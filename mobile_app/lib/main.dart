@@ -33,7 +33,10 @@ class YeneTeacherApp extends StatelessWidget {
         '/stories': (context) => const StoriesScreen(),
         '/story-reader': (context) {
           final args = ModalRoute.of(context)!.settings.arguments as Map<String, String>;
-          return StoryReaderScreen(title: args['title']!);
+          return StoryReaderScreen(
+            storyId: args['id']!,
+            title: args['title']!,
+          );
         },
         '/games': (context) => const GamesScreen(),
         '/knowledge': (context) => const KnowledgeScreen(),

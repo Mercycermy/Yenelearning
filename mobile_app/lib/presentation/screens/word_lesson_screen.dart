@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import '../../core/app_colors.dart';
+import '../../data/content_repository.dart';
+import '../../data/models/content_models.dart';
+import '../../data/user_prefs.dart';
 
 class WordLessonScreen extends StatefulWidget {
   const WordLessonScreen({super.key});
@@ -11,18 +15,47 @@ class WordLessonScreen extends StatefulWidget {
 class _WordLessonScreenState extends State<WordLessonScreen> {
   int currentIndex = 0;
   bool isListening = false;
+  final ContentRepository _repository = ContentRepository();
+  final UserPrefs _prefs = UserPrefs();
+  List<ContentListItem> words = [];
+  bool isLoading = true;
+  String? errorMessage;
 
-  final List<Map<String, String>> words = [
-    {'word': 'አንበሳ', 'translation': 'Lion', 'image': 'https://api.dicebear.com/7.x/identicon/png?seed=Lion'},
-    {'word': 'ዝሆን', 'translation': 'Elephant', 'image': 'https://api.dicebear.com/7.x/identicon/png?seed=Elephant'},
-    {'word': 'ፈረስ', 'translation': 'Horse', 'image': 'https://api.dicebear.com/7.x/identicon/png?seed=Horse'},
-  ];
+  @override
+  void initState() {
+    super.initState();
+    _loadWords();
+  }
+
+  Future<void> _loadWords() async {
+    try {
+      final language = await _prefs.getLanguage();
+      final response = await _repository.fetchContentPaged(
+        type: 'word',
+        language: language,
+        page: 1,
+        pageSize: 50,
+      );
+
+      if (!mounted) return;
+      setState(() {
+        words = response.items;
+        isLoading = false;
+        currentIndex = 0;
+      });
+    } catch (error) {
+      if (!mounted) return;
+      setState(() {
+        isLoading = false;
+        errorMessage = 'Failed to load words.';
+      });
+    }
+  }
 
   void _nextWord() {
     if (currentIndex < words.length - 1) {
       setState(() => currentIndex++);
     } else {
-      // Finished lesson
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Great job! You finished the lesson!')),
       );
@@ -32,7 +65,77 @@ class _WordLessonScreenState extends State<WordLessonScreen> {
 
   @override
   Widget build(BuildContext context) {
+    if (isLoading) {
+      return Scaffold(
+        appBar: AppBar(
+          title: const Text('Learn Words'),
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back_rounded),
+            onPressed: () => Navigator.pop(context),
+          ),
+        ),
+        body: const Center(child: CircularProgressIndicator()),
+      );
+    }
+
+    if (errorMessage != null) {
+      return Scaffold(
+        appBar: AppBar(
+          title: const Text('Learn Words'),
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back_rounded),
+            onPressed: () => Navigator.pop(context),
+          ),
+        ),
+        body: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(24),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(errorMessage!, style: const TextStyle(color: AppColors.error)),
+                const SizedBox(height: 16),
+                ElevatedButton(
+                  onPressed: _loadWords,
+                  child: const Text('Retry'),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+    }
+
+    if (words.isEmpty) {
+      return Scaffold(
+        appBar: AppBar(
+          title: const Text('Learn Words'),
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back_rounded),
+            onPressed: () => Navigator.pop(context),
+          ),
+        ),
+        body: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(24),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text('No words available yet.'),
+                const SizedBox(height: 16),
+                ElevatedButton(
+                  onPressed: _loadWords,
+                  child: const Text('Refresh'),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+    }
+
     final word = words[currentIndex];
+    final translation = (word.description ?? '').isNotEmpty ? word.description! : '...';
     
     return Scaffold(
       appBar: AppBar(
@@ -74,10 +177,22 @@ class _WordLessonScreenState extends State<WordLessonScreen> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Image.network(word['image']!, height: 180),
+                    if (word.imageUrl != null && word.imageUrl!.isNotEmpty)
+                      CachedNetworkImage(
+                        imageUrl: word.imageUrl!,
+                        height: 180,
+                        placeholder: (context, url) => const SizedBox(
+                          height: 100,
+                          width: 100,
+                          child: CircularProgressIndicator(strokeWidth: 2),
+                        ),
+                        errorWidget: (context, url, error) => const Icon(Icons.image, size: 80),
+                      )
+                    else
+                      const Icon(Icons.image, size: 80, color: AppColors.gray500),
                     const SizedBox(height: 40),
                     Text(
-                      word['word']!,
+                      word.title,
                       style: const TextStyle(
                         fontSize: 48,
                         fontWeight: FontWeight.bold,
@@ -85,7 +200,7 @@ class _WordLessonScreenState extends State<WordLessonScreen> {
                       ),
                     ),
                     Text(
-                      word['translation']!,
+                      translation,
                       style: const TextStyle(
                         fontSize: 24,
                         color: AppColors.gray500,

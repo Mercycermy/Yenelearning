@@ -7,6 +7,7 @@ import {
     UseGuards,
     Request,
     ParseUUIDPipe,
+    ParseIntPipe,
 } from '@nestjs/common';
 import { ProgressService } from './progress.service';
 import { RecordProgressDto } from './dto/record-progress.dto';
@@ -48,6 +49,15 @@ export class ProgressController {
         @Param('contentId', ParseUUIDPipe) contentId: string,
     ) {
         return this.progressService.getProgressByContent(childId, contentId);
+    }
+
+    @Get(':childId/story/:storyId/page/:pageNumber')
+    getProgressByStoryPage(
+        @Param('childId', ParseUUIDPipe) childId: string,
+        @Param('storyId', ParseUUIDPipe) storyId: string,
+        @Param('pageNumber', ParseIntPipe) pageNumber: number,
+    ) {
+        return this.progressService.getProgressByStoryPage(childId, storyId, pageNumber);
     }
 
     @Get('stats/global')

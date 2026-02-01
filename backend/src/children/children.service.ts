@@ -38,7 +38,7 @@ export class ChildrenService {
     async findOne(id: string, parentId?: string): Promise<Child> {
         const child = await this.childRepository.findOne({
             where: { id },
-            relations: ['progress', 'progress.content'],
+            relations: ['progress', 'progress.content', 'progress.story'],
         });
 
         if (!child) {

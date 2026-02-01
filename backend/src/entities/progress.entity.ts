@@ -8,6 +8,7 @@ import {
 } from 'typeorm';
 import { Child } from './child.entity';
 import { Content } from './content.entity';
+import { Story } from './story.entity';
 
 export enum ProgressStatus {
     NOT_STARTED = 'not_started',
@@ -28,12 +29,22 @@ export class Progress {
     @Column()
     childId: string;
 
-    @ManyToOne(() => Content, { onDelete: 'CASCADE' })
+    @ManyToOne(() => Content, { onDelete: 'CASCADE', nullable: true })
     @JoinColumn({ name: 'contentId' })
-    content: Content;
+    content?: Content;
 
-    @Column()
-    contentId: string;
+    @Column({ nullable: true })
+    contentId?: string;
+
+    @ManyToOne(() => Story, { onDelete: 'CASCADE', nullable: true })
+    @JoinColumn({ name: 'storyId' })
+    story?: Story;
+
+    @Column({ nullable: true })
+    storyId?: string;
+
+    @Column({ type: 'int', nullable: true })
+    pageNumber?: number;
 
     @Column({
         type: 'simple-enum',

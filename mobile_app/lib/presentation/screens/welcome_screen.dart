@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import '../../core/app_colors.dart';
+import '../../data/content_repository.dart';
+import '../../data/models/avatar_models.dart';
+import '../../data/user_prefs.dart';
 
 class WelcomeScreen extends StatefulWidget {
   const WelcomeScreen({super.key});
@@ -11,18 +15,52 @@ class WelcomeScreen extends StatefulWidget {
 class _WelcomeScreenState extends State<WelcomeScreen> {
   String? selectedAvatar;
   String? selectedLanguage;
+  List<AvatarItem> avatars = [];
+  bool isLoading = true;
+  String? errorMessage;
 
-  final List<Map<String, String>> avatars = [
-    {'id': 'tutor_1', 'name': 'Abebe', 'image': 'https://api.dicebear.com/7.x/bottts/png?seed=Abebe'},
-    {'id': 'tutor_2', 'name': 'Chala', 'image': 'https://api.dicebear.com/7.x/bottts/png?seed=Chala'},
-    {'id': 'tutor_3', 'name': 'Sara', 'image': 'https://api.dicebear.com/7.x/bottts/png?seed=Sara'},
-  ];
+  final ContentRepository _repository = ContentRepository();
+  final UserPrefs _prefs = UserPrefs();
 
   final List<Map<String, String>> languages = [
     {'id': 'amharic', 'name': 'Amharic', 'native': 'አማርኛ'},
     {'id': 'geez', 'name': 'Ge\'ez', 'native': 'ግዕዝ'},
     {'id': 'english', 'name': 'English', 'native': 'English'},
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    _loadData();
+  }
+
+  Future<void> _loadData() async {
+    try {
+      final language = await _prefs.getLanguage();
+      final avatarId = await _prefs.getAvatarId();
+      final data = await _repository.fetchAvatars();
+
+      if (!mounted) return;
+      setState(() {
+        selectedLanguage = language;
+        selectedAvatar = avatarId;
+        avatars = data;
+        isLoading = false;
+      });
+    } catch (error) {
+      if (!mounted) return;
+      setState(() {
+        isLoading = false;
+        errorMessage = 'Failed to load tutors.';
+      });
+    }
+  }
+
+  Future<void> _saveSelections() async {
+    final avatar = avatars.firstWhere((a) => a.id == selectedAvatar);
+    await _prefs.saveLanguage(selectedLanguage!);
+    await _prefs.saveAvatar(id: avatar.id, name: avatar.name, imageUrl: avatar.imageUrl);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -144,60 +182,80 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                       style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                     ),
                     const SizedBox(height: 12),
-                    Wrap(
-                      spacing: 12,
-                      runSpacing: 12,
-                      children: avatars.map((avatar) {
-                        final isSelected = selectedAvatar == avatar['id'];
-                        return GestureDetector(
-                          onTap: () => setState(() => selectedAvatar = avatar['id']),
-                          child: AnimatedContainer(
-                            duration: const Duration(milliseconds: 200),
-                            width: 120,
-                            padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
-                            decoration: BoxDecoration(
-                              color: isSelected ? AppColors.softBlue : AppColors.gray100,
-                              borderRadius: BorderRadius.circular(22),
-                              border: Border.all(
-                                color: isSelected ? AppColors.blue : Colors.transparent,
-                                width: 3,
-                              ),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: AppColors.blue.withOpacity(0.08),
-                                  blurRadius: 10,
-                                  offset: const Offset(0, 4),
+                    if (isLoading)
+                      const Padding(
+                        padding: EdgeInsets.symmetric(vertical: 24),
+                        child: Center(child: CircularProgressIndicator()),
+                      )
+                    else if (errorMessage != null)
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        child: Text(errorMessage!, style: const TextStyle(color: AppColors.error)),
+                      )
+                    else
+                      Wrap(
+                        spacing: 12,
+                        runSpacing: 12,
+                        children: avatars.map((avatar) {
+                          final isSelected = selectedAvatar == avatar.id;
+                          return GestureDetector(
+                            onTap: () => setState(() => selectedAvatar = avatar.id),
+                            child: AnimatedContainer(
+                              duration: const Duration(milliseconds: 200),
+                              width: 120,
+                              padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
+                              decoration: BoxDecoration(
+                                color: isSelected ? AppColors.softBlue : AppColors.gray100,
+                                borderRadius: BorderRadius.circular(22),
+                                border: Border.all(
+                                  color: isSelected ? AppColors.blue : Colors.transparent,
+                                  width: 3,
                                 ),
-                              ],
-                            ),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Image.network(avatar['image']!, height: 64),
-                                const SizedBox(height: 8),
-                                Text(
-                                  avatar['name']!,
-                                  style: const TextStyle(fontWeight: FontWeight.bold),
-                                ),
-                                const SizedBox(height: 6),
-                                if (isSelected)
-                                  Container(
-                                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                                    decoration: BoxDecoration(
-                                      color: AppColors.blue,
-                                      borderRadius: BorderRadius.circular(12),
-                                    ),
-                                    child: const Text(
-                                      'Chosen',
-                                      style: TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.bold),
-                                    ),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: AppColors.blue.withOpacity(0.08),
+                                    blurRadius: 10,
+                                    offset: const Offset(0, 4),
                                   ),
-                              ],
+                                ],
+                              ),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  CachedNetworkImage(
+                                    imageUrl: avatar.imageUrl,
+                                    height: 64,
+                                    placeholder: (context, url) => const SizedBox(
+                                      height: 64,
+                                      width: 64,
+                                      child: CircularProgressIndicator(strokeWidth: 2),
+                                    ),
+                                    errorWidget: (context, url, error) => const Icon(Icons.person, size: 48),
+                                  ),
+                                  const SizedBox(height: 8),
+                                  Text(
+                                    avatar.name,
+                                    style: const TextStyle(fontWeight: FontWeight.bold),
+                                  ),
+                                  const SizedBox(height: 6),
+                                  if (isSelected)
+                                    Container(
+                                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                      decoration: BoxDecoration(
+                                        color: AppColors.blue,
+                                        borderRadius: BorderRadius.circular(12),
+                                      ),
+                                      child: const Text(
+                                        'Chosen',
+                                        style: TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.bold),
+                                      ),
+                                    ),
+                                ],
+                              ),
                             ),
-                          ),
-                        );
-                      }).toList(),
-                    ),
+                          );
+                        }).toList(),
+                      ),
 
                     const SizedBox(height: 28),
 
@@ -245,7 +303,9 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                         shadowColor: AppColors.pink.withOpacity(0.35),
                       ),
                       onPressed: (selectedAvatar != null && selectedLanguage != null)
-                          ? () {
+                          ? () async {
+                              await _saveSelections();
+                              if (!mounted) return;
                               Navigator.pushReplacementNamed(context, '/dashboard');
                             }
                           : null,

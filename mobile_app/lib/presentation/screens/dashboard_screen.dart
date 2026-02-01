@@ -1,8 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import '../../core/app_colors.dart';
+import '../../data/user_prefs.dart';
 
-class DashboardScreen extends StatelessWidget {
+class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
+
+  @override
+  State<DashboardScreen> createState() => _DashboardScreenState();
+}
+
+class _DashboardScreenState extends State<DashboardScreen> {
+  final UserPrefs _prefs = UserPrefs();
+  String? avatarImageUrl;
+  String? avatarName;
+  String? language;
 
   final List<Map<String, dynamic>> activities = const [
     {
@@ -53,6 +65,25 @@ class DashboardScreen extends StatelessWidget {
   ];
 
   @override
+  void initState() {
+    super.initState();
+    _loadProfile();
+  }
+
+  Future<void> _loadProfile() async {
+    final image = await _prefs.getAvatarImage();
+    final name = await _prefs.getAvatarName();
+    final selectedLanguage = await _prefs.getLanguage();
+
+    if (!mounted) return;
+    setState(() {
+      avatarImageUrl = image;
+      avatarName = name;
+      language = selectedLanguage;
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -91,10 +122,25 @@ class DashboardScreen extends StatelessWidget {
               ),
               child: Row(
                 children: [
-                  const CircleAvatar(
+                  CircleAvatar(
                     radius: 30,
-                    backgroundImage: NetworkImage('https://api.dicebear.com/7.x/bottts/png?seed=Abebe'),
                     backgroundColor: AppColors.white,
+                    child: avatarImageUrl == null
+                        ? const Icon(Icons.person, color: AppColors.blue)
+                        : ClipOval(
+                            child: CachedNetworkImage(
+                              imageUrl: avatarImageUrl!,
+                              width: 60,
+                              height: 60,
+                              fit: BoxFit.cover,
+                              placeholder: (context, url) => const SizedBox(
+                                width: 40,
+                                height: 40,
+                                child: CircularProgressIndicator(strokeWidth: 2),
+                              ),
+                              errorWidget: (context, url, error) => const Icon(Icons.person, color: AppColors.blue),
+                            ),
+                          ),
                   ),
                   const SizedBox(width: 16),
                   Expanded(
@@ -102,11 +148,14 @@ class DashboardScreen extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Hello, Learner!',
+                          'Hello${avatarName != null ? ', $avatarName!' : ', Learner!'}',
                           style: Theme.of(context).textTheme.headlineMedium?.copyWith(color: Colors.white),
                         ),
                         const SizedBox(height: 4),
-                        const Text('Ready to learn today?', style: TextStyle(color: Colors.white70)),
+                        Text(
+                          language == null ? 'Ready to learn today?' : 'Learning in ${language!}',
+                          style: const TextStyle(color: Colors.white70),
+                        ),
                         const SizedBox(height: 10),
                         Row(
                           children: [

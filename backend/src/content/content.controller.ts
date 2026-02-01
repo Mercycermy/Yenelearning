@@ -9,7 +9,12 @@ import {
     Query,
     UseGuards,
     ParseUUIDPipe,
+    DefaultValuePipe,
+    ParseIntPipe,
+    Res,
 } from '@nestjs/common';
+import { Response } from 'express';
+import { createHash } from 'crypto';
 import { ContentService } from './content.service';
 import { CreateContentDto } from './dto/create-content.dto';
 import { CreateStoryDto } from './dto/create-story.dto';
@@ -45,6 +50,33 @@ export class ContentController {
         return this.contentService.findAllContent({ type, language, difficulty, minAge, maxAge });
     }
 
+    @Get('paged')
+    findAllContentPaged(
+        @Query('type') type?: ContentType,
+        @Query('language') language?: SupportedLanguage,
+        @Query('difficulty') difficulty?: DifficultyLevel,
+        @Query('minAge') minAge?: number,
+        @Query('maxAge') maxAge?: number,
+        @Query('page', new DefaultValuePipe(1), ParseIntPipe) page?: number,
+        @Query('pageSize', new DefaultValuePipe(20), ParseIntPipe) pageSize?: number,
+        @Res({ passthrough: true }) res?: Response,
+    ) {
+        const payload = this.contentService.findAllContentPaged({
+            type,
+            language,
+            difficulty,
+            minAge,
+            maxAge,
+            page,
+            pageSize,
+        });
+
+        return payload.then((data) => {
+            this.setCachingHeaders(res, data);
+            return data;
+        });
+    }
+
     @Get('stats')
     @UseGuards(JwtAuthGuard, RolesGuard)
     @Roles(UserRole.ADMIN)
@@ -53,8 +85,15 @@ export class ContentController {
     }
 
     @Get(':id')
-    findOneContent(@Param('id', ParseUUIDPipe) id: string) {
-        return this.contentService.findOneContent(id);
+    findOneContent(
+        @Param('id', ParseUUIDPipe) id: string,
+        @Res({ passthrough: true }) res?: Response,
+    ) {
+        const payload = this.contentService.findOneContent(id);
+        return payload.then((data) => {
+            this.setCachingHeaders(res, data);
+            return data;
+        });
     }
 
     @Patch(':id')
@@ -92,9 +131,53 @@ export class ContentController {
         return this.contentService.findAllStories({ language, difficulty, age });
     }
 
+    @Get('stories')
+    findAllStoriesPaged(
+        @Query('language') language?: SupportedLanguage,
+        @Query('difficulty') difficulty?: DifficultyLevel,
+        @Query('age') age?: number,
+        @Query('page', new DefaultValuePipe(1), ParseIntPipe) page?: number,
+        @Query('pageSize', new DefaultValuePipe(20), ParseIntPipe) pageSize?: number,
+        @Res({ passthrough: true }) res?: Response,
+    ) {
+        const payload = this.contentService.findAllStoriesPaged({
+            language,
+            difficulty,
+            age,
+            page,
+            pageSize,
+        });
+
+        return payload.then((data) => {
+            this.setCachingHeaders(res, data);
+            return data;
+        });
+    }
+
+    @Get('stories/:id/pages/:pageNumber')
+    findStoryPage(
+        @Param('id', ParseUUIDPipe) id: string,
+        @Param('pageNumber', ParseIntPipe) pageNumber: number,
+        @Res({ passthrough: true }) res?: Response,
+    ) {
+        const payload = this.contentService.findStoryPage(id, pageNumber);
+
+        return payload.then((data) => {
+            this.setCachingHeaders(res, data);
+            return data;
+        });
+    }
+
     @Get('stories/:id')
-    findOneStory(@Param('id', ParseUUIDPipe) id: string) {
-        return this.contentService.findOneStory(id);
+    findOneStory(
+        @Param('id', ParseUUIDPipe) id: string,
+        @Res({ passthrough: true }) res?: Response,
+    ) {
+        const payload = this.contentService.findOneStory(id);
+        return payload.then((data) => {
+            this.setCachingHeaders(res, data);
+            return data;
+        });
     }
 
     @Patch('stories/:id')
@@ -148,5 +231,12 @@ export class ContentController {
     @Roles(UserRole.ADMIN)
     deleteAvatar(@Param('id', ParseUUIDPipe) id: string) {
         return this.contentService.deleteAvatar(id);
+    }
+
+    private setCachingHeaders(res: Response | undefined, data: unknown) {
+        if (!res) return;
+        const etag = createHash('sha1').update(JSON.stringify(data)).digest('hex');
+        res.setHeader('Cache-Control', 'public, max-age=60, stale-while-revalidate=300');
+        res.setHeader('ETag', `W/"${etag}"`);
     }
 }

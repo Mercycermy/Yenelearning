@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Progress, ProgressStatus } from '../entities/progress.entity';
@@ -15,14 +15,28 @@ export class ProgressService {
     ) { }
 
     async recordProgress(childId: string, dto: RecordProgressDto): Promise<Progress> {
+        if (!dto.contentId && !dto.storyId) {
+            throw new BadRequestException('contentId or storyId is required');
+        }
+
+        if (dto.storyId && !dto.pageNumber) {
+            throw new BadRequestException('pageNumber is required when storyId is provided');
+        }
+
+        const isStoryProgress = !!dto.storyId;
+
         let progress = await this.progressRepository.findOne({
-            where: { childId, contentId: dto.contentId },
+            where: isStoryProgress
+                ? { childId, storyId: dto.storyId, pageNumber: dto.pageNumber }
+                : { childId, contentId: dto.contentId },
         });
 
         if (!progress) {
             progress = this.progressRepository.create({
                 childId,
-                contentId: dto.contentId,
+                contentId: dto.contentId ?? null,
+                storyId: dto.storyId ?? null,
+                pageNumber: dto.pageNumber ?? null,
             });
         }
 
@@ -65,7 +79,7 @@ export class ProgressService {
     async getChildProgress(childId: string): Promise<Progress[]> {
         return this.progressRepository.find({
             where: { childId },
-            relations: ['content'],
+            relations: ['content', 'story'],
             order: { lastAttemptAt: 'DESC' },
         });
     }
@@ -74,6 +88,17 @@ export class ProgressService {
         return this.progressRepository.findOne({
             where: { childId, contentId },
             relations: ['content'],
+        });
+    }
+
+    async getProgressByStoryPage(
+        childId: string,
+        storyId: string,
+        pageNumber: number,
+    ): Promise<Progress | null> {
+        return this.progressRepository.findOne({
+            where: { childId, storyId, pageNumber },
+            relations: ['story'],
         });
     }
 
@@ -109,7 +134,7 @@ export class ProgressService {
 
         const recentActivity = await this.progressRepository.find({
             where: { childId },
-            relations: ['content'],
+            relations: ['content', 'story'],
             order: { lastAttemptAt: 'DESC' },
             take: 10,
         });

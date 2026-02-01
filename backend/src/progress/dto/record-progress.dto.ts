@@ -1,9 +1,30 @@
-import { IsUUID, IsOptional, IsInt, IsNumber, Min, Max, IsEnum } from 'class-validator';
+import {
+    IsUUID,
+    IsOptional,
+    IsInt,
+    IsNumber,
+    Min,
+    Max,
+    IsEnum,
+    ValidateIf,
+} from 'class-validator';
 import { ProgressStatus } from '../../entities/progress.entity';
 
 export class RecordProgressDto {
+    @ValidateIf((o) => !o.storyId)
     @IsUUID()
-    contentId: string;
+    @IsOptional()
+    contentId?: string;
+
+    @ValidateIf((o) => !o.contentId)
+    @IsUUID()
+    @IsOptional()
+    storyId?: string;
+
+    @ValidateIf((o) => !!o.storyId)
+    @IsInt()
+    @Min(1)
+    pageNumber?: number;
 
     @IsOptional()
     @IsEnum(ProgressStatus)

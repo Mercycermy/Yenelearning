@@ -1,35 +1,116 @@
 import 'package:flutter/material.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import '../../core/app_colors.dart';
+import '../../data/content_repository.dart';
+import '../../data/models/story_models.dart';
 
 class StoryReaderScreen extends StatefulWidget {
+  final String storyId;
   final String title;
-  const StoryReaderScreen({super.key, required this.title});
+  const StoryReaderScreen({super.key, required this.storyId, required this.title});
 
   @override
   State<StoryReaderScreen> createState() => _StoryReaderScreenState();
 }
 
 class _StoryReaderScreenState extends State<StoryReaderScreen> {
-  int currentPage = 0;
-  
-  final List<Map<String, String>> storyPages = [
-    {
-      'text': 'Once upon a time, there was a brave lion who lived in the Ethiopian highlands.',
-      'image': 'https://api.dicebear.com/7.x/identicon/png?seed=story1',
-    },
-    {
-      'text': 'He had a very loud roar, but he was also very kind to all the other animals.',
-      'image': 'https://api.dicebear.com/7.x/identicon/png?seed=story2',
-    },
-    {
-      'text': 'One day, he found a small bird who had lost its way home.',
-      'image': 'https://api.dicebear.com/7.x/identicon/png?seed=story3',
-    },
-  ];
+  int currentPage = 1;
+  bool isLoading = true;
+  String? errorMessage;
+  StoryPageResponse? pageResponse;
+
+  final ContentRepository _repository = ContentRepository();
+
+  @override
+  void initState() {
+    super.initState();
+    _loadPage();
+  }
+
+  Future<void> _loadPage() async {
+    try {
+      final response = await _repository.fetchStoryPage(
+        storyId: widget.storyId,
+        pageNumber: currentPage,
+      );
+
+      if (!mounted) return;
+      setState(() {
+        pageResponse = response;
+        isLoading = false;
+        errorMessage = null;
+      });
+    } catch (error) {
+      if (!mounted) return;
+      setState(() {
+        isLoading = false;
+        errorMessage = 'Failed to load story page.';
+      });
+    }
+  }
+
+  Future<void> _nextPage() async {
+    if (pageResponse == null) return;
+    if (currentPage >= pageResponse!.totalPages) {
+      Navigator.pop(context);
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('The End! You finished the story!')),
+      );
+      return;
+    }
+
+    setState(() {
+      currentPage += 1;
+      isLoading = true;
+    });
+    await _loadPage();
+  }
+
+  Future<void> _previousPage() async {
+    if (currentPage <= 1) return;
+    setState(() {
+      currentPage -= 1;
+      isLoading = true;
+    });
+    await _loadPage();
+  }
 
   @override
   Widget build(BuildContext context) {
-    final page = storyPages[currentPage];
+    if (isLoading) {
+      return Scaffold(
+        appBar: AppBar(
+          title: Text(widget.title),
+        ),
+        body: const Center(child: CircularProgressIndicator()),
+      );
+    }
+
+    if (errorMessage != null) {
+      return Scaffold(
+        appBar: AppBar(
+          title: Text(widget.title),
+        ),
+        body: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(24),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(errorMessage!, style: const TextStyle(color: AppColors.error)),
+                const SizedBox(height: 16),
+                ElevatedButton(
+                  onPressed: _loadPage,
+                  child: const Text('Retry'),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+    }
+
+    final page = pageResponse!.page;
     
     return Scaffold(
       appBar: AppBar(
@@ -48,7 +129,18 @@ class _StoryReaderScreenState extends State<StoryReaderScreen> {
                   borderRadius: BorderRadius.circular(32),
                 ),
                 child: Center(
-                  child: Image.network(page['image']!, height: 200),
+                  child: page.imageUrl == null
+                      ? const Icon(Icons.image, size: 80, color: AppColors.gray500)
+                      : CachedNetworkImage(
+                          imageUrl: page.imageUrl!,
+                          height: 200,
+                          placeholder: (context, url) => const SizedBox(
+                            height: 80,
+                            width: 80,
+                            child: CircularProgressIndicator(strokeWidth: 2),
+                          ),
+                          errorWidget: (context, url, error) => const Icon(Icons.image, size: 80),
+                        ),
                 ),
               ),
             ),
@@ -68,7 +160,7 @@ class _StoryReaderScreenState extends State<StoryReaderScreen> {
                 ),
                 child: Center(
                   child: Text(
-                    page['text']!,
+                    page.text,
                     textAlign: TextAlign.center,
                     style: const TextStyle(
                       fontSize: 22,
@@ -86,9 +178,9 @@ class _StoryReaderScreenState extends State<StoryReaderScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                if (currentPage > 0)
+                if (currentPage > 1)
                   ElevatedButton(
-                    onPressed: () => setState(() => currentPage--),
+                    onPressed: _previousPage,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.gray200,
                       foregroundColor: AppColors.gray900,
@@ -100,26 +192,17 @@ class _StoryReaderScreenState extends State<StoryReaderScreen> {
                   const SizedBox(width: 120),
                 
                 Text(
-                  '${currentPage + 1} / ${storyPages.length}',
+                  '${pageResponse!.pageNumber} / ${pageResponse!.totalPages}',
                   style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
 
                 ElevatedButton(
-                  onPressed: () {
-                    if (currentPage < storyPages.length - 1) {
-                      setState(() => currentPage++);
-                    } else {
-                      Navigator.pop(context);
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('The End! You finished the story!')),
-                      );
-                    }
-                  },
+                  onPressed: _nextPage,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.green,
                     minimumSize: const Size(120, 60),
                   ),
-                  child: Text(currentPage < storyPages.length - 1 ? 'Next' : 'Finish'),
+                  child: Text(currentPage < (pageResponse?.totalPages ?? 0) ? 'Next' : 'Finish'),
                 ),
               ],
             ),
