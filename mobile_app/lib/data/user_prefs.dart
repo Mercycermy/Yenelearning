@@ -10,6 +10,8 @@ class UserPrefs {
   static const _avatarVoiceIdKey = 'selected_avatar_voice_id';
   static const _avatarSpeechRateKey = 'selected_avatar_speech_rate';
   static const _avatarPitchLevelKey = 'selected_avatar_pitch_level';
+  static const _accessTokenKey = 'auth_access_token';
+  static const _userJsonKey = 'auth_user_json';
 
   Future<void> saveLanguage(String language) async {
     final prefs = await SharedPreferences.getInstance();
@@ -90,5 +92,30 @@ class UserPrefs {
   Future<double?> getAvatarPitchLevel() async {
     final prefs = await SharedPreferences.getInstance();
     return prefs.getDouble(_avatarPitchLevelKey);
+  }
+
+  Future<void> saveAuth({
+    required String accessToken,
+    required String userJson,
+  }) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_accessTokenKey, accessToken);
+    await prefs.setString(_userJsonKey, userJson);
+  }
+
+  Future<String?> getAccessToken() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString(_accessTokenKey);
+  }
+
+  Future<String?> getUserJson() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString(_userJsonKey);
+  }
+
+  Future<void> clearAuth() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove(_accessTokenKey);
+    await prefs.remove(_userJsonKey);
   }
 }

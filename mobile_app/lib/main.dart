@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'core/app_theme.dart';
+import 'presentation/screens/auth_gate.dart';
+import 'presentation/screens/auth/sign_in_screen.dart';
+import 'presentation/screens/auth/sign_up_screen.dart';
 import 'presentation/screens/dashboard_screen.dart';
 import 'presentation/screens/games_screen.dart';
 import 'presentation/screens/knowledge_screen.dart';
@@ -25,7 +28,10 @@ class YeneTeacherApp extends StatelessWidget {
       theme: AppTheme.lightTheme,
       initialRoute: '/',
       routes: {
-        '/': (context) => const WelcomeScreen(),
+        '/': (context) => const AuthGate(),
+        '/login': (context) => const SignInScreen(),
+        '/register': (context) => const SignUpScreen(),
+        '/welcome': (context) => const WelcomeScreen(),
         '/dashboard': (context) => const DashboardScreen(),
         '/words': (context) => const WordLessonScreen(),
         '/tutor': (context) => const TalkWithTutorScreen(),

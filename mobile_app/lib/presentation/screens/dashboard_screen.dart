@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import '../../core/app_colors.dart';
 import '../../data/user_prefs.dart';
@@ -146,18 +147,29 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     child: avatarImageUrl == null
                         ? const Icon(Icons.person, color: AppColors.blue)
                         : ClipOval(
-                            child: CachedNetworkImage(
-                              imageUrl: avatarImageUrl!,
-                              width: 60,
-                              height: 60,
-                              fit: BoxFit.cover,
-                              placeholder: (context, url) => const SizedBox(
-                                width: 40,
-                                height: 40,
-                                child: CircularProgressIndicator(strokeWidth: 2),
-                              ),
-                              errorWidget: (context, url, error) => const Icon(Icons.person, color: AppColors.blue),
-                            ),
+                            child: kIsWeb
+                                ? Image.network(
+                                    avatarImageUrl!,
+                                    width: 60,
+                                    height: 60,
+                                    fit: BoxFit.cover,
+                                    errorBuilder: (context, error, stackTrace) => const Icon(
+                                      Icons.person,
+                                      color: AppColors.blue,
+                                    ),
+                                  )
+                                : CachedNetworkImage(
+                                    imageUrl: avatarImageUrl!,
+                                    width: 60,
+                                    height: 60,
+                                    fit: BoxFit.cover,
+                                    placeholder: (context, url) => const SizedBox(
+                                      width: 40,
+                                      height: 40,
+                                      child: CircularProgressIndicator(strokeWidth: 2),
+                                    ),
+                                    errorWidget: (context, url, error) => const Icon(Icons.person, color: AppColors.blue),
+                                  ),
                           ),
                   ),
                   const SizedBox(width: 16),

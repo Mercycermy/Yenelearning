@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import '../../core/app_colors.dart';
 import '../../data/content_repository.dart';
@@ -58,7 +59,23 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   @override
   void initState() {
     super.initState();
-    _loadData();
+    _init();
+  }
+
+  Future<void> _init() async {
+    final isAuthenticated = await _ensureAuthenticated();
+    if (!isAuthenticated) return;
+    await _loadData();
+  }
+
+  Future<bool> _ensureAuthenticated() async {
+    final token = await _prefs.getAccessToken();
+    if (!mounted) return false;
+    if (token == null || token.isEmpty) {
+      Navigator.pushReplacementNamed(context, '/login');
+      return false;
+    }
+    return true;
   }
 
   Future<void> _loadData() async {
@@ -276,16 +293,25 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    CachedNetworkImage(
-                                      imageUrl: avatar.imageUrl,
-                                      height: 64,
-                                      placeholder: (context, url) => const SizedBox(
+                                    if (kIsWeb)
+                                      Image.network(
+                                        avatar.imageUrl,
                                         height: 64,
                                         width: 64,
-                                        child: CircularProgressIndicator(strokeWidth: 2),
+                                        fit: BoxFit.cover,
+                                        errorBuilder: (context, error, stackTrace) => const Icon(Icons.person, size: 48),
+                                      )
+                                    else
+                                      CachedNetworkImage(
+                                        imageUrl: avatar.imageUrl,
+                                        height: 64,
+                                        placeholder: (context, url) => const SizedBox(
+                                          height: 64,
+                                          width: 64,
+                                          child: CircularProgressIndicator(strokeWidth: 2),
+                                        ),
+                                        errorWidget: (context, url, error) => const Icon(Icons.person, size: 48),
                                       ),
-                                      errorWidget: (context, url, error) => const Icon(Icons.person, size: 48),
-                                    ),
                                     const SizedBox(height: 8),
                                     Text(
                                       avatar.name,

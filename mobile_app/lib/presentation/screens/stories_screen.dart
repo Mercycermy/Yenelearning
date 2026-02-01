@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import '../../core/app_colors.dart';
 import '../../data/content_repository.dart';
@@ -141,23 +142,36 @@ class _StoriesScreenState extends State<StoriesScreen> {
                                   color: AppColors.gray100,
                                   child: const Icon(Icons.auto_stories_rounded, color: AppColors.green),
                                 )
-                              : CachedNetworkImage(
-                                  imageUrl: story.coverImageUrl!,
-                                  width: 120,
-                                  height: 120,
-                                  fit: BoxFit.cover,
-                                  placeholder: (context, url) => const SizedBox(
-                                    width: 120,
-                                    height: 120,
-                                    child: Center(child: CircularProgressIndicator(strokeWidth: 2)),
-                                  ),
-                                  errorWidget: (context, url, error) => Container(
-                                    width: 120,
-                                    height: 120,
-                                    color: AppColors.gray100,
-                                    child: const Icon(Icons.auto_stories_rounded, color: AppColors.green),
-                                  ),
-                                ),
+                              : kIsWeb
+                                  ? Image.network(
+                                      story.coverImageUrl!,
+                                      width: 120,
+                                      height: 120,
+                                      fit: BoxFit.cover,
+                                      errorBuilder: (context, error, stackTrace) => Container(
+                                        width: 120,
+                                        height: 120,
+                                        color: AppColors.gray100,
+                                        child: const Icon(Icons.auto_stories_rounded, color: AppColors.green),
+                                      ),
+                                    )
+                                  : CachedNetworkImage(
+                                      imageUrl: story.coverImageUrl!,
+                                      width: 120,
+                                      height: 120,
+                                      fit: BoxFit.cover,
+                                      placeholder: (context, url) => const SizedBox(
+                                        width: 120,
+                                        height: 120,
+                                        child: Center(child: CircularProgressIndicator(strokeWidth: 2)),
+                                      ),
+                                      errorWidget: (context, url, error) => Container(
+                                        width: 120,
+                                        height: 120,
+                                        color: AppColors.gray100,
+                                        child: const Icon(Icons.auto_stories_rounded, color: AppColors.green),
+                                      ),
+                                    ),
                         ),
                         Expanded(
                           child: Padding(

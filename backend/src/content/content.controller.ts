@@ -84,18 +84,6 @@ export class ContentController {
         return this.contentService.getContentStats();
     }
 
-    @Get(':id')
-    findOneContent(
-        @Param('id', ParseUUIDPipe) id: string,
-        @Res({ passthrough: true }) res?: Response,
-    ) {
-        const payload = this.contentService.findOneContent(id);
-        return payload.then((data) => {
-            this.setCachingHeaders(res, data);
-            return data;
-        });
-    }
-
     @Patch(':id')
     @UseGuards(JwtAuthGuard, RolesGuard)
     @Roles(UserRole.ADMIN)
@@ -231,6 +219,18 @@ export class ContentController {
     @Roles(UserRole.ADMIN)
     deleteAvatar(@Param('id', ParseUUIDPipe) id: string) {
         return this.contentService.deleteAvatar(id);
+    }
+
+    @Get(':id')
+    findOneContent(
+        @Param('id', ParseUUIDPipe) id: string,
+        @Res({ passthrough: true }) res?: Response,
+    ) {
+        const payload = this.contentService.findOneContent(id);
+        return payload.then((data) => {
+            this.setCachingHeaders(res, data);
+            return data;
+        });
     }
 
     private setCachingHeaders(res: Response | undefined, data: unknown) {

@@ -34,6 +34,27 @@ class ApiClient {
 
     throw ApiException(response.statusCode, response.body);
   }
+
+  Future<Map<String, dynamic>> postJson(String path, Map<String, dynamic> body) async {
+    final uri = Uri.parse('${ApiConfig.baseUrl}$path');
+    final response = await _client.post(
+      uri,
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode(body),
+    );
+
+    if (response.statusCode >= 200 && response.statusCode < 300) {
+      if (response.body.isEmpty) {
+        return {};
+      }
+      return jsonDecode(response.body) as Map<String, dynamic>;
+    }
+
+    throw ApiException(response.statusCode, response.body);
+  }
 }
 
 class ApiException implements Exception {
