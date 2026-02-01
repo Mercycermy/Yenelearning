@@ -63,6 +63,14 @@ export class UsersService {
         await this.userRepository.save(user);
     }
 
+    async remove(id: string): Promise<void> {
+        const user = await this.userRepository.findOne({ where: { id } });
+        if (!user) {
+            throw new NotFoundException('User not found');
+        }
+        await this.userRepository.remove(user);
+    }
+
     async getStats(): Promise<{
         totalUsers: number;
         activeUsers: number;

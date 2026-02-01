@@ -6,6 +6,7 @@ import {
     Body,
     UseGuards,
     ParseUUIDPipe,
+    Delete,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
@@ -52,5 +53,11 @@ export class UsersController {
     @Roles(UserRole.ADMIN)
     activate(@Param('id', ParseUUIDPipe) id: string) {
         return this.usersService.activate(id);
+    }
+
+    @Delete(':id')
+    @Roles(UserRole.ADMIN)
+    remove(@Param('id', ParseUUIDPipe) id: string) {
+        return this.usersService.remove(id);
     }
 }

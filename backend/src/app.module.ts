@@ -17,6 +17,8 @@ import { Content } from './entities/content.entity';
 import { Progress } from './entities/progress.entity';
 import { Avatar } from './entities/avatar.entity';
 import { Story } from './entities/story.entity';
+import { Language } from './entities/language.entity';
+import { SettingsModule } from './settings/settings.module';
 
 @Module({
   imports: [
@@ -37,7 +39,7 @@ import { Story } from './entities/story.entity';
             username: configService.get<string>('DATABASE_USERNAME', 'postgres'),
             password: configService.get<string>('DATABASE_PASSWORD', 'postgres'),
             database: configService.get<string>('DATABASE_NAME', 'yene_teacher'),
-            entities: [User, Child, Content, Progress, Avatar, Story],
+            entities: [User, Child, Content, Progress, Avatar, Story, Language],
             synchronize: configService.get<string>('NODE_ENV') === 'development',
             logging: configService.get<string>('NODE_ENV') === 'development',
           };
@@ -47,7 +49,7 @@ import { Story } from './entities/story.entity';
         return {
           type: 'better-sqlite3' as const,
           database: 'yene_teacher.db',
-          entities: [User, Child, Content, Progress, Avatar, Story],
+          entities: [User, Child, Content, Progress, Avatar, Story, Language],
           synchronize: true,
           logging: configService.get<string>('NODE_ENV') === 'development',
         };
@@ -60,6 +62,7 @@ import { Story } from './entities/story.entity';
     ContentModule,
     ProgressModule,
     AiModule,
+    SettingsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

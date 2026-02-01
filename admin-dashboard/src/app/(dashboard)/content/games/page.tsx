@@ -20,15 +20,43 @@ interface Game {
     };
 }
 
+interface LanguageItem {
+    id: string;
+    code: string;
+    name: string;
+    nativeName: string;
+    isActive: boolean;
+}
+
 export default function GamesPage() {
     const [games, setGames] = useState<Game[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    const [languages, setLanguages] = useState<LanguageItem[]>([]);
+    const [selectedLanguage, setSelectedLanguage] = useState<string>("all");
+
+    useEffect(() => {
+        async function loadLanguages() {
+            try {
+                const data = await fetchAPI("/settings/languages");
+                setLanguages(data);
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        loadLanguages();
+    }, []);
 
     useEffect(() => {
         async function loadGames() {
+            setIsLoading(true);
+            setError(null);
             try {
-                const data = await fetchAPI("/content?type=game");
+                const query = selectedLanguage === "all"
+                    ? "/content?type=game"
+                    : `/content?type=game&language=${selectedLanguage}`;
+                const data = await fetchAPI(query);
                 setGames(data);
             } catch (err) {
                 setError("Failed to load games.");
@@ -39,7 +67,7 @@ export default function GamesPage() {
         }
 
         loadGames();
-    }, []);
+    }, [selectedLanguage]);
 
     async function handleDelete(id: string) {
         if (!confirm("Are you sure you want to delete this game?")) return;
@@ -72,13 +100,29 @@ export default function GamesPage() {
                         Manage learning games and interactive activities.
                     </p>
                 </div>
-                <Link
-                    href="/content/games/new"
-                    className="flex items-center gap-2 rounded-xl bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-md shadow-blue-200 transition-all hover:bg-blue-700 hover:shadow-lg dark:bg-blue-600 dark:shadow-none dark:hover:bg-blue-500"
-                >
-                    <Plus className="h-4 w-4" />
-                    Create Game
-                </Link>
+                <div className="flex items-center gap-3">
+                    <select
+                        value={selectedLanguage}
+                        onChange={(event) => setSelectedLanguage(event.target.value)}
+                        className="rounded-xl border border-gray-200 bg-white px-3 py-2 text-sm text-gray-700 shadow-sm outline-none focus:border-blue-500 dark:border-zinc-700 dark:bg-zinc-900 dark:text-gray-200"
+                    >
+                        <option value="all">All languages</option>
+                        {languages
+                            .filter((lang) => lang.isActive)
+                            .map((lang) => (
+                                <option key={lang.id} value={lang.code}>
+                                    {lang.name}
+                                </option>
+                            ))}
+                    </select>
+                    <Link
+                        href="/content/games/new"
+                        className="flex items-center gap-2 rounded-xl bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-md shadow-blue-200 transition-all hover:bg-blue-700 hover:shadow-lg dark:bg-blue-600 dark:shadow-none dark:hover:bg-blue-500"
+                    >
+                        <Plus className="h-4 w-4" />
+                        Create Game
+                    </Link>
+                </div>
             </div>
 
             {error && (
