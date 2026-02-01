@@ -7,33 +7,48 @@ class DashboardScreen extends StatelessWidget {
   final List<Map<String, dynamic>> activities = const [
     {
       'title': 'Learn Words',
+      'subtitle': 'New words & sounds',
+      'emoji': '🔤',
       'icon': Icons.abc_rounded,
       'color': AppColors.blue,
       'bgColor': AppColors.softBlue,
+      'route': '/words',
     },
     {
       'title': 'Talk with Tutor',
+      'subtitle': 'Practice speaking',
+      'emoji': '🗣️',
       'icon': Icons.record_voice_over_rounded,
       'color': AppColors.purple,
       'bgColor': AppColors.softPurple,
+      'route': '/tutor',
     },
     {
       'title': 'Stories',
+      'subtitle': 'Read & listen',
+      'emoji': '📚',
       'icon': Icons.auto_stories_rounded,
       'color': AppColors.green,
       'bgColor': AppColors.softGreen,
+      'route': '/stories',
     },
     {
       'title': 'Games',
+      'subtitle': 'Play & learn',
+      'emoji': '🎮',
       'icon': Icons.videogame_asset_rounded,
       'color': AppColors.yellow,
       'bgColor': AppColors.softYellow,
+      'route': '/games',
     },
     {
       'title': 'Knowledge',
+      'subtitle': 'Fun facts',
+      'emoji': '💡',
       'icon': Icons.lightbulb_rounded,
       'color': Colors.orange,
       'bgColor': Color(0xFFFFF3E0),
+      'route': '/knowledge',
     },
   ];
 
@@ -57,26 +72,68 @@ class DashboardScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              children: [
-                const CircleAvatar(
-                  radius: 30,
-                  backgroundImage: NetworkImage('https://api.dicebear.com/7.x/bottts/png?seed=Abebe'),
+            Container(
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                gradient: const LinearGradient(
+                  colors: [AppColors.blue, AppColors.purple],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
                 ),
-                const SizedBox(width: 16),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Hello, Learner!',
-                      style: Theme.of(context).textTheme.headlineMedium,
+                borderRadius: BorderRadius.circular(28),
+                boxShadow: [
+                  BoxShadow(
+                    color: AppColors.blue.withOpacity(0.25),
+                    blurRadius: 16,
+                    offset: const Offset(0, 8),
+                  ),
+                ],
+              ),
+              child: Row(
+                children: [
+                  const CircleAvatar(
+                    radius: 30,
+                    backgroundImage: NetworkImage('https://api.dicebear.com/7.x/bottts/png?seed=Abebe'),
+                    backgroundColor: AppColors.white,
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Hello, Learner!',
+                          style: Theme.of(context).textTheme.headlineMedium?.copyWith(color: Colors.white),
+                        ),
+                        const SizedBox(height: 4),
+                        const Text('Ready to learn today?', style: TextStyle(color: Colors.white70)),
+                        const SizedBox(height: 10),
+                        Row(
+                          children: [
+                            _HeaderBadge(label: 'Streak 3', icon: Icons.local_fire_department_rounded),
+                            const SizedBox(width: 8),
+                            _HeaderBadge(label: 'Coins 120', icon: Icons.star_rounded),
+                          ],
+                        ),
+                      ],
                     ),
-                    const Text('Ready to learn today?'),
-                  ],
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 24),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text('Let’s explore!', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                TextButton.icon(
+                  onPressed: () => Navigator.pushNamed(context, '/parent'),
+                  icon: const Icon(Icons.shield_rounded, size: 18),
+                  label: const Text('Parent Mode'),
                 ),
               ],
             ),
-            const SizedBox(height: 32),
+            const SizedBox(height: 12),
             GridView.builder(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
@@ -84,20 +141,15 @@ class DashboardScreen extends StatelessWidget {
                 crossAxisCount: 2,
                 crossAxisSpacing: 16,
                 mainAxisSpacing: 16,
-                childAspectRatio: 0.9,
+                childAspectRatio: 0.85,
               ),
               itemCount: activities.length,
               itemBuilder: (context, index) {
                 final activity = activities[index];
                 return GestureDetector(
+                  behavior: HitTestBehavior.opaque,
                   onTap: () {
-                    if (activity['title'] == 'Learn Words') {
-                      Navigator.pushNamed(context, '/words');
-                    } else if (activity['title'] == 'Talk with Tutor') {
-                      Navigator.pushNamed(context, '/tutor');
-                    } else if (activity['title'] == 'Stories') {
-                      Navigator.pushNamed(context, '/stories');
-                    }
+                    Navigator.pushNamed(context, activity['route'] as String);
                   },
                   child: Container(
                     decoration: BoxDecoration(
@@ -111,25 +163,43 @@ class DashboardScreen extends StatelessWidget {
                         ),
                       ],
                     ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          activity['icon'],
-                          size: 48,
-                          color: activity['color'],
-                        ),
-                        const SizedBox(height: 12),
-                        Text(
-                          activity['title'],
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
+                    child: Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(16),
+                            ),
+                            child: Text(activity['emoji'], style: const TextStyle(fontSize: 22)),
+                          ),
+                          const SizedBox(height: 10),
+                          Icon(
+                            activity['icon'],
+                            size: 36,
                             color: activity['color'],
                           ),
-                        ),
-                      ],
+                          const SizedBox(height: 8),
+                          Text(
+                            activity['title'],
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: activity['color'],
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            activity['subtitle'],
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(fontSize: 12, color: AppColors.gray500),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 );
@@ -137,6 +207,31 @@ class DashboardScreen extends StatelessWidget {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class _HeaderBadge extends StatelessWidget {
+  final String label;
+  final IconData icon;
+
+  const _HeaderBadge({required this.label, required this.icon});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+      decoration: BoxDecoration(
+        color: Colors.white.withOpacity(0.2),
+        borderRadius: BorderRadius.circular(14),
+      ),
+      child: Row(
+        children: [
+          Icon(icon, size: 14, color: Colors.white),
+          const SizedBox(width: 6),
+          Text(label, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w600, fontSize: 12)),
+        ],
       ),
     );
   }

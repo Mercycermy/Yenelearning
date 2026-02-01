@@ -18,6 +18,54 @@ class ParentDashboardScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            Container(
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                gradient: const LinearGradient(
+                  colors: [AppColors.teal, AppColors.blue],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+                borderRadius: BorderRadius.circular(24),
+                boxShadow: [
+                  BoxShadow(
+                    color: AppColors.teal.withOpacity(0.25),
+                    blurRadius: 14,
+                    offset: const Offset(0, 8),
+                  ),
+                ],
+              ),
+              child: Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.2),
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    child: const Icon(Icons.family_restroom_rounded, color: Colors.white),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          'Parent Dashboard',
+                          style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
+                        ),
+                        const SizedBox(height: 4),
+                        const Text(
+                          'Track progress, set limits, and cheer them on!',
+                          style: TextStyle(color: Colors.white70),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 24),
             // Child Profile Selector
             const Text(
               'Your Children',
@@ -91,23 +139,43 @@ class _ChildProfileCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: isSelected ? AppColors.softBlue : AppColors.gray100,
-        borderRadius: BorderRadius.circular(20),
+        color: isSelected ? AppColors.softSky : AppColors.white,
+        borderRadius: BorderRadius.circular(22),
         border: Border.all(
-          color: isSelected ? AppColors.blue : Colors.transparent,
+          color: isSelected ? AppColors.blue : AppColors.gray200,
           width: 2,
         ),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.blue.withOpacity(0.08),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
       ),
       child: Column(
         children: [
           CircleAvatar(
             radius: 25,
-            backgroundColor: AppColors.blue.withOpacity(0.2),
+            backgroundColor: AppColors.softBlue,
             child: Text(name[0], style: const TextStyle(fontWeight: FontWeight.bold)),
           ),
           const SizedBox(height: 8),
           Text(name, style: const TextStyle(fontWeight: FontWeight.bold)),
           Text('$age years old', style: const TextStyle(fontSize: 12, color: AppColors.gray500)),
+          const SizedBox(height: 8),
+          if (isSelected)
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+              decoration: BoxDecoration(
+                color: AppColors.blue,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: const Text(
+                'Active',
+                style: TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.bold),
+              ),
+            ),
         ],
       ),
     );
@@ -120,11 +188,11 @@ class _ChildProfileAddButton extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        color: AppColors.gray100,
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: AppColors.gray200, style: BorderStyle.none),
+        color: AppColors.softYellow,
+        borderRadius: BorderRadius.circular(22),
+        border: Border.all(color: AppColors.yellow.withOpacity(0.3)),
       ),
-      child: const Icon(Icons.add_rounded, color: AppColors.gray500),
+      child: const Icon(Icons.add_rounded, color: AppColors.yellow),
     );
   }
 }
@@ -137,7 +205,7 @@ class _ProgressOverviewCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        color: AppColors.white,
+        color: AppColors.softGreen,
         borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10),
@@ -145,6 +213,21 @@ class _ProgressOverviewCard extends StatelessWidget {
       ),
       child: Column(
         children: [
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: AppColors.green.withOpacity(0.15),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: const Icon(Icons.insights_rounded, color: AppColors.green),
+              ),
+              const SizedBox(width: 10),
+              const Text('This week', style: TextStyle(fontWeight: FontWeight.bold)),
+            ],
+          ),
+          const SizedBox(height: 16),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [

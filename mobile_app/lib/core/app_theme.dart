@@ -7,6 +7,17 @@ class AppTheme {
       useMaterial3: true,
       colorSchemeSeed: AppColors.blue,
       scaffoldBackgroundColor: AppColors.white,
+      appBarTheme: const AppBarTheme(
+        backgroundColor: AppColors.white,
+        foregroundColor: AppColors.gray900,
+        elevation: 0,
+        centerTitle: true,
+        titleTextStyle: TextStyle(
+          fontSize: 20,
+          fontWeight: FontWeight.bold,
+          color: AppColors.gray900,
+        ),
+      ),
       
       // Typography
       textTheme: const TextTheme(
@@ -20,6 +31,16 @@ class AppTheme {
           fontWeight: FontWeight.bold,
           color: AppColors.gray900,
         ),
+        titleLarge: TextStyle(
+          fontSize: 20,
+          fontWeight: FontWeight.bold,
+          color: AppColors.gray900,
+        ),
+        titleMedium: TextStyle(
+          fontSize: 16,
+          fontWeight: FontWeight.w600,
+          color: AppColors.gray900,
+        ),
         bodyLarge: TextStyle(
           fontSize: 18,
           color: AppColors.gray900,
@@ -31,7 +52,7 @@ class AppTheme {
       ),
       
       // Card Theme
-      cardTheme: CardTheme(
+      cardTheme: CardThemeData(
         elevation: 0,
         color: AppColors.gray100,
         shape: RoundedRectangleBorder(
@@ -54,6 +75,18 @@ class AppTheme {
           ),
           elevation: 4,
           shadowColor: AppColors.blue.withOpacity(0.3),
+        ),
+      ),
+
+      // Chip Theme
+      chipTheme: ChipThemeData(
+        backgroundColor: AppColors.gray100,
+        selectedColor: AppColors.softBlue,
+        labelStyle: const TextStyle(fontWeight: FontWeight.w600),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(18),
+          side: const BorderSide(color: Colors.transparent),
         ),
       ),
       
