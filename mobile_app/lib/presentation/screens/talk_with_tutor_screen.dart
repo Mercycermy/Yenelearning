@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../core/app_colors.dart';
+import '../../data/user_prefs.dart';
 
 class TalkWithTutorScreen extends StatefulWidget {
   const TalkWithTutorScreen({super.key});
@@ -11,6 +12,40 @@ class TalkWithTutorScreen extends StatefulWidget {
 class _TalkWithTutorScreenState extends State<TalkWithTutorScreen> {
   bool isTutorSpeaking = true;
   String currentQuestion = 'Hello! What is your name?';
+  final UserPrefs _prefs = UserPrefs();
+  String? avatarName;
+  String? avatarImageUrl;
+  String? personalityDescription;
+  String? teachingStyle;
+
+  String _formatTeachingStyle(String? value) {
+    if (value == null || value.isEmpty) return '';
+    return value
+        .replaceAll('_', ' ')
+        .split(' ')
+        .map((word) => word.isEmpty ? word : '${word[0].toUpperCase()}${word.substring(1)}')
+        .join(' ');
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _loadTutorPrefs();
+  }
+
+  Future<void> _loadTutorPrefs() async {
+    final name = await _prefs.getAvatarName();
+    final image = await _prefs.getAvatarImage();
+    final personality = await _prefs.getAvatarPersonality();
+    final style = await _prefs.getAvatarTeachingStyle();
+    if (!mounted) return;
+    setState(() {
+      avatarName = name;
+      avatarImageUrl = image;
+      personalityDescription = personality;
+      teachingStyle = style;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +53,7 @@ class _TalkWithTutorScreenState extends State<TalkWithTutorScreen> {
       backgroundColor: AppColors.softBlue,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
-        title: const Text('Talk with Tutor'),
+        title: Text(avatarName == null ? 'Talk with Tutor' : 'Talk with ${avatarName!}'),
       ),
       body: Center(
         child: Padding(
@@ -26,6 +61,17 @@ class _TalkWithTutorScreenState extends State<TalkWithTutorScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              if (teachingStyle != null || personalityDescription != null) ...[
+                Text(
+                  [
+                    if ((teachingStyle ?? '').isNotEmpty) _formatTeachingStyle(teachingStyle),
+                    if ((personalityDescription ?? '').isNotEmpty) personalityDescription!,
+                  ].join(' • '),
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(color: AppColors.gray500, fontSize: 13),
+                ),
+                const SizedBox(height: 16),
+              ],
               // Tutor Avatar
               Container(
                 width: 200,
@@ -42,10 +88,17 @@ class _TalkWithTutorScreenState extends State<TalkWithTutorScreen> {
                   ],
                 ),
                 child: ClipOval(
-                  child: Image.network(
-                    'https://api.dicebear.com/7.x/bottts/png?seed=Abebe',
-                    fit: BoxFit.cover,
-                  ),
+                  child: avatarImageUrl == null
+                      ? const Icon(Icons.person, size: 120, color: AppColors.blue)
+                      : Image.network(
+                          avatarImageUrl!,
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) => const Icon(
+                            Icons.person,
+                            size: 120,
+                            color: AppColors.blue,
+                          ),
+                        ),
                 ),
               ),
               const SizedBox(height: 48),

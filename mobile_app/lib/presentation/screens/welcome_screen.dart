@@ -46,6 +46,15 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     {'id': 'english', 'name': 'English', 'native': 'English'},
   ];
 
+  String _formatTeachingStyle(String? value) {
+    if (value == null || value.isEmpty) return 'Friendly tutor';
+    return value
+        .replaceAll('_', ' ')
+        .split(' ')
+        .map((word) => word.isEmpty ? word : '${word[0].toUpperCase()}${word.substring(1)}')
+        .join(' ');
+  }
+
   @override
   void initState() {
     super.initState();
@@ -63,6 +72,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         selectedLanguage = language;
         selectedAvatar = avatarId;
         avatars = data.isEmpty ? fallbackAvatars : data;
+        errorMessage = null;
         isLoading = false;
       });
     } catch (error) {
@@ -78,7 +88,16 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   Future<void> _saveSelections() async {
     final avatar = avatars.firstWhere((a) => a.id == selectedAvatar);
     await _prefs.saveLanguage(selectedLanguage!);
-    await _prefs.saveAvatar(id: avatar.id, name: avatar.name, imageUrl: avatar.imageUrl);
+    await _prefs.saveAvatar(
+      id: avatar.id,
+      name: avatar.name,
+      imageUrl: avatar.imageUrl,
+      teachingStyle: avatar.teachingStyle,
+      personalityDescription: avatar.personalityDescription,
+      voiceId: avatar.voiceId,
+      speechRate: avatar.speechRate,
+      pitchLevel: avatar.pitchLevel,
+    );
   }
 
   @override
@@ -196,9 +215,24 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                     ),
                     const SizedBox(height: 28),
 
-                    const Text(
-                      '1. Pick a Buddy',
-                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text(
+                          '1. Pick a Buddy',
+                          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                        ),
+                        IconButton(
+                          icon: const Icon(Icons.refresh, color: AppColors.blue),
+                          onPressed: () {
+                            setState(() {
+                              isLoading = true;
+                              errorMessage = null;
+                            });
+                            _loadData();
+                          },
+                        ),
+                      ],
                     ),
                     const SizedBox(height: 12),
                     if (isLoading)
@@ -257,6 +291,22 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                                       avatar.name,
                                       style: const TextStyle(fontWeight: FontWeight.bold),
                                     ),
+                                    const SizedBox(height: 4),
+                                    Text(
+                                      _formatTeachingStyle(avatar.teachingStyle),
+                                      textAlign: TextAlign.center,
+                                      style: const TextStyle(fontSize: 11, color: AppColors.gray500),
+                                    ),
+                                    if ((avatar.personalityDescription ?? '').isNotEmpty) ...[
+                                      const SizedBox(height: 4),
+                                      Text(
+                                        avatar.personalityDescription!,
+                                        textAlign: TextAlign.center,
+                                        maxLines: 2,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: const TextStyle(fontSize: 10, color: AppColors.gray500),
+                                      ),
+                                    ],
                                     const SizedBox(height: 6),
                                     if (isSelected)
                                       Container(
