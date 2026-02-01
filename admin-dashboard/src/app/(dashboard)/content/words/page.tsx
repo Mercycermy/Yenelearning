@@ -39,6 +39,18 @@ export default function WordsPage() {
         loadWords();
     }, []);
 
+    async function handleDelete(id: string) {
+        if (!confirm("Are you sure you want to delete this word?")) return;
+
+        try {
+            await fetchAPI(`/content/${id}`, { method: "DELETE" });
+            setWords(words.filter((w) => w.id !== id));
+        } catch (err) {
+            alert("Failed to delete word.");
+            console.error(err);
+        }
+    }
+
     if (isLoading) {
         return (
             <div className="flex h-64 items-center justify-center">
@@ -127,10 +139,16 @@ export default function WordsPage() {
                                     </td>
                                     <td className="px-6 py-4 text-right">
                                         <div className="flex justify-end gap-2 opacity-0 transition-opacity group-hover:opacity-100">
-                                            <button className="rounded-lg p-2 text-gray-400 transition-colors hover:bg-gray-100 hover:text-blue-600 dark:hover:bg-zinc-700 dark:hover:text-blue-400">
+                                            <Link
+                                                href={`/content/words/edit/${word.id}`}
+                                                className="rounded-lg p-2 text-gray-400 transition-colors hover:bg-gray-100 hover:text-blue-600 dark:hover:bg-zinc-700 dark:hover:text-blue-400"
+                                            >
                                                 <Edit className="h-4 w-4" />
-                                            </button>
-                                            <button className="rounded-lg p-2 text-gray-400 transition-colors hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-900/20 dark:hover:text-red-400">
+                                            </Link>
+                                            <button
+                                                onClick={() => handleDelete(word.id)}
+                                                className="rounded-lg p-2 text-gray-400 transition-colors hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-900/20 dark:hover:text-red-400"
+                                            >
                                                 <Trash2 className="h-4 w-4" />
                                             </button>
                                         </div>

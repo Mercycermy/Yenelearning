@@ -36,6 +36,18 @@ export default function AITutorsPage() {
         loadAvatars();
     }, []);
 
+    async function handleDelete(id: string) {
+        if (!confirm("Are you sure you want to delete this tutor?")) return;
+
+        try {
+            await fetchAPI(`/content/avatars/${id}`, { method: "DELETE" });
+            setAvatars(avatars.filter((a) => a.id !== id));
+        } catch (err) {
+            alert("Failed to delete tutor.");
+            console.error(err);
+        }
+    }
+
     if (isLoading) {
         return (
             <div className="flex h-64 items-center justify-center">
@@ -111,8 +123,17 @@ export default function AITutorsPage() {
                         </div>
 
                         <div className="absolute right-3 top-3 flex gap-2 opacity-0 transition-opacity group-hover:opacity-100">
-                            <button className="rounded-full bg-white/90 p-2 text-gray-600 shadow-sm hover:text-blue-600 dark:bg-black/80 dark:text-gray-300 dark:hover:text-blue-400">
+                            <Link
+                                href={`/ai-tutors/edit/${avatar.id}`}
+                                className="rounded-full bg-white/90 p-2 text-gray-600 shadow-sm hover:text-blue-600 dark:bg-black/80 dark:text-gray-300 dark:hover:text-blue-400"
+                            >
                                 <Edit className="h-4 w-4" />
+                            </Link>
+                            <button
+                                onClick={() => handleDelete(avatar.id)}
+                                className="rounded-full bg-white/90 p-2 text-gray-600 shadow-sm hover:text-red-600 dark:bg-black/80 dark:text-gray-300 dark:hover:text-red-400"
+                            >
+                                <Trash2 className="h-4 w-4" />
                             </button>
                         </div>
                     </div>

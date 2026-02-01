@@ -7,7 +7,8 @@ import { fetchAPI } from "@/lib/api";
 interface UserData {
     id: string;
     email: string;
-    fullName: string;
+    firstName: string;
+    lastName: string;
     role: string;
     isActive: boolean;
     subscriptionPlan: string;
@@ -93,7 +94,7 @@ export default function UsersPage() {
                                             </div>
                                             <div>
                                                 <p className="font-semibold text-gray-900 dark:text-gray-100">
-                                                    {user.fullName || "User"}
+                                                    {user.firstName} {user.lastName}
                                                 </p>
                                                 <p className="text-gray-500 dark:text-gray-400">
                                                     {user.email}
@@ -103,8 +104,8 @@ export default function UsersPage() {
                                     </td>
                                     <td className="px-6 py-4">
                                         <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium capitalize ${user.role === 'admin'
-                                                ? 'bg-purple-50 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400'
-                                                : 'bg-blue-50 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400'
+                                            ? 'bg-purple-50 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400'
+                                            : 'bg-blue-50 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400'
                                             }`}>
                                             {user.role}
                                         </span>

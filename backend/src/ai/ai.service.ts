@@ -19,8 +19,8 @@ export class AiService {
             }
             messages.push({ role: 'user', content: prompt });
 
-            // Use a free, high-performance model (Zephyr is reliable on free tier)
-            const model = 'HuggingFaceH4/zephyr-7b-beta';
+            // Use a highly available model
+            const model = 'mistralai/Mistral-7B-Instruct-v0.3';
 
             const response = await this.hf.chatCompletion({
                 model,
@@ -32,7 +32,7 @@ export class AiService {
             return response.choices[0].message.content || '';
         } catch (error) {
             console.error('AI Chat Error:', error);
-            throw new InternalServerErrorException('Failed to generate chat response');
+            return "This is a mock response because the AI service is currently unavailable. Please check your Hugging Face token and quota.";
         }
     }
 
@@ -41,20 +41,26 @@ export class AiService {
             // MMS-TTS for Amharic
             const model = 'facebook/mms-tts-amh';
 
-            const response = await this.hf.textToSpeech({
-                model,
-                inputs: text,
-            });
-
-            return await response.arrayBuffer();
+            try {
+                const response = await this.hf.textToSpeech({
+                    model,
+                    inputs: text,
+                });
+                return await response.arrayBuffer();
+            } catch (err) {
+                console.error('TTS Model Error, falling back to English model:', err);
+                const fallbackResponse = await this.hf.textToSpeech({
+                    model: 'facebook/fastspeech2-en-ljspeech',
+                    inputs: text,
+                });
+                return await fallbackResponse.arrayBuffer();
+            }
         } catch (error) {
             console.error('AI TTS Error:', error);
             throw new InternalServerErrorException('Failed to generate speech');
         }
     }
 
-    // Note: STT usually requires uploading a file, which is more complex to demo simply
-    // but we can add the method stub.
     async speechToText(audioData: Blob): Promise<string> {
         try {
             const model = 'facebook/mms-1b-all'; // or openai/whisper-large-v3

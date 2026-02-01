@@ -13,11 +13,34 @@ export default function LoginPage() {
         event.preventDefault();
         setIsLoading(true);
 
-        // Mock authentication delay
-        setTimeout(() => {
-            setIsLoading(false);
+        const formData = new FormData(event.currentTarget);
+        const email = formData.get("email");
+        const password = formData.get("password");
+
+        try {
+            const response = await fetch("http://localhost:3000/api/auth/login", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ email, password }),
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json().catch(() => ({}));
+                throw new Error(errorData.message || "Invalid credentials");
+            }
+
+            const data = await response.json();
+            localStorage.setItem("accessToken", data.accessToken);
+            localStorage.setItem("user", JSON.stringify(data.user));
+
             router.push("/");
-        }, 1500);
+        } catch (err: any) {
+            alert(err.message || "Login failed");
+        } finally {
+            setIsLoading(false);
+        }
     }
 
     return (
