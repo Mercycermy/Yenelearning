@@ -119,71 +119,74 @@ class _GamesScreenState extends State<GamesScreen> {
             );
           }
 
-          return ListView.builder(
-            padding: const EdgeInsets.all(24),
-            itemCount: games.length,
-            itemBuilder: (context, index) {
-              final game = games[index];
-              return Container(
-                margin: const EdgeInsets.only(bottom: 16),
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: AppColors.white,
-                  borderRadius: BorderRadius.circular(20),
-                  boxShadow: [
-                    BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10),
-                  ],
-                ),
-                child: Row(
-                  children: [
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(16),
-                      child: game.imageUrl == null
-                          ? Container(
-                              width: 72,
-                              height: 72,
-                              color: AppColors.softYellow,
-                              child: const Icon(Icons.videogame_asset_rounded, color: AppColors.yellow),
-                            )
-                          : CachedNetworkImage(
-                              imageUrl: game.imageUrl!,
-                              width: 72,
-                              height: 72,
-                              fit: BoxFit.cover,
-                              placeholder: (context, url) => const SizedBox(
-                                width: 72,
-                                height: 72,
-                                child: Center(child: CircularProgressIndicator(strokeWidth: 2)),
-                              ),
-                              errorWidget: (context, url, error) => Container(
+          return RefreshIndicator(
+            onRefresh: _loadGames,
+            child: ListView.builder(
+              padding: const EdgeInsets.all(24),
+              itemCount: games.length,
+              itemBuilder: (context, index) {
+                final game = games[index];
+                return Container(
+                  margin: const EdgeInsets.only(bottom: 16),
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: AppColors.white,
+                    borderRadius: BorderRadius.circular(20),
+                    boxShadow: [
+                      BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10),
+                    ],
+                  ),
+                  child: Row(
+                    children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(16),
+                        child: game.imageUrl == null
+                            ? Container(
                                 width: 72,
                                 height: 72,
                                 color: AppColors.softYellow,
                                 child: const Icon(Icons.videogame_asset_rounded, color: AppColors.yellow),
+                              )
+                            : CachedNetworkImage(
+                                imageUrl: game.imageUrl!,
+                                width: 72,
+                                height: 72,
+                                fit: BoxFit.cover,
+                                placeholder: (context, url) => const SizedBox(
+                                  width: 72,
+                                  height: 72,
+                                  child: Center(child: CircularProgressIndicator(strokeWidth: 2)),
+                                ),
+                                errorWidget: (context, url, error) => Container(
+                                  width: 72,
+                                  height: 72,
+                                  color: AppColors.softYellow,
+                                  child: const Icon(Icons.videogame_asset_rounded, color: AppColors.yellow),
+                                ),
                               ),
-                            ),
-                    ),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(game.title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-                          const SizedBox(height: 6),
-                          Text(
-                            game.description ?? 'Tap to start playing',
-                            style: const TextStyle(color: AppColors.gray500),
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ],
                       ),
-                    ),
-                    const Icon(Icons.chevron_right_rounded, color: AppColors.gray500),
-                  ],
-                ),
-              );
-            },
+                      const SizedBox(width: 16),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(game.title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                            const SizedBox(height: 6),
+                            Text(
+                              game.description ?? 'Tap to start playing',
+                              style: const TextStyle(color: AppColors.gray500),
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ],
+                        ),
+                      ),
+                      const Icon(Icons.chevron_right_rounded, color: AppColors.gray500),
+                    ],
+                  ),
+                );
+              },
+            ),
           );
         },
       ),

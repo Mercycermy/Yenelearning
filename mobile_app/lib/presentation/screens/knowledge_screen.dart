@@ -119,71 +119,74 @@ class _KnowledgeScreenState extends State<KnowledgeScreen> {
             );
           }
 
-          return ListView.builder(
-            padding: const EdgeInsets.all(24),
-            itemCount: lessons.length,
-            itemBuilder: (context, index) {
-              final lesson = lessons[index];
-              return Container(
-                margin: const EdgeInsets.only(bottom: 16),
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: AppColors.white,
-                  borderRadius: BorderRadius.circular(20),
-                  boxShadow: [
-                    BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10),
-                  ],
-                ),
-                child: Row(
-                  children: [
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(16),
-                      child: lesson.imageUrl == null
-                          ? Container(
-                              width: 72,
-                              height: 72,
-                              color: AppColors.softOrange,
-                              child: const Icon(Icons.lightbulb_rounded, color: Colors.orange),
-                            )
-                          : CachedNetworkImage(
-                              imageUrl: lesson.imageUrl!,
-                              width: 72,
-                              height: 72,
-                              fit: BoxFit.cover,
-                              placeholder: (context, url) => const SizedBox(
-                                width: 72,
-                                height: 72,
-                                child: Center(child: CircularProgressIndicator(strokeWidth: 2)),
-                              ),
-                              errorWidget: (context, url, error) => Container(
+          return RefreshIndicator(
+            onRefresh: _loadLessons,
+            child: ListView.builder(
+              padding: const EdgeInsets.all(24),
+              itemCount: lessons.length,
+              itemBuilder: (context, index) {
+                final lesson = lessons[index];
+                return Container(
+                  margin: const EdgeInsets.only(bottom: 16),
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: AppColors.white,
+                    borderRadius: BorderRadius.circular(20),
+                    boxShadow: [
+                      BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10),
+                    ],
+                  ),
+                  child: Row(
+                    children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(16),
+                        child: lesson.imageUrl == null
+                            ? Container(
                                 width: 72,
                                 height: 72,
                                 color: AppColors.softOrange,
                                 child: const Icon(Icons.lightbulb_rounded, color: Colors.orange),
+                              )
+                            : CachedNetworkImage(
+                                imageUrl: lesson.imageUrl!,
+                                width: 72,
+                                height: 72,
+                                fit: BoxFit.cover,
+                                placeholder: (context, url) => const SizedBox(
+                                  width: 72,
+                                  height: 72,
+                                  child: Center(child: CircularProgressIndicator(strokeWidth: 2)),
+                                ),
+                                errorWidget: (context, url, error) => Container(
+                                  width: 72,
+                                  height: 72,
+                                  color: AppColors.softOrange,
+                                  child: const Icon(Icons.lightbulb_rounded, color: Colors.orange),
+                                ),
                               ),
-                            ),
-                    ),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(lesson.title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-                          const SizedBox(height: 6),
-                          Text(
-                            lesson.description ?? 'Tap to explore',
-                            style: const TextStyle(color: AppColors.gray500),
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ],
                       ),
-                    ),
-                    const Icon(Icons.chevron_right_rounded, color: AppColors.gray500),
-                  ],
-                ),
-              );
-            },
+                      const SizedBox(width: 16),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(lesson.title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                            const SizedBox(height: 6),
+                            Text(
+                              lesson.description ?? 'Tap to explore',
+                              style: const TextStyle(color: AppColors.gray500),
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ],
+                        ),
+                      ),
+                      const Icon(Icons.chevron_right_rounded, color: AppColors.gray500),
+                    ],
+                  ),
+                );
+              },
+            ),
           );
         },
       ),

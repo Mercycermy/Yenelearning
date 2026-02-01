@@ -16,6 +16,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
   String? avatarName;
   String? language;
 
+  final List<Map<String, String>> languages = const [
+    {'id': 'amharic', 'name': 'Amharic', 'native': 'አማርኛ'},
+    {'id': 'geez', 'name': 'Ge\'ez', 'native': 'ግዕዝ'},
+    {'id': 'english', 'name': 'English', 'native': 'English'},
+  ];
+
   final List<Map<String, dynamic>> activities = const [
     {
       'title': 'Learn Words',
@@ -81,6 +87,18 @@ class _DashboardScreenState extends State<DashboardScreen> {
       avatarName = name;
       language = selectedLanguage;
     });
+  }
+
+  Future<void> _updateLanguage(String value) async {
+    await _prefs.saveLanguage(value);
+    if (!mounted) return;
+    setState(() {
+      language = value;
+    });
+    final label = languages.firstWhere((lang) => lang['id'] == value, orElse: () => {'name': value})['name'] ?? value;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Language set to $label')),
+    );
   }
 
   @override
@@ -169,6 +187,35 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   ),
                 ],
               ),
+            ),
+            const SizedBox(height: 24),
+            const Text('Choose a language', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            const SizedBox(height: 10),
+            Wrap(
+              spacing: 10,
+              runSpacing: 10,
+              children: languages.map((lang) {
+                final isSelected = language == lang['id'];
+                return ChoiceChip(
+                  selected: isSelected,
+                  onSelected: (_) => _updateLanguage(lang['id']!),
+                  label: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(lang['name']!, style: const TextStyle(fontWeight: FontWeight.bold)),
+                      const SizedBox(height: 2),
+                      Text(lang['native']!, style: const TextStyle(fontSize: 12, color: AppColors.gray500)),
+                    ],
+                  ),
+                  backgroundColor: AppColors.gray100,
+                  selectedColor: AppColors.softGreen,
+                  labelPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  side: BorderSide(
+                    color: isSelected ? AppColors.green : Colors.transparent,
+                    width: 2,
+                  ),
+                );
+              }).toList(),
             ),
             const SizedBox(height: 24),
             Row(

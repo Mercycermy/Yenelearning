@@ -144,6 +144,12 @@ class _WordLessonScreenState extends State<WordLessonScreen> {
           icon: const Icon(Icons.arrow_back_rounded),
           onPressed: () => Navigator.pop(context),
         ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.refresh_rounded),
+            onPressed: _loadWords,
+          ),
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(24.0),

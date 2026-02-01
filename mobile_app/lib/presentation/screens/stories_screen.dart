@@ -99,117 +99,120 @@ class _StoriesScreenState extends State<StoriesScreen> {
             );
           }
 
-          return ListView.builder(
-            padding: const EdgeInsets.all(24),
-            itemCount: stories.length,
-            itemBuilder: (context, index) {
-              final story = stories[index];
-              return GestureDetector(
-                behavior: HitTestBehavior.opaque,
-                onTap: () {
-                  Navigator.pushNamed(
-                    context,
-                    '/story-reader',
-                    arguments: {
-                      'id': story.id,
-                      'title': story.title,
-                    },
-                  );
-                },
-                child: Container(
-                  margin: const EdgeInsets.only(bottom: 20),
-                  decoration: BoxDecoration(
-                    color: AppColors.white,
-                    borderRadius: BorderRadius.circular(24),
-                    boxShadow: [
-                      BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10),
-                    ],
-                  ),
-                  child: Row(
-                    children: [
-                      ClipRRect(
-                        borderRadius: const BorderRadius.only(
-                          topLeft: Radius.circular(24),
-                          bottomLeft: Radius.circular(24),
-                        ),
-                        child: story.coverImageUrl == null
-                            ? Container(
-                                width: 120,
-                                height: 120,
-                                color: AppColors.gray100,
-                                child: const Icon(Icons.auto_stories_rounded, color: AppColors.green),
-                              )
-                            : CachedNetworkImage(
-                                imageUrl: story.coverImageUrl!,
-                                width: 120,
-                                height: 120,
-                                fit: BoxFit.cover,
-                                placeholder: (context, url) => const SizedBox(
-                                  width: 120,
-                                  height: 120,
-                                  child: Center(child: CircularProgressIndicator(strokeWidth: 2)),
-                                ),
-                                errorWidget: (context, url, error) => Container(
+          return RefreshIndicator(
+            onRefresh: _loadStories,
+            child: ListView.builder(
+              padding: const EdgeInsets.all(24),
+              itemCount: stories.length,
+              itemBuilder: (context, index) {
+                final story = stories[index];
+                return GestureDetector(
+                  behavior: HitTestBehavior.opaque,
+                  onTap: () {
+                    Navigator.pushNamed(
+                      context,
+                      '/story-reader',
+                      arguments: {
+                        'id': story.id,
+                        'title': story.title,
+                      },
+                    );
+                  },
+                  child: Container(
+                    margin: const EdgeInsets.only(bottom: 20),
+                    decoration: BoxDecoration(
+                      color: AppColors.white,
+                      borderRadius: BorderRadius.circular(24),
+                      boxShadow: [
+                        BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10),
+                      ],
+                    ),
+                    child: Row(
+                      children: [
+                        ClipRRect(
+                          borderRadius: const BorderRadius.only(
+                            topLeft: Radius.circular(24),
+                            bottomLeft: Radius.circular(24),
+                          ),
+                          child: story.coverImageUrl == null
+                              ? Container(
                                   width: 120,
                                   height: 120,
                                   color: AppColors.gray100,
                                   child: const Icon(Icons.auto_stories_rounded, color: AppColors.green),
-                                ),
-                              ),
-                      ),
-                      Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                story.title,
-                                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                              ),
-                              const SizedBox(height: 4),
-                              Text(
-                                story.description,
-                                style: const TextStyle(color: AppColors.gray500),
-                                maxLines: 2,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                              const SizedBox(height: 12),
-                              Row(
-                                children: [
-                                  const Icon(Icons.menu_book_rounded, size: 16, color: AppColors.green),
-                                  const SizedBox(width: 4),
-                                  Text(
-                                    '${story.pagesCount} pages',
-                                    style: const TextStyle(fontSize: 12, color: AppColors.green),
+                                )
+                              : CachedNetworkImage(
+                                  imageUrl: story.coverImageUrl!,
+                                  width: 120,
+                                  height: 120,
+                                  fit: BoxFit.cover,
+                                  placeholder: (context, url) => const SizedBox(
+                                    width: 120,
+                                    height: 120,
+                                    child: Center(child: CircularProgressIndicator(strokeWidth: 2)),
                                   ),
-                                  const Spacer(),
-                                  Container(
-                                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                                    decoration: BoxDecoration(
-                                      color: AppColors.softGreen,
-                                      borderRadius: BorderRadius.circular(12),
+                                  errorWidget: (context, url, error) => Container(
+                                    width: 120,
+                                    height: 120,
+                                    color: AppColors.gray100,
+                                    child: const Icon(Icons.auto_stories_rounded, color: AppColors.green),
+                                  ),
+                                ),
+                        ),
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  story.title,
+                                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                                ),
+                                const SizedBox(height: 4),
+                                Text(
+                                  story.description,
+                                  style: const TextStyle(color: AppColors.gray500),
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                                const SizedBox(height: 12),
+                                Row(
+                                  children: [
+                                    const Icon(Icons.menu_book_rounded, size: 16, color: AppColors.green),
+                                    const SizedBox(width: 4),
+                                    Text(
+                                      '${story.pagesCount} pages',
+                                      style: const TextStyle(fontSize: 12, color: AppColors.green),
                                     ),
-                                    child: const Text(
-                                      'Read',
-                                      style: TextStyle(
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.bold,
-                                        color: AppColors.green,
+                                    const Spacer(),
+                                    Container(
+                                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                                      decoration: BoxDecoration(
+                                        color: AppColors.softGreen,
+                                        borderRadius: BorderRadius.circular(12),
+                                      ),
+                                      child: const Text(
+                                        'Read',
+                                        style: TextStyle(
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.bold,
+                                          color: AppColors.green,
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                ],
-                              ),
-                            ],
+                                  ],
+                                ),
+                              ],
+                            ),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-              );
-            },
+                );
+              },
+            ),
           );
         },
       ),

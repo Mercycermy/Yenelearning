@@ -22,6 +22,24 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   final ContentRepository _repository = ContentRepository();
   final UserPrefs _prefs = UserPrefs();
 
+  final List<AvatarItem> fallbackAvatars = const [
+    AvatarItem(
+      id: 'fallback_1',
+      name: 'Abebe',
+      imageUrl: 'https://api.dicebear.com/7.x/bottts/png?seed=Abebe',
+    ),
+    AvatarItem(
+      id: 'fallback_2',
+      name: 'Chala',
+      imageUrl: 'https://api.dicebear.com/7.x/bottts/png?seed=Chala',
+    ),
+    AvatarItem(
+      id: 'fallback_3',
+      name: 'Sara',
+      imageUrl: 'https://api.dicebear.com/7.x/bottts/png?seed=Sara',
+    ),
+  ];
+
   final List<Map<String, String>> languages = [
     {'id': 'amharic', 'name': 'Amharic', 'native': 'አማርኛ'},
     {'id': 'geez', 'name': 'Ge\'ez', 'native': 'ግዕዝ'},
@@ -44,14 +62,15 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
       setState(() {
         selectedLanguage = language;
         selectedAvatar = avatarId;
-        avatars = data;
+        avatars = data.isEmpty ? fallbackAvatars : data;
         isLoading = false;
       });
     } catch (error) {
       if (!mounted) return;
       setState(() {
         isLoading = false;
-        errorMessage = 'Failed to load tutors.';
+        errorMessage = 'Failed to load tutors. Using offline buddies.';
+        avatars = fallbackAvatars;
       });
     }
   }
@@ -187,75 +206,77 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                         padding: EdgeInsets.symmetric(vertical: 24),
                         child: Center(child: CircularProgressIndicator()),
                       )
-                    else if (errorMessage != null)
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 16),
-                        child: Text(errorMessage!, style: const TextStyle(color: AppColors.error)),
-                      )
-                    else
-                      Wrap(
-                        spacing: 12,
-                        runSpacing: 12,
-                        children: avatars.map((avatar) {
-                          final isSelected = selectedAvatar == avatar.id;
-                          return GestureDetector(
-                            onTap: () => setState(() => selectedAvatar = avatar.id),
-                            child: AnimatedContainer(
-                              duration: const Duration(milliseconds: 200),
-                              width: 120,
-                              padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
-                              decoration: BoxDecoration(
-                                color: isSelected ? AppColors.softBlue : AppColors.gray100,
-                                borderRadius: BorderRadius.circular(22),
-                                border: Border.all(
-                                  color: isSelected ? AppColors.blue : Colors.transparent,
-                                  width: 3,
+                    else ...[
+                      if (errorMessage != null)
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 12),
+                          child: Text(errorMessage!, style: const TextStyle(color: AppColors.error)),
+                        ),
+                      if (avatars.isNotEmpty)
+                        Wrap(
+                          spacing: 12,
+                          runSpacing: 12,
+                          children: avatars.map((avatar) {
+                            final isSelected = selectedAvatar == avatar.id;
+                            return GestureDetector(
+                              onTap: () => setState(() => selectedAvatar = avatar.id),
+                              child: AnimatedContainer(
+                                duration: const Duration(milliseconds: 200),
+                                width: 120,
+                                padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
+                                decoration: BoxDecoration(
+                                  color: isSelected ? AppColors.softBlue : AppColors.gray100,
+                                  borderRadius: BorderRadius.circular(22),
+                                  border: Border.all(
+                                    color: isSelected ? AppColors.blue : Colors.transparent,
+                                    width: 3,
+                                  ),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: AppColors.blue.withOpacity(0.08),
+                                      blurRadius: 10,
+                                      offset: const Offset(0, 4),
+                                    ),
+                                  ],
                                 ),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: AppColors.blue.withOpacity(0.08),
-                                    blurRadius: 10,
-                                    offset: const Offset(0, 4),
-                                  ),
-                                ],
-                              ),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  CachedNetworkImage(
-                                    imageUrl: avatar.imageUrl,
-                                    height: 64,
-                                    placeholder: (context, url) => const SizedBox(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    CachedNetworkImage(
+                                      imageUrl: avatar.imageUrl,
                                       height: 64,
-                                      width: 64,
-                                      child: CircularProgressIndicator(strokeWidth: 2),
-                                    ),
-                                    errorWidget: (context, url, error) => const Icon(Icons.person, size: 48),
-                                  ),
-                                  const SizedBox(height: 8),
-                                  Text(
-                                    avatar.name,
-                                    style: const TextStyle(fontWeight: FontWeight.bold),
-                                  ),
-                                  const SizedBox(height: 6),
-                                  if (isSelected)
-                                    Container(
-                                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                                      decoration: BoxDecoration(
-                                        color: AppColors.blue,
-                                        borderRadius: BorderRadius.circular(12),
+                                      placeholder: (context, url) => const SizedBox(
+                                        height: 64,
+                                        width: 64,
+                                        child: CircularProgressIndicator(strokeWidth: 2),
                                       ),
-                                      child: const Text(
-                                        'Chosen',
-                                        style: TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.bold),
-                                      ),
+                                      errorWidget: (context, url, error) => const Icon(Icons.person, size: 48),
                                     ),
-                                ],
+                                    const SizedBox(height: 8),
+                                    Text(
+                                      avatar.name,
+                                      style: const TextStyle(fontWeight: FontWeight.bold),
+                                    ),
+                                    const SizedBox(height: 6),
+                                    if (isSelected)
+                                      Container(
+                                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                        decoration: BoxDecoration(
+                                          color: AppColors.blue,
+                                          borderRadius: BorderRadius.circular(12),
+                                        ),
+                                        child: const Text(
+                                          'Chosen',
+                                          style: TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.bold),
+                                        ),
+                                      ),
+                                  ],
+                                ),
                               ),
-                            ),
-                          );
-                        }).toList(),
-                      ),
+                            );
+                          }).toList(),
+                        ),
+                    ],
 
                     const SizedBox(height: 28),
 

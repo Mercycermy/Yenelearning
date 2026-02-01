@@ -32,12 +32,14 @@ export class ProgressService {
         });
 
         if (!progress) {
-            progress = this.progressRepository.create({
+            const payload: Partial<Progress> = {
                 childId,
-                contentId: dto.contentId ?? null,
-                storyId: dto.storyId ?? null,
-                pageNumber: dto.pageNumber ?? null,
-            });
+                contentId: dto.contentId,
+                storyId: dto.storyId,
+                pageNumber: dto.pageNumber,
+            };
+
+            progress = this.progressRepository.create(payload);
         }
 
         progress.attempts += 1;
@@ -166,6 +168,7 @@ export class ProgressService {
         // Get top performing content
         const contentCounts: Record<string, number> = {};
         completed.forEach((p) => {
+            if (!p.contentId) return;
             contentCounts[p.contentId] = (contentCounts[p.contentId] || 0) + 1;
         });
 

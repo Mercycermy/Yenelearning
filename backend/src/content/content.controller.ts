@@ -13,7 +13,7 @@ import {
     ParseIntPipe,
     Res,
 } from '@nestjs/common';
-import { Response } from 'express';
+import type { Response } from 'express';
 import { createHash } from 'crypto';
 import { ContentService } from './content.service';
 import { CreateContentDto } from './dto/create-content.dto';
