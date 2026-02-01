@@ -1,8 +1,18 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { Bell, Search } from "lucide-react";
 
 export function Header() {
+    const [user, setUser] = useState<any>(null);
+
+    useEffect(() => {
+        const userData = localStorage.getItem("user");
+        if (userData) {
+            setUser(JSON.parse(userData));
+        }
+    }, []);
+
     return (
         <header className="fixed right-0 top-0 z-30 flex h-20 w-[calc(100%-16rem)] items-center justify-between border-b border-gray-100 bg-white/50 px-8 backdrop-blur-md dark:border-zinc-800 dark:bg-zinc-900/50">
             <div className="flex items-center gap-4">
@@ -28,11 +38,19 @@ export function Header() {
 
                 <div className="flex items-center gap-3 pl-4">
                     <div className="text-right hidden sm:block">
-                        <p className="text-sm font-semibold text-gray-800 dark:text-gray-100">Admin User</p>
-                        <p className="text-xs font-medium text-gray-500 dark:text-gray-400">Super Admin</p>
+                        <p className="text-sm font-semibold text-gray-800 dark:text-gray-100">
+                            {user ? `${user.firstName} ${user.lastName}` : "Admin User"}
+                        </p>
+                        <p className="text-xs font-medium text-gray-500 dark:text-gray-400 capitalize">
+                            {user ? user.role : "Super Admin"}
+                        </p>
                     </div>
                     <div className="h-10 w-10 overflow-hidden rounded-full border-2 border-white bg-gray-200 shadow-sm dark:border-zinc-700">
-                        <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Admin" alt="Admin" className="h-full w-full object-cover" />
+                        <img
+                            src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${user?.firstName || "Admin"}`}
+                            alt="Admin"
+                            className="h-full w-full object-cover"
+                        />
                     </div>
                 </div>
             </div>

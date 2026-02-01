@@ -55,8 +55,11 @@ export default function NewStoryPage() {
             difficulty: formData.get("difficulty"),
             minAge: parseInt(formData.get("minAge") as string),
             maxAge: parseInt(formData.get("maxAge") as string),
-            imageUrl: formData.get("imageUrl") || undefined,
-            pages: pages,
+            coverImageUrl: formData.get("imageUrl") || undefined,
+            pages: pages.map(p => ({
+                ...p,
+                imageUrl: p.imageUrl && p.imageUrl.trim() !== "" ? p.imageUrl : undefined
+            })),
         };
 
         try {

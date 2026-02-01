@@ -15,9 +15,17 @@ export async function fetchAPI(endpoint: string, options: RequestInit = {}) {
     });
 
     if (!response.ok) {
+        if (response.status === 401 || response.status === 403) {
+            if (typeof window !== "undefined") {
+                localStorage.removeItem("accessToken");
+                localStorage.removeItem("user");
+                window.location.href = "/login";
+            }
+        }
         const errorData = await response.json().catch(() => ({}));
         throw new Error(errorData.message || `API error: ${response.statusText}`);
     }
 
-    return response.json();
+    const text = await response.text();
+    return text ? JSON.parse(text) : {};
 }
