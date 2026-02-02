@@ -27,7 +27,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
     {
       'title': 'Learn Words',
       'subtitle': 'New words & sounds',
-      'emoji': '🔤',
       'icon': Icons.abc_rounded,
       'color': AppColors.blue,
       'bgColor': AppColors.softBlue,
@@ -36,7 +35,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
     {
       'title': 'Talk with Tutor',
       'subtitle': 'Practice speaking',
-      'emoji': '🗣️',
       'icon': Icons.record_voice_over_rounded,
       'color': AppColors.purple,
       'bgColor': AppColors.softPurple,
@@ -45,7 +43,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
     {
       'title': 'Stories',
       'subtitle': 'Read & listen',
-      'emoji': '📚',
       'icon': Icons.auto_stories_rounded,
       'color': AppColors.green,
       'bgColor': AppColors.softGreen,
@@ -54,7 +51,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
     {
       'title': 'Games',
       'subtitle': 'Play & learn',
-      'emoji': '🎮',
       'icon': Icons.videogame_asset_rounded,
       'color': AppColors.yellow,
       'bgColor': AppColors.softYellow,
@@ -63,7 +59,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
     {
       'title': 'Knowledge',
       'subtitle': 'Fun facts',
-      'emoji': '💡',
       'icon': Icons.lightbulb_rounded,
       'color': Colors.orange,
       'bgColor': Color(0xFFFFF3E0),
@@ -126,7 +121,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
                 gradient: const LinearGradient(
-                  colors: [AppColors.blue, AppColors.purple],
+                  colors: [Color(0xFF6C63FF), Color(0xFF38BDF8), Color(0xFF7EEAD2)],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                 ),
@@ -204,36 +199,23 @@ class _DashboardScreenState extends State<DashboardScreen> {
             const Text('Choose a language', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
             const SizedBox(height: 10),
             Wrap(
-              spacing: 10,
-              runSpacing: 10,
+              spacing: 12,
+              runSpacing: 12,
               children: languages.map((lang) {
                 final isSelected = language == lang['id'];
-                return ChoiceChip(
-                  selected: isSelected,
-                  onSelected: (_) => _updateLanguage(lang['id']!),
-                  label: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(lang['name']!, style: const TextStyle(fontWeight: FontWeight.bold)),
-                      const SizedBox(height: 2),
-                      Text(lang['native']!, style: const TextStyle(fontSize: 12, color: AppColors.gray500)),
-                    ],
-                  ),
-                  backgroundColor: AppColors.gray100,
-                  selectedColor: AppColors.softGreen,
-                  labelPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                  side: BorderSide(
-                    color: isSelected ? AppColors.green : Colors.transparent,
-                    width: 2,
-                  ),
+                return _LanguageChip(
+                  title: lang['name']!,
+                  subtitle: lang['native']!,
+                  isSelected: isSelected,
+                  onTap: () => _updateLanguage(lang['id']!),
                 );
               }).toList(),
             ),
             const SizedBox(height: 24),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 const Text('Let’s explore!', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                const SizedBox(width: 12),
                 TextButton.icon(
                   onPressed: () => Navigator.pushNamed(context, '/parent'),
                   icon: const Icon(Icons.shield_rounded, size: 18),
@@ -276,21 +258,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Container(
-                            padding: const EdgeInsets.all(10),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(16),
-                            ),
-                            child: Text(activity['emoji'], style: const TextStyle(fontSize: 22)),
-                          ),
-                          const SizedBox(height: 10),
                           Icon(
                             activity['icon'],
-                            size: 36,
+                            size: 44,
                             color: activity['color'],
                           ),
-                          const SizedBox(height: 8),
+                          const SizedBox(height: 12),
                           Text(
                             activity['title'],
                             textAlign: TextAlign.center,
@@ -304,7 +277,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           Text(
                             activity['subtitle'],
                             textAlign: TextAlign.center,
-                            style: const TextStyle(fontSize: 12, color: AppColors.gray500),
+                            style: const TextStyle(fontSize: 13, color: AppColors.gray500),
                           ),
                         ],
                       ),
@@ -329,10 +302,11 @@ class _HeaderBadge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.2),
-        borderRadius: BorderRadius.circular(14),
+        color: Colors.white.withOpacity(0.25),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: Colors.white.withOpacity(0.35)),
       ),
       child: Row(
         children: [
@@ -340,6 +314,50 @@ class _HeaderBadge extends StatelessWidget {
           const SizedBox(width: 6),
           Text(label, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w600, fontSize: 12)),
         ],
+      ),
+    );
+  }
+}
+
+class _LanguageChip extends StatelessWidget {
+  final String title;
+  final String subtitle;
+  final bool isSelected;
+  final VoidCallback onTap;
+
+  const _LanguageChip({
+    required this.title,
+    required this.subtitle,
+    required this.isSelected,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+        decoration: BoxDecoration(
+          color: isSelected ? AppColors.softMint : AppColors.white,
+          borderRadius: BorderRadius.circular(18),
+          border: Border.all(color: isSelected ? AppColors.mint : AppColors.gray200, width: 2),
+          boxShadow: [
+            BoxShadow(
+              color: AppColors.navy.withOpacity(0.08),
+              blurRadius: 12,
+              offset: const Offset(0, 6),
+            ),
+          ],
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
+            const SizedBox(height: 2),
+            Text(subtitle, style: const TextStyle(fontSize: 12, color: AppColors.gray500)),
+          ],
+        ),
       ),
     );
   }

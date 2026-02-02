@@ -17,6 +17,7 @@ class _SignInScreenState extends State<SignInScreen> {
   final UserPrefs _prefs = UserPrefs();
   bool isLoading = false;
   String? errorMessage;
+  bool isButtonPressed = false;
 
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
@@ -62,36 +63,41 @@ class _SignInScreenState extends State<SignInScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.softSky,
+      backgroundColor: AppColors.softMint,
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(24),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              const SizedBox(height: 30),
-              const Text(
-                'Welcome!',
-                style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: AppColors.blue),
+              const SizedBox(height: 16),
+              _MascotHeader(),
+              const SizedBox(height: 24),
+              Text(
+                'Learning Progress',
+                style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                      color: AppColors.navy,
+                      fontWeight: FontWeight.w700,
+                    ),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 8),
               const Text(
-                'Sign in to track learning progress.',
+                'Sign in to continue your learning journey.',
                 textAlign: TextAlign.center,
-                style: TextStyle(color: AppColors.gray500),
+                style: TextStyle(color: AppColors.gray500, fontSize: 14),
               ),
-              const SizedBox(height: 32),
+              const SizedBox(height: 24),
               Container(
-                padding: const EdgeInsets.all(20),
+                padding: const EdgeInsets.all(24),
                 decoration: BoxDecoration(
                   color: AppColors.white,
-                  borderRadius: BorderRadius.circular(24),
+                  borderRadius: BorderRadius.circular(28),
                   boxShadow: [
                     BoxShadow(
-                      color: AppColors.blue.withOpacity(0.08),
-                      blurRadius: 18,
-                      offset: const Offset(0, 8),
+                      color: AppColors.navy.withOpacity(0.08),
+                      blurRadius: 24,
+                      offset: const Offset(0, 12),
                     ),
                   ],
                 ),
@@ -102,10 +108,7 @@ class _SignInScreenState extends State<SignInScreen> {
                       TextFormField(
                         controller: _emailController,
                         keyboardType: TextInputType.emailAddress,
-                        decoration: const InputDecoration(
-                          labelText: 'Email',
-                          prefixIcon: Icon(Icons.mail_outline),
-                        ),
+                        decoration: _inputDecoration('Email address', Icons.mail_outline),
                         validator: (value) => value == null || value.trim().isEmpty
                             ? 'Email is required'
                             : null,
@@ -114,10 +117,7 @@ class _SignInScreenState extends State<SignInScreen> {
                       TextFormField(
                         controller: _passwordController,
                         obscureText: true,
-                        decoration: const InputDecoration(
-                          labelText: 'Password',
-                          prefixIcon: Icon(Icons.lock_outline),
-                        ),
+                        decoration: _inputDecoration('Password', Icons.lock_outline),
                         validator: (value) => value == null || value.trim().length < 6
                             ? 'Password is too short'
                             : null,
@@ -128,31 +128,129 @@ class _SignInScreenState extends State<SignInScreen> {
                           padding: const EdgeInsets.only(bottom: 8),
                           child: Text(errorMessage!, style: const TextStyle(color: AppColors.error)),
                         ),
-                      ElevatedButton(
-                        onPressed: isLoading ? null : _handleSignIn,
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: AppColors.blue,
-                          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                      const SizedBox(height: 8),
+                      GestureDetector(
+                        onTapDown: (_) => setState(() => isButtonPressed = true),
+                        onTapUp: (_) => setState(() => isButtonPressed = false),
+                        onTapCancel: () => setState(() => isButtonPressed = false),
+                        child: AnimatedScale(
+                          duration: const Duration(milliseconds: 120),
+                          scale: isButtonPressed ? 0.97 : 1,
+                          child: ElevatedButton(
+                            onPressed: isLoading ? null : _handleSignIn,
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: AppColors.accent,
+                              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+                              elevation: 6,
+                              shadowColor: AppColors.accent.withOpacity(0.35),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                            ),
+                            child: isLoading
+                                ? const SizedBox(
+                                    height: 20,
+                                    width: 20,
+                                    child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+                                  )
+                                : const Text('Sign In'),
+                          ),
                         ),
-                        child: isLoading
-                            ? const SizedBox(
-                                height: 20,
-                                width: 20,
-                                child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
-                              )
-                            : const Text('Sign In'),
                       ),
                     ],
                   ),
                 ),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 16),
               TextButton(
                 onPressed: () => Navigator.pushNamed(context, '/register'),
                 child: const Text('Create an account'),
               ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+
+  InputDecoration _inputDecoration(String label, IconData icon) {
+    return InputDecoration(
+      labelText: label,
+      prefixIcon: Icon(icon, color: AppColors.navy),
+      filled: true,
+      fillColor: AppColors.softMint,
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(18),
+        borderSide: const BorderSide(color: AppColors.navy, width: 2),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(18),
+        borderSide: const BorderSide(color: AppColors.accent, width: 2),
+      ),
+    );
+  }
+}
+
+class _MascotHeader extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: SizedBox(
+        height: 160,
+        width: 160,
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            Container(
+              height: 150,
+              width: 150,
+              decoration: BoxDecoration(
+                gradient: const LinearGradient(
+                  colors: [AppColors.softMint, AppColors.softSky],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+                borderRadius: BorderRadius.circular(48),
+                boxShadow: [
+                  BoxShadow(
+                    color: AppColors.navy.withOpacity(0.15),
+                    blurRadius: 20,
+                    offset: const Offset(0, 12),
+                  ),
+                ],
+              ),
+            ),
+            Positioned(
+              top: 18,
+              right: 18,
+              child: Container(
+                width: 24,
+                height: 24,
+                decoration: const BoxDecoration(
+                  color: AppColors.accent,
+                  shape: BoxShape.circle,
+                ),
+              ),
+            ),
+            Container(
+              width: 96,
+              height: 96,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(28),
+                boxShadow: [
+                  BoxShadow(
+                    color: AppColors.navy.withOpacity(0.12),
+                    blurRadius: 12,
+                    offset: const Offset(0, 8),
+                  ),
+                ],
+              ),
+              child: Center(
+                child: Icon(Icons.auto_awesome_rounded, color: AppColors.navy, size: 48),
+              ),
+            ),
+          ],
         ),
       ),
     );

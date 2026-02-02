@@ -122,7 +122,7 @@ class _StoriesScreenState extends State<StoriesScreen> {
                   child: Container(
                     margin: const EdgeInsets.only(bottom: 20),
                     decoration: BoxDecoration(
-                      color: AppColors.white,
+                      color: AppColors.softSky,
                       borderRadius: BorderRadius.circular(24),
                       boxShadow: [
                         BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10),
@@ -137,39 +137,39 @@ class _StoriesScreenState extends State<StoriesScreen> {
                           ),
                           child: story.coverImageUrl == null
                               ? Container(
-                                  width: 120,
-                                  height: 120,
-                                  color: AppColors.gray100,
-                                  child: const Icon(Icons.auto_stories_rounded, color: AppColors.green),
+                                  width: 110,
+                                  height: 140,
+                                  color: AppColors.softGreen,
+                                  child: const Icon(Icons.auto_stories_rounded, color: AppColors.green, size: 40),
                                 )
                               : kIsWeb
                                   ? Image.network(
                                       story.coverImageUrl!,
-                                      width: 120,
-                                      height: 120,
+                                      width: 110,
+                                      height: 140,
                                       fit: BoxFit.cover,
                                       errorBuilder: (context, error, stackTrace) => Container(
-                                        width: 120,
-                                        height: 120,
-                                        color: AppColors.gray100,
-                                        child: const Icon(Icons.auto_stories_rounded, color: AppColors.green),
+                                        width: 110,
+                                        height: 140,
+                                        color: AppColors.softGreen,
+                                        child: const Icon(Icons.auto_stories_rounded, color: AppColors.green, size: 40),
                                       ),
                                     )
                                   : CachedNetworkImage(
                                       imageUrl: story.coverImageUrl!,
-                                      width: 120,
-                                      height: 120,
+                                      width: 110,
+                                      height: 140,
                                       fit: BoxFit.cover,
                                       placeholder: (context, url) => const SizedBox(
-                                        width: 120,
-                                        height: 120,
+                                        width: 110,
+                                        height: 140,
                                         child: Center(child: CircularProgressIndicator(strokeWidth: 2)),
                                       ),
                                       errorWidget: (context, url, error) => Container(
-                                        width: 120,
-                                        height: 120,
-                                        color: AppColors.gray100,
-                                        child: const Icon(Icons.auto_stories_rounded, color: AppColors.green),
+                                        width: 110,
+                                        height: 140,
+                                        color: AppColors.softGreen,
+                                        child: const Icon(Icons.auto_stories_rounded, color: AppColors.green, size: 40),
                                       ),
                                     ),
                         ),
@@ -197,21 +197,28 @@ class _StoriesScreenState extends State<StoriesScreen> {
                                     const SizedBox(width: 4),
                                     Text(
                                       '${story.pagesCount} pages',
-                                      style: const TextStyle(fontSize: 12, color: AppColors.green),
+                                      style: const TextStyle(fontSize: 12, color: AppColors.green, fontWeight: FontWeight.bold),
                                     ),
                                     const Spacer(),
                                     Container(
-                                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                                      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
                                       decoration: BoxDecoration(
-                                        color: AppColors.softGreen,
-                                        borderRadius: BorderRadius.circular(12),
+                                        color: AppColors.accent,
+                                        borderRadius: BorderRadius.circular(14),
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: AppColors.accent.withOpacity(0.35),
+                                            blurRadius: 10,
+                                            offset: const Offset(0, 6),
+                                          ),
+                                        ],
                                       ),
                                       child: const Text(
                                         'Read',
                                         style: TextStyle(
                                           fontSize: 12,
                                           fontWeight: FontWeight.bold,
-                                          color: AppColors.green,
+                                          color: Colors.white,
                                         ),
                                       ),
                                     ),

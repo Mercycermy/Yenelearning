@@ -121,30 +121,31 @@ class _StoryReaderScreenState extends State<StoryReaderScreen> {
         child: Column(
           children: [
             // Image Placeholder
-            Expanded(
-              flex: 4,
-              child: Container(
-                decoration: BoxDecoration(
-                  color: AppColors.gray100,
-                  borderRadius: BorderRadius.circular(32),
-                ),
-                child: Center(
-                  child: page.imageUrl == null
-                      ? const Icon(Icons.image, size: 80, color: AppColors.gray500)
-                      : CachedNetworkImage(
-                          imageUrl: page.imageUrl!,
-                          height: 200,
-                          placeholder: (context, url) => const SizedBox(
-                            height: 80,
-                            width: 80,
-                            child: CircularProgressIndicator(strokeWidth: 2),
-                          ),
-                          errorWidget: (context, url, error) => const Icon(Icons.image, size: 80),
+            Container(
+              width: double.infinity,
+              height: 260,
+              decoration: BoxDecoration(
+                color: AppColors.gray100,
+                borderRadius: BorderRadius.circular(28),
+              ),
+              child: Center(
+                child: page.imageUrl == null
+                    ? const Icon(Icons.image, size: 80, color: AppColors.gray500)
+                    : CachedNetworkImage(
+                        imageUrl: page.imageUrl!,
+                        height: 260,
+                        width: double.infinity,
+                        fit: BoxFit.cover,
+                        placeholder: (context, url) => const SizedBox(
+                          height: 80,
+                          width: 80,
+                          child: CircularProgressIndicator(strokeWidth: 2),
                         ),
-                ),
+                        errorWidget: (context, url, error) => const Icon(Icons.image, size: 80),
+                      ),
               ),
             ),
-            const SizedBox(height: 32),
+            const SizedBox(height: 24),
             
             // Text Content
             Expanded(
@@ -163,9 +164,9 @@ class _StoryReaderScreenState extends State<StoryReaderScreen> {
                     page.text,
                     textAlign: TextAlign.center,
                     style: const TextStyle(
-                      fontSize: 22,
+                      fontSize: 26,
                       fontWeight: FontWeight.w500,
-                      height: 1.5,
+                      height: 1.7,
                     ),
                   ),
                 ),
@@ -199,10 +200,10 @@ class _StoryReaderScreenState extends State<StoryReaderScreen> {
                 ElevatedButton(
                   onPressed: _nextPage,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.green,
+                    backgroundColor: AppColors.mint,
                     minimumSize: const Size(120, 60),
                   ),
-                  child: Text(currentPage < (pageResponse?.totalPages ?? 0) ? 'Next' : 'Finish'),
+                  child: Text(currentPage < (pageResponse?.totalPages ?? 0) ? 'Next Page' : 'Done!'),
                 ),
               ],
             ),

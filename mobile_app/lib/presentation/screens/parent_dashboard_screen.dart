@@ -22,14 +22,14 @@ class ParentDashboardScreen extends StatelessWidget {
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
                 gradient: const LinearGradient(
-                  colors: [AppColors.teal, AppColors.blue],
+                  colors: [Color(0xFF2F3A56), Color(0xFF4E5D78)],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                 ),
                 borderRadius: BorderRadius.circular(24),
                 boxShadow: [
                   BoxShadow(
-                    color: AppColors.teal.withOpacity(0.25),
+                    color: AppColors.navy.withOpacity(0.25),
                     blurRadius: 14,
                     offset: const Offset(0, 8),
                   ),
@@ -98,23 +98,23 @@ class ParentDashboardScreen extends StatelessWidget {
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
-            _SettingTile(
+            const _ToggleTile(
               icon: Icons.timer_rounded,
               title: 'Daily Time Limit',
-              value: '30 Minutes',
-              color: AppColors.blue,
+              subtitle: '30 Minutes',
+              value: true,
             ),
-            _SettingTile(
+            const _ToggleTile(
               icon: Icons.security_rounded,
               title: 'Content Filter',
-              value: 'Strict',
-              color: AppColors.green,
+              subtitle: 'Strict',
+              value: true,
             ),
-            _SettingTile(
+            const _ToggleTile(
               icon: Icons.trending_up_rounded,
               title: 'Difficulty Level',
-              value: 'Beginner',
-              color: AppColors.yellow,
+              subtitle: 'Beginner',
+              value: false,
             ),
           ],
         ),
@@ -205,7 +205,7 @@ class _ProgressOverviewCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        color: AppColors.softGreen,
+        color: AppColors.white,
         borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10),
@@ -236,6 +236,8 @@ class _ProgressOverviewCard extends StatelessWidget {
               _StatItem(label: 'Time', value: '1.5h', color: AppColors.yellow),
             ],
           ),
+          const SizedBox(height: 20),
+          const SizedBox(height: 120, child: _ProgressLineChart()),
           const SizedBox(height: 24),
           const Divider(),
           const SizedBox(height: 16),
@@ -247,12 +249,19 @@ class _ProgressOverviewCard extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 8),
-          LinearProgressIndicator(
-            value: 0.75,
-            backgroundColor: AppColors.gray200,
-            color: AppColors.green,
-            minHeight: 10,
-            borderRadius: BorderRadius.circular(5),
+          Container(
+            decoration: BoxDecoration(
+              boxShadow: [
+                BoxShadow(color: AppColors.green.withOpacity(0.35), blurRadius: 10),
+              ],
+            ),
+            child: LinearProgressIndicator(
+              value: 0.75,
+              backgroundColor: AppColors.gray200,
+              color: AppColors.green,
+              minHeight: 10,
+              borderRadius: BorderRadius.circular(5),
+            ),
           ),
         ],
       ),
@@ -278,17 +287,17 @@ class _StatItem extends StatelessWidget {
   }
 }
 
-class _SettingTile extends StatelessWidget {
+class _ToggleTile extends StatelessWidget {
   final IconData icon;
   final String title;
-  final String value;
-  final Color color;
+  final String subtitle;
+  final bool value;
 
-  const _SettingTile({
+  const _ToggleTile({
     required this.icon,
     required this.title,
+    required this.subtitle,
     required this.value,
-    required this.color,
   });
 
   @override
@@ -305,19 +314,74 @@ class _SettingTile extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
-              color: color.withOpacity(0.1),
+              color: AppColors.navy.withOpacity(0.1),
               shape: BoxShape.circle,
             ),
-            child: Icon(icon, color: color),
+            child: Icon(icon, color: AppColors.navy),
           ),
           const SizedBox(width: 16),
           Expanded(
-            child: Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
+                Text(subtitle, style: const TextStyle(color: AppColors.gray500, fontSize: 12)),
+              ],
+            ),
           ),
-          Text(value, style: const TextStyle(color: AppColors.gray500)),
-          const Icon(Icons.chevron_right_rounded, color: AppColors.gray500),
+          Switch(
+            value: value,
+            onChanged: (_) {},
+            activeColor: AppColors.mint,
+          ),
         ],
       ),
     );
   }
+}
+
+class _ProgressLineChart extends StatelessWidget {
+  const _ProgressLineChart();
+
+  @override
+  Widget build(BuildContext context) {
+    return CustomPaint(
+      painter: _LineChartPainter(),
+      child: Container(),
+    );
+  }
+}
+
+class _LineChartPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = AppColors.blue
+      ..strokeWidth = 3
+      ..style = PaintingStyle.stroke;
+
+    final points = [
+      Offset(0, size.height * 0.7),
+      Offset(size.width * 0.2, size.height * 0.55),
+      Offset(size.width * 0.4, size.height * 0.6),
+      Offset(size.width * 0.6, size.height * 0.35),
+      Offset(size.width * 0.8, size.height * 0.4),
+      Offset(size.width, size.height * 0.25),
+    ];
+
+    final path = Path()..moveTo(points.first.dx, points.first.dy);
+    for (var point in points.skip(1)) {
+      path.lineTo(point.dx, point.dy);
+    }
+
+    canvas.drawPath(path, paint);
+
+    final dotPaint = Paint()..color = AppColors.mint;
+    for (var point in points) {
+      canvas.drawCircle(point, 4, dotPaint);
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }

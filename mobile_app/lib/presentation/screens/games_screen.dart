@@ -130,7 +130,7 @@ class _GamesScreenState extends State<GamesScreen> {
                   margin: const EdgeInsets.only(bottom: 16),
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color: AppColors.white,
+                    color: AppColors.softYellow,
                     borderRadius: BorderRadius.circular(20),
                     boxShadow: [
                       BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10),
@@ -142,26 +142,26 @@ class _GamesScreenState extends State<GamesScreen> {
                         borderRadius: BorderRadius.circular(16),
                         child: game.imageUrl == null
                             ? Container(
-                                width: 72,
-                                height: 72,
+                                width: 84,
+                                height: 84,
                                 color: AppColors.softYellow,
-                                child: const Icon(Icons.videogame_asset_rounded, color: AppColors.yellow),
+                                child: const Icon(Icons.videogame_asset_rounded, color: AppColors.yellow, size: 36),
                               )
                             : CachedNetworkImage(
                                 imageUrl: game.imageUrl!,
-                                width: 72,
-                                height: 72,
+                                width: 84,
+                                height: 84,
                                 fit: BoxFit.cover,
                                 placeholder: (context, url) => const SizedBox(
-                                  width: 72,
-                                  height: 72,
+                                  width: 84,
+                                  height: 84,
                                   child: Center(child: CircularProgressIndicator(strokeWidth: 2)),
                                 ),
                                 errorWidget: (context, url, error) => Container(
-                                  width: 72,
-                                  height: 72,
+                                  width: 84,
+                                  height: 84,
                                   color: AppColors.softYellow,
-                                  child: const Icon(Icons.videogame_asset_rounded, color: AppColors.yellow),
+                                  child: const Icon(Icons.videogame_asset_rounded, color: AppColors.yellow, size: 36),
                                 ),
                               ),
                       ),
@@ -177,6 +177,25 @@ class _GamesScreenState extends State<GamesScreen> {
                               style: const TextStyle(color: AppColors.gray500),
                               maxLines: 2,
                               overflow: TextOverflow.ellipsis,
+                            ),
+                            const SizedBox(height: 10),
+                            Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                              decoration: BoxDecoration(
+                                color: AppColors.orange,
+                                borderRadius: BorderRadius.circular(14),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: AppColors.orange.withOpacity(0.35),
+                                    blurRadius: 10,
+                                    offset: const Offset(0, 6),
+                                  ),
+                                ],
+                              ),
+                              child: const Text(
+                                'Play',
+                                style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 12),
+                              ),
                             ),
                           ],
                         ),

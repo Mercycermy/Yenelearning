@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'app_colors.dart';
 
 class AppTheme {
   static ThemeData get lightTheme {
+    final baseTextTheme = GoogleFonts.poppinsTextTheme();
     return ThemeData(
       useMaterial3: true,
-      colorSchemeSeed: AppColors.blue,
+      colorSchemeSeed: AppColors.mint,
       scaffoldBackgroundColor: AppColors.white,
       appBarTheme: const AppBarTheme(
         backgroundColor: AppColors.white,
@@ -20,32 +22,32 @@ class AppTheme {
       ),
       
       // Typography
-      textTheme: const TextTheme(
-        displayLarge: TextStyle(
+      textTheme: baseTextTheme.copyWith(
+        displayLarge: baseTextTheme.displayLarge?.copyWith(
           fontSize: 32,
           fontWeight: FontWeight.bold,
           color: AppColors.gray900,
         ),
-        headlineMedium: TextStyle(
+        headlineMedium: baseTextTheme.headlineMedium?.copyWith(
           fontSize: 24,
           fontWeight: FontWeight.bold,
           color: AppColors.gray900,
         ),
-        titleLarge: TextStyle(
+        titleLarge: baseTextTheme.titleLarge?.copyWith(
           fontSize: 20,
           fontWeight: FontWeight.bold,
           color: AppColors.gray900,
         ),
-        titleMedium: TextStyle(
+        titleMedium: baseTextTheme.titleMedium?.copyWith(
           fontSize: 16,
           fontWeight: FontWeight.w600,
           color: AppColors.gray900,
         ),
-        bodyLarge: TextStyle(
+        bodyLarge: baseTextTheme.bodyLarge?.copyWith(
           fontSize: 18,
           color: AppColors.gray900,
         ),
-        bodyMedium: TextStyle(
+        bodyMedium: baseTextTheme.bodyMedium?.copyWith(
           fontSize: 16,
           color: AppColors.gray900,
         ),
@@ -96,7 +98,15 @@ class AppTheme {
         fillColor: AppColors.gray100,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(20),
-          borderSide: BorderSide.none,
+          borderSide: const BorderSide(color: AppColors.gray200, width: 2),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(20),
+          borderSide: const BorderSide(color: AppColors.gray200, width: 2),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(20),
+          borderSide: const BorderSide(color: AppColors.accent, width: 2),
         ),
         contentPadding: const EdgeInsets.symmetric(
           horizontal: 20,

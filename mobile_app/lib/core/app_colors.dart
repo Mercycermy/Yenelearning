@@ -19,6 +19,7 @@ class AppColors {
   static const Color softTeal = Color(0xFFE8FFF6);
   static const Color softOrange = Color(0xFFFFF1E7);
   static const Color softSky = Color(0xFFEAF4FF);
+  static const Color softMint = Color(0xFFE6F9F1);
   
   // Neutral
   static const Color white = Color(0xFFFFFFFF);
@@ -26,6 +27,11 @@ class AppColors {
   static const Color gray200 = Color(0xFFEEEEEE);
   static const Color gray500 = Color(0xFF9B9B9B);
   static const Color gray900 = Color(0xFF4A4A4A);
+
+  // Accent / Brand
+  static const Color mint = Color(0xFF7EEAD2);
+  static const Color navy = Color(0xFF1E2A44);
+  static const Color accent = Color(0xFFFF8A00);
   
   // Semantic
   static const Color error = Color(0xFFE74C3C); // Soft red

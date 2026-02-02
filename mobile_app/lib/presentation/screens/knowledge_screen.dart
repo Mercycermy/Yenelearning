@@ -122,12 +122,20 @@ class _KnowledgeScreenState extends State<KnowledgeScreen> {
 
           return RefreshIndicator(
             onRefresh: _loadLessons,
-            child: ListView.builder(
+            child: GridView.builder(
               padding: const EdgeInsets.all(24),
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                crossAxisSpacing: 16,
+                mainAxisSpacing: 16,
+                childAspectRatio: 0.8,
+              ),
               itemCount: lessons.length,
               itemBuilder: (context, index) {
                 final lesson = lessons[index];
-                return InkWell(
+                return _KnowledgeTile(
+                  lesson: lesson,
+                  index: index,
                   onTap: () {
                     Navigator.of(context).push(
                       MaterialPageRoute(
@@ -135,71 +143,101 @@ class _KnowledgeScreenState extends State<KnowledgeScreen> {
                       ),
                     );
                   },
-                  borderRadius: BorderRadius.circular(20),
-                  child: Container(
-                    margin: const EdgeInsets.only(bottom: 16),
-                    padding: const EdgeInsets.all(16),
-                    decoration: BoxDecoration(
-                      color: AppColors.white,
-                      borderRadius: BorderRadius.circular(20),
-                      boxShadow: [
-                        BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10),
-                      ],
-                    ),
-                    child: Row(
-                      children: [
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(16),
-                          child: lesson.imageUrl == null
-                              ? Container(
-                                  width: 72,
-                                  height: 72,
-                                  color: AppColors.softOrange,
-                                  child: const Icon(Icons.lightbulb_rounded, color: Colors.orange),
-                                )
-                              : CachedNetworkImage(
-                                  imageUrl: lesson.imageUrl!,
-                                  width: 72,
-                                  height: 72,
-                                  fit: BoxFit.cover,
-                                  placeholder: (context, url) => const SizedBox(
-                                    width: 72,
-                                    height: 72,
-                                    child: Center(child: CircularProgressIndicator(strokeWidth: 2)),
-                                  ),
-                                  errorWidget: (context, url, error) => Container(
-                                    width: 72,
-                                    height: 72,
-                                    color: AppColors.softOrange,
-                                    child: const Icon(Icons.lightbulb_rounded, color: Colors.orange),
-                                  ),
-                                ),
-                        ),
-                        const SizedBox(width: 16),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(lesson.title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-                              const SizedBox(height: 6),
-                              Text(
-                                lesson.description ?? 'Tap to explore',
-                                style: const TextStyle(color: AppColors.gray500),
-                                maxLines: 2,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ],
-                          ),
-                        ),
-                        const Icon(Icons.chevron_right_rounded, color: AppColors.gray500),
-                      ],
-                    ),
-                  ),
                 );
               },
             ),
           );
         },
+      ),
+    );
+  }
+}
+
+class _KnowledgeTile extends StatelessWidget {
+  final ContentListItem lesson;
+  final int index;
+  final VoidCallback onTap;
+
+  const _KnowledgeTile({
+    required this.lesson,
+    required this.index,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = [AppColors.softOrange, AppColors.softBlue, AppColors.softGreen, AppColors.softPink];
+    final accent = [Colors.orange, AppColors.blue, AppColors.green, AppColors.pink];
+    final bgColor = colors[index % colors.length];
+    final iconColor = accent[index % accent.length];
+    final progress = ((index % 5) + 1) / 5;
+
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(24),
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: bgColor,
+          borderRadius: BorderRadius.circular(24),
+          boxShadow: [
+            BoxShadow(color: iconColor.withOpacity(0.15), blurRadius: 12, offset: const Offset(0, 6)),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(18),
+              child: lesson.imageUrl == null
+                  ? Container(
+                      height: 90,
+                      width: double.infinity,
+                      color: Colors.white.withOpacity(0.6),
+                      child: Icon(Icons.lightbulb_rounded, color: iconColor, size: 40),
+                    )
+                  : CachedNetworkImage(
+                      imageUrl: lesson.imageUrl!,
+                      height: 90,
+                      width: double.infinity,
+                      fit: BoxFit.cover,
+                      placeholder: (context, url) => const SizedBox(
+                        height: 90,
+                        child: Center(child: CircularProgressIndicator(strokeWidth: 2)),
+                      ),
+                      errorWidget: (context, url, error) => Container(
+                        height: 90,
+                        color: Colors.white.withOpacity(0.6),
+                        child: Icon(Icons.lightbulb_rounded, color: iconColor, size: 40),
+                      ),
+                    ),
+            ),
+            const SizedBox(height: 12),
+            Text(
+              lesson.title,
+              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+            ),
+            const SizedBox(height: 6),
+            Text(
+              lesson.description ?? 'Tap to explore',
+              style: const TextStyle(color: AppColors.gray500, fontSize: 13),
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+            ),
+            const Spacer(),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(10),
+              child: LinearProgressIndicator(
+                value: progress,
+                backgroundColor: Colors.white.withOpacity(0.5),
+                color: iconColor,
+                minHeight: 8,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

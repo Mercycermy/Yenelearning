@@ -54,6 +54,31 @@ class _TalkWithTutorScreenState extends State<TalkWithTutorScreen> {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         title: Text(avatarName == null ? 'Talk with Tutor' : 'Talk with ${avatarName!}'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.info_outline_rounded),
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (context) => AlertDialog(
+                  title: const Text('Tutor Info'),
+                  content: Text(
+                    [
+                      if ((teachingStyle ?? '').isNotEmpty) _formatTeachingStyle(teachingStyle),
+                      if ((personalityDescription ?? '').isNotEmpty) personalityDescription!,
+                    ].join('\n'),
+                  ),
+                  actions: [
+                    TextButton(
+                      onPressed: () => Navigator.pop(context),
+                      child: const Text('Close'),
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+        ],
       ),
       body: Center(
         child: Padding(
@@ -61,17 +86,6 @@ class _TalkWithTutorScreenState extends State<TalkWithTutorScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              if (teachingStyle != null || personalityDescription != null) ...[
-                Text(
-                  [
-                    if ((teachingStyle ?? '').isNotEmpty) _formatTeachingStyle(teachingStyle),
-                    if ((personalityDescription ?? '').isNotEmpty) personalityDescription!,
-                  ].join(' • '),
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(color: AppColors.gray500, fontSize: 13),
-                ),
-                const SizedBox(height: 16),
-              ],
               // Tutor Avatar
               Container(
                 width: 200,
@@ -133,8 +147,8 @@ class _TalkWithTutorScreenState extends State<TalkWithTutorScreen> {
               if (isTutorSpeaking)
                 const Column(
                   children: [
-                    Text('Tutor is speaking...', style: TextStyle(color: AppColors.blue)),
-                    SizedBox(height: 16),
+                    Text('Tutor is speaking...', style: TextStyle(color: AppColors.blue, fontWeight: FontWeight.bold)),
+                    SizedBox(height: 20),
                     _SoundWaveWidget(),
                   ],
                 )
@@ -181,15 +195,25 @@ class _SoundWaveWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
-      children: List.generate(5, (index) => Container(
-        margin: const EdgeInsets.symmetric(horizontal: 4),
-        width: 8,
-        height: 20 + (index % 3 * 10).toDouble(),
-        decoration: BoxDecoration(
-          color: AppColors.blue,
-          borderRadius: BorderRadius.circular(4),
-        ),
-      )),
+      children: List.generate(7, (index) {
+        final height = 18 + (index % 4 * 14).toDouble();
+        return Container(
+          margin: const EdgeInsets.symmetric(horizontal: 4),
+          width: 10,
+          height: height,
+          decoration: BoxDecoration(
+            gradient: const LinearGradient(
+              colors: [AppColors.blue, AppColors.purple, AppColors.pink],
+              begin: Alignment.bottomCenter,
+              end: Alignment.topCenter,
+            ),
+            borderRadius: BorderRadius.circular(6),
+            boxShadow: [
+              BoxShadow(color: AppColors.blue.withOpacity(0.2), blurRadius: 8),
+            ],
+          ),
+        );
+      }),
     );
   }
 }

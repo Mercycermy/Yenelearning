@@ -186,17 +186,29 @@ class _WordLessonScreenState extends State<WordLessonScreen> {
                     if (word.imageUrl != null && word.imageUrl!.isNotEmpty)
                       CachedNetworkImage(
                         imageUrl: word.imageUrl!,
-                        height: 180,
+                        height: 220,
                         placeholder: (context, url) => const SizedBox(
-                          height: 100,
-                          width: 100,
+                          height: 120,
+                          width: 120,
                           child: CircularProgressIndicator(strokeWidth: 2),
                         ),
-                        errorWidget: (context, url, error) => const Icon(Icons.image, size: 80),
+                        errorWidget: (context, url, error) => const Icon(Icons.image, size: 120),
                       )
                     else
-                      const Icon(Icons.image, size: 80, color: AppColors.gray500),
-                    const SizedBox(height: 40),
+                      Container(
+                        height: 220,
+                        width: 220,
+                        decoration: BoxDecoration(
+                          gradient: const LinearGradient(
+                            colors: [AppColors.softYellow, AppColors.softOrange],
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                          ),
+                          borderRadius: BorderRadius.circular(32),
+                        ),
+                        child: const Icon(Icons.auto_awesome_rounded, size: 120, color: AppColors.orange),
+                      ),
+                    const SizedBox(height: 32),
                     Text(
                       word.title,
                       style: const TextStyle(
@@ -212,9 +224,9 @@ class _WordLessonScreenState extends State<WordLessonScreen> {
                         color: AppColors.gray500,
                       ),
                     ),
-                    const SizedBox(height: 30),
+                    const SizedBox(height: 24),
                     IconButton(
-                      icon: const Icon(Icons.volume_up_rounded, size: 64, color: AppColors.blue),
+                      icon: const Icon(Icons.volume_up_rounded, size: 72, color: AppColors.accent),
                       onPressed: () {
                         // Play audio pronunciation
                       },
@@ -274,12 +286,19 @@ class _InteractionButton extends StatelessWidget {
       child: Column(
         children: [
           Container(
-            padding: const EdgeInsets.all(20),
+            padding: const EdgeInsets.all(22),
             decoration: BoxDecoration(
-              color: color.withOpacity(0.1),
+              color: color,
               shape: BoxShape.circle,
+              boxShadow: [
+                BoxShadow(
+                  color: color.withOpacity(0.35),
+                  blurRadius: 14,
+                  offset: const Offset(0, 8),
+                ),
+              ],
             ),
-            child: Icon(icon, size: 40, color: color),
+            child: Icon(icon, size: 42, color: Colors.white),
           ),
           const SizedBox(height: 8),
           Text(label, style: TextStyle(color: color, fontWeight: FontWeight.bold)),
