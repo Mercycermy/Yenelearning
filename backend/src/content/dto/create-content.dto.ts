@@ -43,11 +43,11 @@ export class CreateContentDto {
     maxAge?: number;
 
     @IsOptional()
-    @IsUrl()
+    @IsUrl({ require_tld: false })
     imageUrl?: string;
 
     @IsOptional()
-    @IsUrl()
+    @IsUrl({ require_tld: false })
     audioUrl?: string;
 
     @IsOptional()

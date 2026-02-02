@@ -10,7 +10,8 @@ import {
     Users,
     Settings,
     LogOut,
-    Library
+    Library,
+    Lightbulb
 } from "lucide-react";
 
 export function Sidebar() {
@@ -21,6 +22,7 @@ export function Sidebar() {
         { name: "Words", href: "/content/words", icon: Library },
         { name: "Stories", href: "/content/stories", icon: BookOpen },
         { name: "Games", href: "/content/games", icon: Gamepad2 },
+        { name: "Knowledge", href: "/content/knowledge", icon: Lightbulb },
         { name: "AI Tutors", href: "/ai-tutors", icon: Mic },
         { name: "Users", href: "/users", icon: Users },
         { name: "Settings", href: "/settings", icon: Settings },

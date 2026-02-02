@@ -4,7 +4,7 @@ import { useEffect, useState, use } from "react";
 import { useRouter } from "next/navigation";
 import { ArrowLeft, Loader2, Save } from "lucide-react";
 import Link from "next/link";
-import { fetchAPI } from "@/lib/api";
+import { fetchAPI, uploadFile } from "@/lib/api";
 
 export default function EditWordPage({ params }: { params: Promise<{ id: string }> }) {
     const { id } = use(params);
@@ -33,6 +33,9 @@ export default function EditWordPage({ params }: { params: Promise<{ id: string 
         setIsSaving(true);
 
         const formData = new FormData(event.currentTarget);
+        const imageFile = formData.get("imageFile") as File | null;
+        const imageUrl = imageFile && imageFile.size > 0 ? await uploadFile(imageFile) : word.imageUrl;
+
         const wordData = {
             title: formData.get("title"),
             description: formData.get("description"),
@@ -40,7 +43,7 @@ export default function EditWordPage({ params }: { params: Promise<{ id: string 
             difficulty: formData.get("difficulty"),
             minAge: parseInt(formData.get("minAge") as string),
             maxAge: parseInt(formData.get("maxAge") as string),
-            imageUrl: formData.get("imageUrl") || undefined,
+            imageUrl,
         };
 
         try {
@@ -168,13 +171,17 @@ export default function EditWordPage({ params }: { params: Promise<{ id: string 
 
                     <div className="col-span-full">
                         <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                            Image URL (optional)
+                            Image Upload (optional)
                         </label>
                         <input
-                            name="imageUrl"
-                            defaultValue={word.imageUrl}
-                            className="mt-2 block w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-gray-900 outline-none transition-all focus:bg-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500 dark:border-zinc-700 dark:bg-zinc-800 dark:text-gray-100"
+                            name="imageFile"
+                            type="file"
+                            accept="image/*"
+                            className="mt-2 block w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-gray-900 outline-none transition-all file:mr-4 file:rounded-lg file:border-0 file:bg-blue-600 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-white hover:file:bg-blue-700 dark:border-zinc-700 dark:bg-zinc-800 dark:text-gray-100"
                         />
+                        {word.imageUrl && (
+                            <p className="mt-2 text-xs text-gray-500">Current image will be kept if no file is uploaded.</p>
+                        )}
                     </div>
                 </div>
 

@@ -16,7 +16,7 @@ export class CreateAvatarDto {
     @IsString()
     personalityDescription?: string;
 
-    @IsUrl()
+    @IsUrl({ require_tld: false })
     imageUrl: string;
 
     @IsOptional()

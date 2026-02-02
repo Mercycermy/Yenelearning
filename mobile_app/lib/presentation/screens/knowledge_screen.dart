@@ -4,6 +4,7 @@ import '../../core/app_colors.dart';
 import '../../data/content_repository.dart';
 import '../../data/models/content_models.dart';
 import '../../data/user_prefs.dart';
+import 'knowledge_detail_screen.dart';
 
 class KnowledgeScreen extends StatefulWidget {
   const KnowledgeScreen({super.key});
@@ -126,63 +127,73 @@ class _KnowledgeScreenState extends State<KnowledgeScreen> {
               itemCount: lessons.length,
               itemBuilder: (context, index) {
                 final lesson = lessons[index];
-                return Container(
-                  margin: const EdgeInsets.only(bottom: 16),
-                  padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    color: AppColors.white,
-                    borderRadius: BorderRadius.circular(20),
-                    boxShadow: [
-                      BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10),
-                    ],
-                  ),
-                  child: Row(
-                    children: [
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(16),
-                        child: lesson.imageUrl == null
-                            ? Container(
-                                width: 72,
-                                height: 72,
-                                color: AppColors.softOrange,
-                                child: const Icon(Icons.lightbulb_rounded, color: Colors.orange),
-                              )
-                            : CachedNetworkImage(
-                                imageUrl: lesson.imageUrl!,
-                                width: 72,
-                                height: 72,
-                                fit: BoxFit.cover,
-                                placeholder: (context, url) => const SizedBox(
-                                  width: 72,
-                                  height: 72,
-                                  child: Center(child: CircularProgressIndicator(strokeWidth: 2)),
-                                ),
-                                errorWidget: (context, url, error) => Container(
+                return InkWell(
+                  onTap: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (_) => KnowledgeDetailScreen(contentId: lesson.id),
+                      ),
+                    );
+                  },
+                  borderRadius: BorderRadius.circular(20),
+                  child: Container(
+                    margin: const EdgeInsets.only(bottom: 16),
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: AppColors.white,
+                      borderRadius: BorderRadius.circular(20),
+                      boxShadow: [
+                        BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10),
+                      ],
+                    ),
+                    child: Row(
+                      children: [
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(16),
+                          child: lesson.imageUrl == null
+                              ? Container(
                                   width: 72,
                                   height: 72,
                                   color: AppColors.softOrange,
                                   child: const Icon(Icons.lightbulb_rounded, color: Colors.orange),
+                                )
+                              : CachedNetworkImage(
+                                  imageUrl: lesson.imageUrl!,
+                                  width: 72,
+                                  height: 72,
+                                  fit: BoxFit.cover,
+                                  placeholder: (context, url) => const SizedBox(
+                                    width: 72,
+                                    height: 72,
+                                    child: Center(child: CircularProgressIndicator(strokeWidth: 2)),
+                                  ),
+                                  errorWidget: (context, url, error) => Container(
+                                    width: 72,
+                                    height: 72,
+                                    color: AppColors.softOrange,
+                                    child: const Icon(Icons.lightbulb_rounded, color: Colors.orange),
+                                  ),
                                 ),
-                              ),
-                      ),
-                      const SizedBox(width: 16),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(lesson.title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-                            const SizedBox(height: 6),
-                            Text(
-                              lesson.description ?? 'Tap to explore',
-                              style: const TextStyle(color: AppColors.gray500),
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ],
                         ),
-                      ),
-                      const Icon(Icons.chevron_right_rounded, color: AppColors.gray500),
-                    ],
+                        const SizedBox(width: 16),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(lesson.title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                              const SizedBox(height: 6),
+                              Text(
+                                lesson.description ?? 'Tap to explore',
+                                style: const TextStyle(color: AppColors.gray500),
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ],
+                          ),
+                        ),
+                        const Icon(Icons.chevron_right_rounded, color: AppColors.gray500),
+                      ],
+                    ),
                   ),
                 );
               },

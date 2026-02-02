@@ -1,6 +1,9 @@
 import { NestFactory } from '@nestjs/core';
 import { ValidationPipe, Logger } from '@nestjs/common';
 import type { CorsOptions } from '@nestjs/common/interfaces/external/cors-options.interface';
+import { NestExpressApplication } from '@nestjs/platform-express';
+import { join } from 'path';
+import { existsSync, mkdirSync } from 'fs';
 import { ConfigService } from '@nestjs/config';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -8,7 +11,7 @@ import { AppModule } from './app.module';
 import { Avatar, AvatarGender, TeachingStyle } from './entities/avatar.entity';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create<NestExpressApplication>(AppModule);
   const logger = new Logger('Bootstrap');
 
   // Get config service
@@ -17,12 +20,20 @@ async function bootstrap() {
   // Enable CORS for frontend apps
   const corsOptions: CorsOptions = {
     origin: (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
+      const nodeEnv = configService.get<string>('NODE_ENV') || 'development';
+
       if (!origin) {
         return callback(null, true);
       }
+
+      if (nodeEnv !== 'production') {
+        return callback(null, true);
+      }
+
       if (origin.startsWith('http://localhost') || origin.startsWith('http://127.0.0.1')) {
         return callback(null, true);
       }
+
       return callback(new Error('Not allowed by CORS'));
     },
     credentials: true,
@@ -46,6 +57,12 @@ async function bootstrap() {
 
   // API prefix
   app.setGlobalPrefix('api');
+
+  const uploadsPath = join(__dirname, '..', 'uploads');
+  if (!existsSync(uploadsPath)) {
+    mkdirSync(uploadsPath, { recursive: true });
+  }
+  app.useStaticAssets(uploadsPath, { prefix: '/uploads' });
 
   const port = configService.get<number>('PORT', 3000);
   await app.listen(port);

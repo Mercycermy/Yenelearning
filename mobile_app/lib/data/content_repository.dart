@@ -31,6 +31,11 @@ class ContentRepository {
     return ContentListResponse.fromJson(data);
   }
 
+  Future<ContentDetail> fetchContentById(String id) async {
+    final data = await _apiClient.getJson('/content/$id');
+    return ContentDetail.fromJson(data);
+  }
+
   Future<StoryListResponse> fetchStoriesPaged({
     required String language,
     int page = 1,

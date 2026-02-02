@@ -2,30 +2,52 @@
 
 import { useEffect, useState, use } from "react";
 import { useRouter } from "next/navigation";
-import { ArrowLeft, Loader2, Save, Gamepad2 } from "lucide-react";
+import { ArrowLeft, Loader2, Save } from "lucide-react";
 import Link from "next/link";
 import { fetchAPI, uploadFile } from "@/lib/api";
 
-export default function EditGamePage({ params }: { params: Promise<{ id: string }> }) {
+interface LanguageItem {
+    id: string;
+    code: string;
+    name: string;
+    nativeName: string;
+    isActive: boolean;
+}
+
+export default function EditKnowledgePage({ params }: { params: Promise<{ id: string }> }) {
     const { id } = use(params);
     const router = useRouter();
     const [isLoading, setIsLoading] = useState(true);
     const [isSaving, setIsSaving] = useState(false);
-    const [game, setGame] = useState<any>(null);
+    const [item, setItem] = useState<any>(null);
+    const [languages, setLanguages] = useState<LanguageItem[]>([]);
 
     useEffect(() => {
-        async function loadGame() {
+        async function loadLanguages() {
+            try {
+                const data = await fetchAPI("/settings/languages");
+                setLanguages(data.filter((lang: LanguageItem) => lang.isActive));
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        loadLanguages();
+    }, []);
+
+    useEffect(() => {
+        async function loadItem() {
             try {
                 const data = await fetchAPI(`/content/${id}`);
-                setGame(data);
+                setItem(data);
             } catch (err) {
-                alert("Failed to load game data");
-                router.push("/content/games");
+                alert("Failed to load knowledge item");
+                router.push("/content/knowledge");
             } finally {
                 setIsLoading(false);
             }
         }
-        loadGame();
+        loadItem();
     }, [id, router]);
 
     async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
@@ -34,9 +56,9 @@ export default function EditGamePage({ params }: { params: Promise<{ id: string 
 
         const formData = new FormData(event.currentTarget);
         const imageFile = formData.get("imageFile") as File | null;
-        const imageUrl = imageFile && imageFile.size > 0 ? await uploadFile(imageFile) : game.imageUrl;
+        const imageUrl = imageFile && imageFile.size > 0 ? await uploadFile(imageFile) : item.imageUrl;
 
-        const gameData = {
+        const updateData = {
             title: formData.get("title"),
             description: formData.get("description"),
             language: formData.get("language"),
@@ -45,18 +67,18 @@ export default function EditGamePage({ params }: { params: Promise<{ id: string 
             maxAge: parseInt(formData.get("maxAge") as string),
             imageUrl,
             metadata: {
-                gameType: formData.get("gameType")
-            }
+                category: formData.get("category") || undefined,
+            },
         };
 
         try {
             await fetchAPI(`/content/${id}`, {
                 method: "PATCH",
-                body: JSON.stringify(gameData),
+                body: JSON.stringify(updateData),
             });
-            router.push("/content/games");
+            router.push("/content/knowledge");
         } catch (err: any) {
-            alert(err.message || "Failed to update game");
+            alert(err.message || "Failed to update knowledge item");
         } finally {
             setIsSaving(false);
         }
@@ -74,16 +96,16 @@ export default function EditGamePage({ params }: { params: Promise<{ id: string 
         <div className="space-y-6">
             <div className="flex items-center gap-4">
                 <Link
-                    href="/content/games"
+                    href="/content/knowledge"
                     className="flex h-10 w-10 items-center justify-center rounded-xl border border-gray-200 bg-white text-gray-500 transition-colors hover:bg-gray-50 dark:border-zinc-800 dark:bg-zinc-900 dark:text-gray-400"
                 >
                     <ArrowLeft className="h-5 w-5" />
                 </Link>
                 <div>
                     <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-50">
-                        Edit Game
+                        Edit Knowledge
                     </h1>
-                    <p className="text-sm text-gray-500">Update learning activity details.</p>
+                    <p className="text-sm text-gray-500">Update knowledge topic information.</p>
                 </div>
             </div>
 
@@ -91,11 +113,11 @@ export default function EditGamePage({ params }: { params: Promise<{ id: string 
                 <div className="grid gap-6 sm:grid-cols-2">
                     <div className="col-span-full">
                         <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                            Game Title
+                            Title
                         </label>
                         <input
                             name="title"
-                            defaultValue={game.title}
+                            defaultValue={item.title}
                             required
                             className="mt-2 block w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-gray-900 outline-none transition-all focus:bg-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500 dark:border-zinc-700 dark:bg-zinc-800 dark:text-gray-100"
                         />
@@ -107,7 +129,7 @@ export default function EditGamePage({ params }: { params: Promise<{ id: string 
                         </label>
                         <textarea
                             name="description"
-                            defaultValue={game.description}
+                            defaultValue={item.description}
                             required
                             rows={3}
                             className="mt-2 block w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-gray-900 outline-none transition-all focus:bg-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500 dark:border-zinc-700 dark:bg-zinc-800 dark:text-gray-100"
@@ -120,30 +142,15 @@ export default function EditGamePage({ params }: { params: Promise<{ id: string 
                         </label>
                         <select
                             name="language"
-                            defaultValue={game.language}
+                            defaultValue={item.language}
                             required
                             className="mt-2 block w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-gray-900 outline-none transition-all focus:bg-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500 dark:border-zinc-700 dark:bg-zinc-800 dark:text-gray-100"
                         >
-                            <option value="amharic">Amharic</option>
-                            <option value="geez">Ge'ez</option>
-                            <option value="english">English</option>
-                        </select>
-                    </div>
-
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                            Game Type
-                        </label>
-                        <select
-                            name="gameType"
-                            defaultValue={game.metadata?.gameType}
-                            required
-                            className="mt-2 block w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-gray-900 outline-none transition-all focus:bg-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500 dark:border-zinc-700 dark:bg-zinc-800 dark:text-gray-100"
-                        >
-                            <option value="matching">Matching</option>
-                            <option value="quiz">Quiz</option>
-                            <option value="drawing">Drawing</option>
-                            <option value="voice">Voice Recognition</option>
+                            {languages.map((lang) => (
+                                <option key={lang.id} value={lang.code}>
+                                    {lang.name}
+                                </option>
+                            ))}
                         </select>
                     </div>
 
@@ -153,7 +160,7 @@ export default function EditGamePage({ params }: { params: Promise<{ id: string 
                         </label>
                         <select
                             name="difficulty"
-                            defaultValue={game.difficulty}
+                            defaultValue={item.difficulty}
                             required
                             className="mt-2 block w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-gray-900 outline-none transition-all focus:bg-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500 dark:border-zinc-700 dark:bg-zinc-800 dark:text-gray-100"
                         >
@@ -170,7 +177,7 @@ export default function EditGamePage({ params }: { params: Promise<{ id: string 
                         <input
                             name="minAge"
                             type="number"
-                            defaultValue={game.minAge}
+                            defaultValue={item.minAge}
                             required
                             className="mt-2 block w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-gray-900 outline-none transition-all focus:bg-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500 dark:border-zinc-700 dark:bg-zinc-800 dark:text-gray-100"
                         />
@@ -183,8 +190,19 @@ export default function EditGamePage({ params }: { params: Promise<{ id: string 
                         <input
                             name="maxAge"
                             type="number"
-                            defaultValue={game.maxAge}
+                            defaultValue={item.maxAge}
                             required
+                            className="mt-2 block w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-gray-900 outline-none transition-all focus:bg-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500 dark:border-zinc-700 dark:bg-zinc-800 dark:text-gray-100"
+                        />
+                    </div>
+
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                            Category
+                        </label>
+                        <input
+                            name="category"
+                            defaultValue={item.metadata?.category}
                             className="mt-2 block w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-gray-900 outline-none transition-all focus:bg-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500 dark:border-zinc-700 dark:bg-zinc-800 dark:text-gray-100"
                         />
                     </div>
@@ -199,7 +217,7 @@ export default function EditGamePage({ params }: { params: Promise<{ id: string 
                             accept="image/*"
                             className="mt-2 block w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-gray-900 outline-none transition-all file:mr-4 file:rounded-lg file:border-0 file:bg-blue-600 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-white hover:file:bg-blue-700 dark:border-zinc-700 dark:bg-zinc-800 dark:text-gray-100"
                         />
-                        {game.imageUrl && (
+                        {item.imageUrl && (
                             <p className="mt-2 text-xs text-gray-500">Current image will be kept if no file is uploaded.</p>
                         )}
                     </div>
@@ -207,7 +225,7 @@ export default function EditGamePage({ params }: { params: Promise<{ id: string 
 
                 <div className="flex justify-end gap-3 border-t border-gray-100 pt-8 dark:border-zinc-800">
                     <Link
-                        href="/content/games"
+                        href="/content/knowledge"
                         className="rounded-xl px-6 py-3 text-sm font-bold text-gray-500 transition-colors hover:text-gray-700"
                     >
                         Cancel
@@ -222,7 +240,7 @@ export default function EditGamePage({ params }: { params: Promise<{ id: string 
                         ) : (
                             <Save className="h-4 w-4" />
                         )}
-                        {isSaving ? "Saving..." : "Update Game"}
+                        {isSaving ? "Saving..." : "Update Knowledge"}
                     </button>
                 </div>
             </form>

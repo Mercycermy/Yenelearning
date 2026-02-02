@@ -9,6 +9,7 @@ import { ChildrenModule } from './children/children.module';
 import { ContentModule } from './content/content.module';
 import { ProgressModule } from './progress/progress.module';
 import { AiModule } from './ai/ai.module';
+import { UploadsModule } from './uploads/uploads.module';
 
 // Entities
 import { User } from './entities/user.entity';
@@ -63,6 +64,7 @@ import { SettingsModule } from './settings/settings.module';
     ProgressModule,
     AiModule,
     SettingsModule,
+    UploadsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -33,6 +33,13 @@ export class ProgressController {
         return this.progressService.recordProgress(childId, dto);
     }
 
+    @Get('stats/dashboard')
+    @UseGuards(RolesGuard)
+    @Roles(UserRole.ADMIN)
+    getDashboardStats() {
+        return this.progressService.getDashboardStats();
+    }
+
     @Get(':childId')
     getChildProgress(@Param('childId', ParseUUIDPipe) childId: string) {
         return this.progressService.getChildProgress(childId);

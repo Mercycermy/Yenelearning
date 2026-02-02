@@ -4,12 +4,13 @@ import { useEffect, useState, use } from "react";
 import { useRouter } from "next/navigation";
 import { ArrowLeft, Loader2, Save, Plus, Trash2 } from "lucide-react";
 import Link from "next/link";
-import { fetchAPI } from "@/lib/api";
+import { fetchAPI, uploadFile } from "@/lib/api";
 
 interface StoryPage {
     pageNumber: number;
     text: string;
     imageUrl?: string;
+    imageFile?: File | null;
 }
 
 export default function EditStoryPage({ params }: { params: Promise<{ id: string }> }) {
@@ -54,9 +55,9 @@ export default function EditStoryPage({ params }: { params: Promise<{ id: string
         setPages(newPages);
     };
 
-    const updatePageImage = (index: number, imageUrl: string) => {
+    const updatePageImage = (index: number, imageFile: File | null) => {
         const newPages = [...pages];
-        newPages[index].imageUrl = imageUrl;
+        newPages[index].imageFile = imageFile;
         setPages(newPages);
     };
 
@@ -65,6 +66,24 @@ export default function EditStoryPage({ params }: { params: Promise<{ id: string
         setIsSaving(true);
 
         const formData = new FormData(event.currentTarget);
+        const coverFile = formData.get("coverFile") as File | null;
+        const coverImageUrl = coverFile && coverFile.size > 0
+            ? await uploadFile(coverFile)
+            : storyData.coverImageUrl;
+
+        const pagesWithUploads = await Promise.all(
+            pages.map(async (page) => {
+                const uploadedUrl = page.imageFile && page.imageFile.size > 0
+                    ? await uploadFile(page.imageFile)
+                    : page.imageUrl;
+                return {
+                    pageNumber: page.pageNumber,
+                    text: page.text,
+                    imageUrl: uploadedUrl && uploadedUrl.trim() !== "" ? uploadedUrl : undefined,
+                };
+            }),
+        );
+
         const updateData = {
             title: formData.get("title"),
             description: formData.get("description"),
@@ -72,11 +91,8 @@ export default function EditStoryPage({ params }: { params: Promise<{ id: string
             difficulty: formData.get("difficulty"),
             minAge: parseInt(formData.get("minAge") as string),
             maxAge: parseInt(formData.get("maxAge") as string),
-            coverImageUrl: formData.get("imageUrl") || undefined,
-            pages: pages.map(p => ({
-                ...p,
-                imageUrl: p.imageUrl && p.imageUrl.trim() !== "" ? p.imageUrl : undefined
-            })),
+            coverImageUrl,
+            pages: pagesWithUploads,
         };
 
         try {
@@ -206,13 +222,17 @@ export default function EditStoryPage({ params }: { params: Promise<{ id: string
 
                         <div className="col-span-full">
                             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                                Cover Image URL
+                                Cover Image Upload
                             </label>
                             <input
-                                name="imageUrl"
-                                defaultValue={storyData.imageUrl}
-                                className="mt-2 block w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-gray-900 outline-none transition-all focus:bg-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500 dark:border-zinc-700 dark:bg-zinc-800 dark:text-gray-100"
+                                name="coverFile"
+                                type="file"
+                                accept="image/*"
+                                className="mt-2 block w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-gray-900 outline-none transition-all file:mr-4 file:rounded-lg file:border-0 file:bg-blue-600 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-white hover:file:bg-blue-700 dark:border-zinc-700 dark:bg-zinc-800 dark:text-gray-100"
                             />
+                            {storyData.coverImageUrl && (
+                                <p className="mt-2 text-xs text-gray-500">Current cover will be kept if no file is uploaded.</p>
+                            )}
                         </div>
                     </div>
                 </div>
@@ -250,13 +270,20 @@ export default function EditStoryPage({ params }: { params: Promise<{ id: string
                                 </div>
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                                        Page Image URL (optional)
+                                        Page Image Upload (optional)
                                     </label>
                                     <input
-                                        value={page.imageUrl || ""}
-                                        onChange={(e) => updatePageImage(index, e.target.value)}
-                                        className="mt-2 block w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-gray-900 outline-none transition-all focus:bg-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500 dark:border-zinc-700 dark:bg-zinc-800 dark:text-gray-100"
+                                        type="file"
+                                        accept="image/*"
+                                        onChange={(e) => updatePageImage(index, e.target.files?.[0] || null)}
+                                        className="mt-2 block w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-gray-900 outline-none transition-all file:mr-4 file:rounded-lg file:border-0 file:bg-blue-600 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-white hover:file:bg-blue-700 dark:border-zinc-700 dark:bg-zinc-800 dark:text-gray-100"
                                     />
+                                    {page.imageFile && (
+                                        <p className="mt-2 text-xs text-gray-500">Selected: {page.imageFile.name}</p>
+                                    )}
+                                    {!page.imageFile && page.imageUrl && (
+                                        <p className="mt-2 text-xs text-gray-500">Current image will be kept if no file is uploaded.</p>
+                                    )}
                                 </div>
                             </div>
                         </div>

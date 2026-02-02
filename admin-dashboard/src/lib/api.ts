@@ -29,3 +29,24 @@ export async function fetchAPI(endpoint: string, options: RequestInit = {}) {
     const text = await response.text();
     return text ? JSON.parse(text) : {};
 }
+
+export async function uploadFile(file: File): Promise<string> {
+    const token = typeof window !== "undefined" ? localStorage.getItem("accessToken") : null;
+    const formData = new FormData();
+    formData.append("file", file);
+
+    const baseUrl = API_BASE_URL.replace(/\/api$/, "");
+    const response = await fetch("/api/uploads", {
+        method: "POST",
+        headers: token ? { "Authorization": `Bearer ${token}` } : undefined,
+        body: formData,
+    });
+
+    if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.message || `Upload failed: ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    return data.url ? `${baseUrl}${data.url}` : data.url;
+}

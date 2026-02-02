@@ -22,11 +22,11 @@ export class StoryPageDto {
     text: string;
 
     @IsOptional()
-    @IsUrl()
+    @IsUrl({ require_tld: false })
     imageUrl?: string;
 
     @IsOptional()
-    @IsUrl()
+    @IsUrl({ require_tld: false })
     audioUrl?: string;
 
     @IsOptional()
@@ -71,7 +71,7 @@ export class CreateStoryDto {
     maxAge?: number;
 
     @IsOptional()
-    @IsUrl()
+    @IsUrl({ require_tld: false })
     coverImageUrl?: string;
 
     @IsArray()

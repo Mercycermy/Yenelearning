@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { ArrowLeft, Loader2, Save, Sparkles } from "lucide-react";
 import Link from "next/link";
-import { fetchAPI } from "@/lib/api";
+import { fetchAPI, uploadFile } from "@/lib/api";
 
 export default function NewTutorPage() {
     const router = useRouter();
@@ -15,12 +15,15 @@ export default function NewTutorPage() {
         setIsSaving(true);
 
         const formData = new FormData(event.currentTarget);
+        const imageFile = formData.get("imageFile") as File | null;
+        const imageUrl = imageFile && imageFile.size > 0 ? await uploadFile(imageFile) : undefined;
+
         const tutorData = {
             name: formData.get("name"),
             gender: formData.get("gender"),
             teachingStyle: formData.get("teachingStyle"),
             personalityDescription: formData.get("personalityDescription"),
-            imageUrl: formData.get("imageUrl"),
+            imageUrl,
             voiceId: formData.get("voiceId") || undefined,
             speechRate: parseFloat(formData.get("speechRate") as string),
             pitchLevel: parseFloat(formData.get("pitchLevel") as string),
@@ -146,13 +149,14 @@ export default function NewTutorPage() {
 
                     <div className="col-span-full">
                         <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                            Avatar Image URL
+                            Avatar Image Upload
                         </label>
                         <input
-                            name="imageUrl"
+                            name="imageFile"
+                            type="file"
+                            accept="image/*"
                             required
-                            className="mt-2 block w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-gray-900 outline-none transition-all focus:bg-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500 dark:border-zinc-700 dark:bg-zinc-800 dark:text-gray-100"
-                            placeholder="https://example.com/avatar.png"
+                            className="mt-2 block w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-gray-900 outline-none transition-all file:mr-4 file:rounded-lg file:border-0 file:bg-blue-600 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-white hover:file:bg-blue-700 dark:border-zinc-700 dark:bg-zinc-800 dark:text-gray-100"
                         />
                     </div>
 
