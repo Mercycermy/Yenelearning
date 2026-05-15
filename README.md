@@ -29,3 +29,31 @@ Yene Teacher is an AI-powered language learning platform designed for Ethiopian 
 - **Backend**: NestJS, TypeORM, SQLite (Dev) / PostgreSQL (Prod)
 - **AI**: Hugging Face Inference API (Mistral, MMS-TTS)
 - **Frontend**: (Planned) Next.js, Flutter
+🛡️ Admin Credentials
+You can use the following credentials to log in to the Dashboard or Backend:
+
+Email: admin@yenelearning.com
+Password: AdminPassword123!
+🚀 Step-by-Step Flutter Installation (Windows)
+Since the automated download is slow, please follow these steps to install Flutter manually:
+
+Download the SDK:
+Go to clinical the Flutter Windows Download page.
+Click the Flutter Windows 3.x.x stable.zip button to download the latest stable bundle.
+Extract the Zip:
+Once downloaded, extract the zip file to a folder like C:\src\flutter.
+Warning: Do not install Flutter in a path that contains special characters or spaces (like C:\Program Files).
+Update Path Environment Variable:
+In the Windows Start menu, type 'env' and select Edit the system environment variables.
+Click Environment Variables.
+Under User variables, select Path and click Edit.
+Click New and add the full path to flutter\bin (e.g., C:\src\flutter\bin).
+Click OK on all windows.
+Verify Installation:
+Open a new terminal (Command Prompt or PowerShell).
+Run flutter doctor to check for any missing dependencies.
+Run the Mobile App:
+In the terminal, navigate to your project: cd c:\Users\zuko\Documents\a\Yenelearning\mobile_app
+Run flutter pub get to fetch dependencies.
+Run flutter run -d chrome to start the app in your browser.
+The Admin Dashboard (port 3000) and Backend (port 3001) are still running in the background for you.
