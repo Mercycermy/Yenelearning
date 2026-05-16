@@ -31,7 +31,7 @@ export class User {
   lastName: string;
 
   @Column({
-    type: 'simple-enum',
+    type: 'varchar',
     enum: UserRole,
     default: UserRole.PARENT,
   })

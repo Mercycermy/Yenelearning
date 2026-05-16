@@ -32,7 +32,7 @@ export class Child {
     avatarId: string;
 
     @Column({
-        type: 'simple-enum',
+        type: 'varchar',
         enum: SupportedLanguage,
         default: SupportedLanguage.AMHARIC,
     })

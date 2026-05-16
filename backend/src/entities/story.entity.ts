@@ -20,13 +20,13 @@ export class Story {
     description: string;
 
     @Column({
-        type: 'simple-enum',
+        type: 'varchar',
         enum: SupportedLanguage,
     })
     language: SupportedLanguage;
 
     @Column({
-        type: 'simple-enum',
+        type: 'varchar',
         enum: DifficultyLevel,
         default: DifficultyLevel.BEGINNER,
     })

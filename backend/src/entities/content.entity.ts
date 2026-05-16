@@ -26,7 +26,7 @@ export class Content {
     id: string;
 
     @Column({
-        type: 'simple-enum',
+        type: 'varchar',
         enum: ContentType,
     })
     type: ContentType;
@@ -38,13 +38,13 @@ export class Content {
     description: string;
 
     @Column({
-        type: 'simple-enum',
+        type: 'varchar',
         enum: SupportedLanguage,
     })
     language: SupportedLanguage;
 
     @Column({
-        type: 'simple-enum',
+        type: 'varchar',
         enum: DifficultyLevel,
         default: DifficultyLevel.BEGINNER,
     })

@@ -26,13 +26,13 @@ export class Avatar {
     name: string;
 
     @Column({
-        type: 'simple-enum',
+        type: 'varchar',
         enum: AvatarGender,
     })
     gender: AvatarGender;
 
     @Column({
-        type: 'simple-enum',
+        type: 'varchar',
         enum: TeachingStyle,
         default: TeachingStyle.PLAYFUL_TEACHER,
     })

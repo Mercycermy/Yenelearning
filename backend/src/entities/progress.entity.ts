@@ -47,7 +47,7 @@ export class Progress {
     pageNumber?: number;
 
     @Column({
-        type: 'simple-enum',
+        type: 'varchar',
         enum: ProgressStatus,
         default: ProgressStatus.NOT_STARTED,
     })
