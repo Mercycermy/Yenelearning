@@ -72,9 +72,39 @@ async function bootstrap() {
   await app.listen(port);
 
   await seedDefaultAvatars(app, logger);
+  await seedAdminUser(app, logger);
 
   console.log(`🚀 Yene Teacher API is running on: http://localhost:${port}/api`);
   console.log(`📚 Environment: ${configService.get<string>('NODE_ENV', 'development')}`);
+}
+
+async function seedAdminUser(app: any, logger: Logger) {
+  try {
+    const userRepository = app.get(getRepositoryToken(User)) as Repository<User>;
+    const adminEmail = 'admin@yenelearning.com';
+    const existingAdmin = await userRepository.findOne({ where: { email: adminEmail } });
+
+    if (!existingAdmin) {
+      const bcrypt = require('bcrypt');
+      const password = 'AdminPassword123!';
+      const salt = await bcrypt.genSalt();
+      const hashedPassword = await bcrypt.hash(password, salt);
+
+      const admin = userRepository.create({
+        email: adminEmail,
+        password: hashedPassword,
+        firstName: 'System',
+        lastName: 'Admin',
+        role: (require('./entities/user.entity').UserRole).ADMIN,
+        isActive: true,
+      });
+
+      await userRepository.save(admin);
+      logger.log('Seeded default admin user: admin@yenelearning.com');
+    }
+  } catch (error) {
+    logger.error('Admin seeding failed', error as Error);
+  }
 }
 
 bootstrap();
