@@ -41,7 +41,7 @@ import { SettingsModule } from './settings/settings.module';
             password: configService.get<string>('DATABASE_PASSWORD', 'postgres'),
             database: configService.get<string>('DATABASE_NAME', 'yene_teacher'),
             entities: [User, Child, Content, Progress, Avatar, Story, Language],
-            synchronize: configService.get<string>('NODE_ENV') === 'development',
+            synchronize: true, // Auto-create tables in Neon Postgres
             logging: configService.get<string>('NODE_ENV') === 'development',
             ssl: true,
             extra: {
