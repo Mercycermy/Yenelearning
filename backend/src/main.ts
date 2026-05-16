@@ -8,6 +8,7 @@ import { ConfigService } from '@nestjs/config';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { AppModule } from './app.module';
+import { User, UserRole } from './entities/user.entity';
 import { Avatar, AvatarGender, TeachingStyle } from './entities/avatar.entity';
 
 async function bootstrap() {
@@ -95,7 +96,7 @@ async function seedAdminUser(app: any, logger: Logger) {
         password: hashedPassword,
         firstName: 'System',
         lastName: 'Admin',
-        role: (require('./entities/user.entity').UserRole).ADMIN,
+        role: UserRole.ADMIN,
         isActive: true,
       });
 
