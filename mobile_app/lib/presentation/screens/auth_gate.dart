@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../../data/user_prefs.dart';
-import 'welcome_screen.dart';
 import 'auth/sign_in_screen.dart';
 
 class AuthGate extends StatefulWidget {
@@ -13,7 +12,6 @@ class AuthGate extends StatefulWidget {
 class _AuthGateState extends State<AuthGate> {
   final UserPrefs _prefs = UserPrefs();
   bool isLoading = true;
-  bool isAuthenticated = false;
 
   @override
   void initState() {
