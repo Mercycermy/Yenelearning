@@ -23,11 +23,16 @@ class _AuthGateState extends State<AuthGate> {
 
   Future<void> _checkAuth() async {
     final token = await _prefs.getAccessToken();
+    final avatarId = await _prefs.getAvatarId();
     if (!mounted) return;
-    setState(() {
-      isAuthenticated = token != null && token.isNotEmpty;
-      isLoading = false;
-    });
+    if (token == null || token.isEmpty) {
+      setState(() => isLoading = false);
+      return;
+    }
+    Navigator.pushReplacementNamed(
+      context,
+      avatarId == null || avatarId.isEmpty ? '/welcome' : '/dashboard',
+    );
   }
 
   @override
@@ -38,6 +43,6 @@ class _AuthGateState extends State<AuthGate> {
       );
     }
 
-    return isAuthenticated ? const WelcomeScreen() : const SignInScreen();
+    return const SignInScreen();
   }
 }

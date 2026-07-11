@@ -1,17 +1,66 @@
 import 'package:flutter/material.dart';
+import 'dart:convert';
 import '../../core/app_colors.dart';
+import '../../data/user_prefs.dart';
 
-class ParentDashboardScreen extends StatelessWidget {
+class ParentDashboardScreen extends StatefulWidget {
   const ParentDashboardScreen({super.key});
+
+  @override
+  State<ParentDashboardScreen> createState() => _ParentDashboardScreenState();
+}
+
+class _ParentDashboardScreenState extends State<ParentDashboardScreen> {
+  final UserPrefs _prefs = UserPrefs();
+  String parentName = 'Parent';
+
+  @override
+  void initState() {
+    super.initState();
+    _loadParent();
+  }
+
+  Future<void> _loadParent() async {
+    final rawUser = await _prefs.getUserJson();
+    if (rawUser == null || !mounted) return;
+    try {
+      final user = jsonDecode(rawUser) as Map<String, dynamic>;
+      final firstName = (user['firstName'] as String?)?.trim();
+      if (firstName != null && firstName.isNotEmpty) setState(() => parentName = firstName);
+    } catch (_) {}
+  }
+
+  Future<void> _logout() async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        icon: const Icon(Icons.logout_rounded, color: AppColors.navy),
+        title: const Text('Sign out?'),
+        content: const Text('Your child’s saved learning preferences will stay on this device.'),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(dialogContext, false), child: const Text('Cancel')),
+          FilledButton(onPressed: () => Navigator.pop(dialogContext, true), child: const Text('Sign out')),
+        ],
+      ),
+    );
+    if (confirmed != true) return;
+    await _prefs.clearAuth();
+    if (!mounted) return;
+    Navigator.pushNamedAndRemoveUntil(context, '/login', (route) => false);
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Parent Dashboard'),
+        title: const Text('Parent space'),
         backgroundColor: AppColors.white,
         foregroundColor: AppColors.gray900,
         elevation: 0,
+        actions: [
+          IconButton(tooltip: 'Sign out', onPressed: _logout, icon: const Icon(Icons.logout_rounded)),
+          const SizedBox(width: 8),
+        ],
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(24.0),
@@ -50,9 +99,9 @@ class ParentDashboardScreen extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text(
-                          'Parent Dashboard',
-                          style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
+                        Text(
+                          'Hi, $parentName',
+                          style: const TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
                         ),
                         const SizedBox(height: 4),
                         const Text(

@@ -18,6 +18,7 @@ class _SignInScreenState extends State<SignInScreen> {
   bool isLoading = false;
   String? errorMessage;
   bool isButtonPressed = false;
+  bool obscurePassword = true;
 
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
@@ -41,6 +42,9 @@ class _SignInScreenState extends State<SignInScreen> {
         email: _emailController.text.trim(),
         password: _passwordController.text.trim(),
       );
+      if (response.user['role'] != 'parent') {
+        throw Exception('This account is not a parent account.');
+      }
       await _prefs.saveAuth(
         accessToken: response.accessToken,
         userJson: jsonEncode(response.user),
@@ -74,7 +78,7 @@ class _SignInScreenState extends State<SignInScreen> {
               _MascotHeader(),
               const SizedBox(height: 24),
               Text(
-                'Learning Progress',
+                'Parent sign in',
                 style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                       color: AppColors.navy,
                       fontWeight: FontWeight.w700,
@@ -83,7 +87,7 @@ class _SignInScreenState extends State<SignInScreen> {
               ),
               const SizedBox(height: 8),
               const Text(
-                'Sign in to continue your learning journey.',
+                'Manage your child’s learning journey in one safe place.',
                 textAlign: TextAlign.center,
                 style: TextStyle(color: AppColors.gray500, fontSize: 14),
               ),
@@ -116,8 +120,16 @@ class _SignInScreenState extends State<SignInScreen> {
                       const SizedBox(height: 16),
                       TextFormField(
                         controller: _passwordController,
-                        obscureText: true,
-                        decoration: _inputDecoration('Password', Icons.lock_outline),
+                        obscureText: obscurePassword,
+                        textInputAction: TextInputAction.done,
+                        onFieldSubmitted: (_) => isLoading ? null : _handleSignIn(),
+                        decoration: _inputDecoration('Password', Icons.lock_outline).copyWith(
+                          suffixIcon: IconButton(
+                            tooltip: obscurePassword ? 'Show password' : 'Hide password',
+                            onPressed: () => setState(() => obscurePassword = !obscurePassword),
+                            icon: Icon(obscurePassword ? Icons.visibility_outlined : Icons.visibility_off_outlined),
+                          ),
+                        ),
                         validator: (value) => value == null || value.trim().length < 6
                             ? 'Password is too short'
                             : null,
@@ -153,7 +165,7 @@ class _SignInScreenState extends State<SignInScreen> {
                                     width: 20,
                                     child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
                                   )
-                                : const Text('Sign In'),
+                                : const Text('Sign in as parent'),
                           ),
                         ),
                       ),
@@ -164,7 +176,7 @@ class _SignInScreenState extends State<SignInScreen> {
               const SizedBox(height: 16),
               TextButton(
                 onPressed: () => Navigator.pushNamed(context, '/register'),
-                child: const Text('Create an account'),
+                child: const Text('New parent? Create an account'),
               ),
             ],
           ),

@@ -25,8 +25,4 @@ yarn-error.log*
 backend/yene_teacher.db
 
 # Documentation Internal (Excluded by request)
-final.md
-ai_api_strategy.md
-implementation_plan.md
-walkthrough.md
-hugging_face_guide.md
+NEXT_MOVE_RUN_GUIDE.md
