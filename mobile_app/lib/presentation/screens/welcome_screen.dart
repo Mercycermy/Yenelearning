@@ -68,19 +68,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   }
 
   Future<void> _init() async {
-    final isAuthenticated = await _ensureAuthenticated();
-    if (!isAuthenticated) return;
     await _loadData();
-  }
-
-  Future<bool> _ensureAuthenticated() async {
-    final token = await _prefs.getAccessToken();
-    if (!mounted) return false;
-    if (token == null || token.isEmpty) {
-      Navigator.pushReplacementNamed(context, '/login');
-      return false;
-    }
-    return true;
   }
 
   Future<void> _loadData() async {
@@ -207,7 +195,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                         borderRadius: BorderRadius.circular(28),
                         boxShadow: [
                           BoxShadow(
-                            color: AppColors.navy.withOpacity(0.08),
+                            color: AppColors.navy.withValues(alpha: 0.08),
                             blurRadius: 18,
                             offset: const Offset(0, 8),
                           ),
@@ -368,7 +356,9 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                                 ),
                                 boxShadow: [
                                   BoxShadow(
-                                    color: AppColors.navy.withOpacity(0.08),
+                                    color: AppColors.navy.withValues(
+                                      alpha: 0.08,
+                                    ),
                                     blurRadius: 12,
                                     offset: const Offset(0, 6),
                                   ),
@@ -416,7 +406,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                         borderRadius: BorderRadius.circular(22),
                         boxShadow: [
                           BoxShadow(
-                            color: AppColors.accent.withOpacity(0.4),
+                            color: AppColors.accent.withValues(alpha: 0.4),
                             blurRadius: 16,
                             offset: const Offset(0, 8),
                           ),
@@ -435,7 +425,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                             (selectedAvatar != null && selectedLanguage != null)
                             ? () async {
                                 await _saveSelections();
-                                if (!mounted) return;
+                                if (!context.mounted) return;
                                 Navigator.pushReplacementNamed(
                                   context,
                                   '/dashboard',
@@ -497,7 +487,7 @@ class _BuddyCard extends StatelessWidget {
           ),
           boxShadow: [
             BoxShadow(
-              color: accentColor.withOpacity(0.12),
+              color: accentColor.withValues(alpha: 0.12),
               blurRadius: 12,
               offset: const Offset(0, 6),
             ),

@@ -179,7 +179,7 @@ class _WordLessonScreenState extends State<WordLessonScreen> {
                   borderRadius: BorderRadius.circular(40),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.05),
+                      color: Colors.black.withValues(alpha: 0.05),
                       blurRadius: 20,
                       spreadRadius: 5,
                     ),
@@ -311,7 +311,7 @@ class _InteractionButton extends StatelessWidget {
               shape: BoxShape.circle,
               boxShadow: [
                 BoxShadow(
-                  color: color.withOpacity(0.35),
+                  color: color.withValues(alpha: 0.35),
                   blurRadius: 14,
                   offset: const Offset(0, 8),
                 ),

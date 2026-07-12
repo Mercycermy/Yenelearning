@@ -7,6 +7,7 @@ import 'presentation/screens/dashboard_screen.dart';
 import 'presentation/screens/games_screen.dart';
 import 'presentation/screens/knowledge_screen.dart';
 import 'presentation/screens/parent_dashboard_screen.dart';
+import 'presentation/screens/parent_gate.dart';
 import 'presentation/screens/stories_screen.dart';
 import 'presentation/screens/story_reader_screen.dart';
 import 'presentation/screens/talk_with_tutor_screen.dart';
@@ -35,7 +36,8 @@ class YeneTeacherApp extends StatelessWidget {
         '/dashboard': (context) => const DashboardScreen(),
         '/words': (context) => const WordLessonScreen(),
         '/tutor': (context) => const TalkWithTutorScreen(),
-        '/parent': (context) => const ParentDashboardScreen(),
+        '/parent': (context) => const ParentGate(),
+        '/parent-dashboard': (context) => const ParentDashboardScreen(),
         '/stories': (context) => const StoriesScreen(),
         '/story-reader': (context) {
           final args =

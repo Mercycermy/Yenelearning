@@ -51,7 +51,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         userJson: jsonEncode(response.user),
       );
       if (!mounted) return;
-      Navigator.pushReplacementNamed(context, '/welcome');
+      Navigator.pushReplacementNamed(context, '/parent-dashboard');
     } catch (error) {
       setState(() {
         errorMessage = 'Sign up failed. Please try again.';
@@ -99,7 +99,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   borderRadius: BorderRadius.circular(24),
                   boxShadow: [
                     BoxShadow(
-                      color: AppColors.blue.withOpacity(0.08),
+                      color: AppColors.blue.withValues(alpha: 0.08),
                       blurRadius: 18,
                       offset: const Offset(0, 8),
                     ),

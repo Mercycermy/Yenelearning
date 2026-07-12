@@ -124,7 +124,7 @@ class _StoriesScreenState extends State<StoriesScreen> {
                       borderRadius: BorderRadius.circular(24),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withOpacity(0.05),
+                          color: Colors.black.withValues(alpha: 0.05),
                           blurRadius: 10,
                         ),
                       ],
@@ -242,8 +242,8 @@ class _StoriesScreenState extends State<StoriesScreen> {
                                         borderRadius: BorderRadius.circular(14),
                                         boxShadow: [
                                           BoxShadow(
-                                            color: AppColors.accent.withOpacity(
-                                              0.35,
+                                            color: AppColors.accent.withValues(
+                                              alpha: 0.35,
                                             ),
                                             blurRadius: 10,
                                             offset: const Offset(0, 6),

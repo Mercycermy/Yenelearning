@@ -4,28 +4,65 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:mobile_app/presentation/screens/dashboard_screen.dart';
 import 'package:mobile_app/presentation/screens/parent_dashboard_screen.dart';
+import 'package:mobile_app/presentation/screens/parent_gate.dart';
+
+Widget testApp() => MaterialApp(
+  routes: {
+    '/dashboard': (_) => const DashboardScreen(),
+    '/parent': (_) => const ParentGate(),
+    '/parent-dashboard': (_) => const ParentDashboardScreen(),
+  },
+  home: const DashboardScreen(),
+);
 
 void main() {
-  testWidgets('kid dashboard opens the parent space', (tester) async {
+  testWidgets('parent space asks for sign in without ending kid mode', (
+    tester,
+  ) async {
     SharedPreferences.setMockInitialValues({'selected_language': 'amharic'});
 
-    await tester.pumpWidget(
-      MaterialApp(
-        routes: {'/parent': (_) => const ParentDashboardScreen()},
-        home: const DashboardScreen(),
-      ),
-    );
+    await tester.pumpWidget(testApp());
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Parents'));
     await tester.pumpAndSettle();
 
-    expect(find.text('Today’s mission'), findsOneWidget);
-    expect(find.text('Choose an adventure'), findsOneWidget);
-    expect(find.text('Play Games'), findsOneWidget);
+    expect(find.text('Parent sign in'), findsOneWidget);
+    expect(find.text('Continue in kid mode'), findsOneWidget);
 
+    await tester.ensureVisible(find.text('Continue in kid mode'));
+    await tester.tap(find.text('Continue in kid mode'));
+    await tester.pumpAndSettle();
+    expect(find.text('Choose an adventure'), findsOneWidget);
+  });
+
+  testWidgets('leaving parent space returns to kid mode and keeps profile', (
+    tester,
+  ) async {
+    SharedPreferences.setMockInitialValues({
+      'selected_language': 'amharic',
+      'selected_avatar_id': 'demo-avatar',
+      'auth_access_token': 'parent-token',
+      'auth_user_json': '{"firstName":"Mimi","role":"parent"}',
+    });
+
+    await tester.pumpWidget(testApp());
+    await tester.pumpAndSettle();
     await tester.tap(find.text('Parents'));
     await tester.pumpAndSettle();
 
     expect(find.text('Parent space'), findsOneWidget);
-    expect(find.text('Healthy learning'), findsOneWidget);
-    expect(find.text('Weekly progress'), findsOneWidget);
+    expect(find.textContaining('Mimi'), findsOneWidget);
+
+    await tester.tap(find.byType(PopupMenuButton<String>));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Sign out'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Sign out'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Choose an adventure'), findsOneWidget);
+    final prefs = await SharedPreferences.getInstance();
+    expect(prefs.getString('auth_access_token'), isNull);
+    expect(prefs.getString('selected_avatar_id'), 'demo-avatar');
   });
 }

@@ -92,9 +92,9 @@ class _ParentDashboardScreenState extends State<ParentDashboardScreen> {
       context: context,
       builder: (dialogContext) => AlertDialog(
         icon: const Icon(Icons.logout_rounded, color: AppColors.navy),
-        title: const Text('Sign out?'),
+        title: const Text('Sign out of Parent Space?'),
         content: const Text(
-          'Your child’s saved learning preferences will stay on this device.',
+          'You’ll return to kid mode. Learning progress and preferences stay on this device.',
         ),
         actions: [
           TextButton(
@@ -111,7 +111,7 @@ class _ParentDashboardScreenState extends State<ParentDashboardScreen> {
     if (confirmed != true) return;
     await _prefs.clearAuth();
     if (!mounted) return;
-    Navigator.pushNamedAndRemoveUntil(context, '/login', (_) => false);
+    Navigator.pushNamedAndRemoveUntil(context, '/dashboard', (_) => false);
   }
 
   @override

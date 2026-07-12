@@ -194,7 +194,7 @@ class _KnowledgeTile extends StatelessWidget {
           borderRadius: BorderRadius.circular(24),
           boxShadow: [
             BoxShadow(
-              color: iconColor.withOpacity(0.15),
+              color: iconColor.withValues(alpha: 0.15),
               blurRadius: 12,
               offset: const Offset(0, 6),
             ),
@@ -209,7 +209,7 @@ class _KnowledgeTile extends StatelessWidget {
                   ? Container(
                       height: 90,
                       width: double.infinity,
-                      color: Colors.white.withOpacity(0.6),
+                      color: Colors.white.withValues(alpha: 0.6),
                       child: Icon(
                         Icons.lightbulb_rounded,
                         color: iconColor,
@@ -229,7 +229,7 @@ class _KnowledgeTile extends StatelessWidget {
                       ),
                       errorWidget: (context, url, error) => Container(
                         height: 90,
-                        color: Colors.white.withOpacity(0.6),
+                        color: Colors.white.withValues(alpha: 0.6),
                         child: Icon(
                           Icons.lightbulb_rounded,
                           color: iconColor,
@@ -257,7 +257,7 @@ class _KnowledgeTile extends StatelessWidget {
               borderRadius: BorderRadius.circular(10),
               child: LinearProgressIndicator(
                 value: progress,
-                backgroundColor: Colors.white.withOpacity(0.5),
+                backgroundColor: Colors.white.withValues(alpha: 0.5),
                 color: iconColor,
                 minHeight: 8,
               ),

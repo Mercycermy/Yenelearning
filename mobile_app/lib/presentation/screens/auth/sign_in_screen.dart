@@ -50,7 +50,7 @@ class _SignInScreenState extends State<SignInScreen> {
         userJson: jsonEncode(response.user),
       );
       if (!mounted) return;
-      Navigator.pushReplacementNamed(context, '/welcome');
+      Navigator.pushReplacementNamed(context, '/parent-dashboard');
     } catch (error) {
       setState(() {
         errorMessage = 'Sign in failed. Please check your credentials.';
@@ -64,10 +64,28 @@ class _SignInScreenState extends State<SignInScreen> {
     }
   }
 
+  void _returnToKidMode() {
+    if (Navigator.canPop(context)) {
+      Navigator.pop(context);
+      return;
+    }
+    Navigator.pushNamedAndRemoveUntil(context, '/dashboard', (_) => false);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.softMint,
+      appBar: AppBar(
+        backgroundColor: AppColors.softMint,
+        centerTitle: false,
+        leading: IconButton(
+          tooltip: 'Back to kid mode',
+          onPressed: _returnToKidMode,
+          icon: const Icon(Icons.arrow_back_rounded),
+        ),
+        title: const Text('Parent access'),
+      ),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(24),
@@ -87,7 +105,7 @@ class _SignInScreenState extends State<SignInScreen> {
               ),
               const SizedBox(height: 8),
               const Text(
-                'Manage your child’s learning journey in one safe place.',
+                'A private space for progress, limits, and family settings.',
                 textAlign: TextAlign.center,
                 style: TextStyle(color: AppColors.gray500, fontSize: 14),
               ),
@@ -99,7 +117,7 @@ class _SignInScreenState extends State<SignInScreen> {
                   borderRadius: BorderRadius.circular(28),
                   boxShadow: [
                     BoxShadow(
-                      color: AppColors.navy.withOpacity(0.08),
+                      color: AppColors.navy.withValues(alpha: 0.08),
                       blurRadius: 24,
                       offset: const Offset(0, 12),
                     ),
@@ -180,7 +198,9 @@ class _SignInScreenState extends State<SignInScreen> {
                                 vertical: 16,
                               ),
                               elevation: 6,
-                              shadowColor: AppColors.accent.withOpacity(0.35),
+                              shadowColor: AppColors.accent.withValues(
+                                alpha: 0.35,
+                              ),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(20),
                               ),
@@ -206,6 +226,11 @@ class _SignInScreenState extends State<SignInScreen> {
               TextButton(
                 onPressed: () => Navigator.pushNamed(context, '/register'),
                 child: const Text('New parent? Create an account'),
+              ),
+              TextButton.icon(
+                onPressed: _returnToKidMode,
+                icon: const Icon(Icons.child_care_rounded),
+                label: const Text('Continue in kid mode'),
               ),
             ],
           ),
@@ -254,7 +279,7 @@ class _MascotHeader extends StatelessWidget {
                 borderRadius: BorderRadius.circular(48),
                 boxShadow: [
                   BoxShadow(
-                    color: AppColors.navy.withOpacity(0.15),
+                    color: AppColors.navy.withValues(alpha: 0.15),
                     blurRadius: 20,
                     offset: const Offset(0, 12),
                   ),
@@ -281,7 +306,7 @@ class _MascotHeader extends StatelessWidget {
                 borderRadius: BorderRadius.circular(28),
                 boxShadow: [
                   BoxShadow(
-                    color: AppColors.navy.withOpacity(0.12),
+                    color: AppColors.navy.withValues(alpha: 0.12),
                     blurRadius: 12,
                     offset: const Offset(0, 8),
                   ),

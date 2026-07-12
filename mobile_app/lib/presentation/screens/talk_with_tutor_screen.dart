@@ -104,7 +104,7 @@ class _TalkWithTutorScreenState extends State<TalkWithTutorScreen> {
                   border: Border.all(color: AppColors.blue, width: 8),
                   boxShadow: [
                     BoxShadow(
-                      color: AppColors.blue.withOpacity(0.2),
+                      color: AppColors.blue.withValues(alpha: 0.2),
                       blurRadius: 30,
                     ),
                   ],
@@ -138,7 +138,7 @@ class _TalkWithTutorScreenState extends State<TalkWithTutorScreen> {
                   borderRadius: BorderRadius.circular(32),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.05),
+                      color: Colors.black.withValues(alpha: 0.05),
                       blurRadius: 10,
                     ),
                   ],
@@ -238,7 +238,10 @@ class _SoundWaveWidget extends StatelessWidget {
             ),
             borderRadius: BorderRadius.circular(6),
             boxShadow: [
-              BoxShadow(color: AppColors.blue.withOpacity(0.2), blurRadius: 8),
+              BoxShadow(
+                color: AppColors.blue.withValues(alpha: 0.2),
+                blurRadius: 8,
+              ),
             ],
           ),
         );
