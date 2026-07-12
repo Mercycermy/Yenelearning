@@ -29,11 +29,9 @@ Yene Teacher is an AI-powered language learning platform designed for Ethiopian 
 - **Backend**: NestJS, TypeORM, SQLite (Dev) / PostgreSQL (Prod)
 - **AI**: Hugging Face Inference API (Mistral, MMS-TTS)
 - **Frontend**: (Planned) Next.js, Flutter
-🛡️ Admin Credentials
-You can use the following credentials to log in to the Dashboard or Backend:
+### Admin credentials
 
-Email: admin@yenelearning.com
-Password: AdminPassword123!
+Set `ADMIN_EMAIL` and `ADMIN_PASSWORD` in `backend/.env` before starting the API. The password must contain at least 12 characters. No production credential is committed to the repository.
 🚀 Step-by-Step Flutter Installation (Windows)
 Since the automated download is slow, please follow these steps to install Flutter manually:
 
