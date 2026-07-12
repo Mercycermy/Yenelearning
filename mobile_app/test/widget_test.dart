@@ -35,7 +35,7 @@ void main() {
     expect(find.text('Choose an adventure'), findsOneWidget);
   });
 
-  testWidgets('leaving parent space returns to kid mode and keeps profile', (
+  testWidgets('parent space requires a fresh login on every visit', (
     tester,
   ) async {
     SharedPreferences.setMockInitialValues({
@@ -50,17 +50,7 @@ void main() {
     await tester.tap(find.text('Parents'));
     await tester.pumpAndSettle();
 
-    expect(find.text('Parent space'), findsOneWidget);
-    expect(find.textContaining('Mimi'), findsOneWidget);
-
-    await tester.tap(find.byType(PopupMenuButton<String>));
-    await tester.pumpAndSettle();
-    await tester.tap(find.text('Sign out'));
-    await tester.pumpAndSettle();
-    await tester.tap(find.text('Sign out'));
-    await tester.pumpAndSettle();
-
-    expect(find.text('Choose an adventure'), findsOneWidget);
+    expect(find.text('Parent sign in'), findsOneWidget);
     final prefs = await SharedPreferences.getInstance();
     expect(prefs.getString('auth_access_token'), isNull);
     expect(prefs.getString('selected_avatar_id'), 'demo-avatar');

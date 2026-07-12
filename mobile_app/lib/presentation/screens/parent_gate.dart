@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import '../../core/app_colors.dart';
 import '../../data/user_prefs.dart';
 import 'auth/sign_in_screen.dart';
-import 'parent_dashboard_screen.dart';
 
 class ParentGate extends StatefulWidget {
   const ParentGate({super.key});
@@ -12,23 +11,20 @@ class ParentGate extends StatefulWidget {
 }
 
 class _ParentGateState extends State<ParentGate> {
-  final UserPrefs _prefs = UserPrefs();
   bool loading = true;
-  bool signedIn = false;
 
   @override
   void initState() {
     super.initState();
-    _checkSession();
+    _prepareProtectedAccess();
   }
 
-  Future<void> _checkSession() async {
-    final token = await _prefs.getAccessToken();
+  Future<void> _prepareProtectedAccess() async {
+    // Parent Space is intentionally locked on every visit. The account remains
+    // set up for kid mode, but a fresh parent login is always required.
+    await UserPrefs().clearAuth();
     if (!mounted) return;
-    setState(() {
-      signedIn = token != null && token.isNotEmpty;
-      loading = false;
-    });
+    setState(() => loading = false);
   }
 
   @override
@@ -39,6 +35,6 @@ class _ParentGateState extends State<ParentGate> {
         body: Center(child: CircularProgressIndicator(color: AppColors.purple)),
       );
     }
-    return signedIn ? const ParentDashboardScreen() : const SignInScreen();
+    return const SignInScreen(destination: SignInDestination.parentDashboard);
   }
 }

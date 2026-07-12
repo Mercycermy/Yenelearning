@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../data/user_prefs.dart';
+import 'auth/sign_in_screen.dart';
 import 'dashboard_screen.dart';
-import 'welcome_screen.dart';
 
 class AuthGate extends StatefulWidget {
   const AuthGate({super.key});
@@ -13,7 +13,7 @@ class AuthGate extends StatefulWidget {
 class _AuthGateState extends State<AuthGate> {
   final UserPrefs _prefs = UserPrefs();
   bool isLoading = true;
-  bool hasLearnerProfile = false;
+  bool familySetupComplete = false;
 
   @override
   void initState() {
@@ -22,10 +22,10 @@ class _AuthGateState extends State<AuthGate> {
   }
 
   Future<void> _checkAuth() async {
-    final avatarId = await _prefs.getAvatarId();
+    final setupComplete = await _prefs.isFamilySetupComplete();
     if (!mounted) return;
     setState(() {
-      hasLearnerProfile = avatarId != null && avatarId.isNotEmpty;
+      familySetupComplete = setupComplete;
       isLoading = false;
     });
   }
@@ -36,6 +36,8 @@ class _AuthGateState extends State<AuthGate> {
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
 
-    return hasLearnerProfile ? const DashboardScreen() : const WelcomeScreen();
+    return familySetupComplete
+        ? const DashboardScreen()
+        : const SignInScreen(destination: SignInDestination.kidDashboard);
   }
 }

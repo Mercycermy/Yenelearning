@@ -50,8 +50,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
         accessToken: response.accessToken,
         userJson: jsonEncode(response.user),
       );
+      await _prefs.markFamilySetupComplete();
       if (!mounted) return;
-      Navigator.pushReplacementNamed(context, '/parent-dashboard');
+      Navigator.pushNamedAndRemoveUntil(context, '/dashboard', (_) => false);
     } catch (error) {
       setState(() {
         errorMessage = 'Sign up failed. Please try again.';

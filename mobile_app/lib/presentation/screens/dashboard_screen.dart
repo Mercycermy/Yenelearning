@@ -16,6 +16,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   String? avatarImageUrl;
   String? avatarName;
   String? language;
+  String learningFocus = 'Reading';
 
   static const languages = [
     {'id': 'amharic', 'name': 'Amharic', 'native': 'አማርኛ'},
@@ -82,12 +83,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
       _prefs.getAvatarImage(),
       _prefs.getAvatarName(),
       _prefs.getLanguage(),
+      _prefs.getLearningFocus(),
     ]);
     if (!mounted) return;
     setState(() {
       avatarImageUrl = values[0];
       avatarName = values[1];
       language = values[2];
+      learningFocus = values[3] ?? 'Reading';
     });
   }
 
@@ -154,7 +157,19 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       onContinue: () => Navigator.pushNamed(context, '/words'),
                     ),
                     const SizedBox(height: 18),
-                    const _DailyMission(),
+                    _FocusRecommendation(
+                      focus: learningFocus,
+                      onStart: () =>
+                          Navigator.pushNamed(context, switch (learningFocus) {
+                            'Speaking' => '/tutor',
+                            'Vocabulary' => '/words',
+                            _ => '/stories',
+                          }),
+                    ),
+                    const SizedBox(height: 18),
+                    _DailyMission(
+                      onOpen: (route) => Navigator.pushNamed(context, route),
+                    ),
                     const SizedBox(height: 26),
                     _SectionHeader(
                       title: 'Pick your language',
@@ -180,6 +195,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             .toList(),
                       ),
                     ),
+                    const SizedBox(height: 22),
+                    const _QuickChallenge(),
                     const SizedBox(height: 28),
                     _SectionHeader(
                       title: 'Choose an adventure',
@@ -416,73 +433,412 @@ class _RewardPill extends StatelessWidget {
   );
 }
 
-class _DailyMission extends StatelessWidget {
-  const _DailyMission();
+class _FocusRecommendation extends StatelessWidget {
+  final String focus;
+  final VoidCallback onStart;
+
+  const _FocusRecommendation({required this.focus, required this.onStart});
+
   @override
-  Widget build(BuildContext context) => Container(
-    padding: const EdgeInsets.all(16),
-    decoration: BoxDecoration(
-      color: Colors.white,
+  Widget build(BuildContext context) {
+    final details = switch (focus) {
+      'Speaking' => (
+        Icons.record_voice_over_rounded,
+        AppColors.purple,
+        AppColors.softPurple,
+        'Practice speaking with your tutor',
+      ),
+      'Vocabulary' => (
+        Icons.abc_rounded,
+        AppColors.blue,
+        AppColors.softBlue,
+        'Grow your word power today',
+      ),
+      _ => (
+        Icons.menu_book_rounded,
+        AppColors.green,
+        AppColors.softGreen,
+        'Read a story and tell someone about it',
+      ),
+    };
+    return Material(
+      color: details.$3,
       borderRadius: BorderRadius.circular(24),
-      border: Border.all(color: const Color(0xFFE8EDF5)),
-    ),
-    child: Row(
-      children: [
-        Container(
-          width: 54,
-          height: 54,
-          decoration: BoxDecoration(
-            color: AppColors.softYellow,
-            borderRadius: BorderRadius.circular(18),
-          ),
-          child: const Icon(
-            Icons.emoji_events_rounded,
-            color: AppColors.yellow,
-            size: 31,
-          ),
-        ),
-        const SizedBox(width: 14),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+      child: InkWell(
+        borderRadius: BorderRadius.circular(24),
+        onTap: onStart,
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Row(
             children: [
-              const Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Today’s mission',
-                    style: TextStyle(fontWeight: FontWeight.w800),
-                  ),
-                  Text(
-                    '2 of 3',
-                    style: TextStyle(
-                      color: AppColors.purple,
-                      fontWeight: FontWeight.w800,
-                    ),
-                  ),
-                ],
+              CircleAvatar(
+                radius: 25,
+                backgroundColor: Colors.white,
+                child: Icon(details.$1, color: details.$2),
               ),
-              const SizedBox(height: 7),
-              ClipRRect(
-                borderRadius: BorderRadius.circular(8),
-                child: const LinearProgressIndicator(
-                  value: .67,
-                  minHeight: 9,
-                  color: AppColors.purple,
-                  backgroundColor: AppColors.softPurple,
+              const SizedBox(width: 13),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Family focus · $focus',
+                      style: TextStyle(
+                        color: details.$2,
+                        fontWeight: FontWeight.w800,
+                      ),
+                    ),
+                    const SizedBox(height: 3),
+                    Text(
+                      details.$4,
+                      style: const TextStyle(
+                        color: AppColors.navy,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
                 ),
               ),
-              const SizedBox(height: 6),
-              const Text(
-                'One more activity unlocks a surprise badge!',
-                style: TextStyle(fontSize: 12, color: AppColors.gray500),
-              ),
+              Icon(Icons.arrow_forward_rounded, color: details.$2),
             ],
           ),
         ),
-      ],
+      ),
+    );
+  }
+}
+
+class _DailyMission extends StatefulWidget {
+  final ValueChanged<String> onOpen;
+  const _DailyMission({required this.onOpen});
+
+  @override
+  State<_DailyMission> createState() => _DailyMissionState();
+}
+
+class _DailyMissionState extends State<_DailyMission> {
+  final Set<int> completed = {0};
+
+  @override
+  Widget build(BuildContext context) {
+    const missions = [
+      ('Learn 5 new words', '/words', Icons.abc_rounded),
+      ('Read one short story', '/stories', Icons.auto_stories_rounded),
+      ('Discover a fun fact', '/knowledge', Icons.lightbulb_rounded),
+    ];
+    final progress = completed.length / missions.length;
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(24),
+        border: Border.all(color: const Color(0xFFE8EDF5)),
+      ),
+      child: Column(
+        children: [
+          Row(
+            children: [
+              Container(
+                width: 54,
+                height: 54,
+                decoration: BoxDecoration(
+                  color: AppColors.softYellow,
+                  borderRadius: BorderRadius.circular(18),
+                ),
+                child: const Icon(
+                  Icons.emoji_events_rounded,
+                  color: AppColors.yellow,
+                  size: 31,
+                ),
+              ),
+              const SizedBox(width: 14),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text(
+                          'Today’s learning path',
+                          style: TextStyle(fontWeight: FontWeight.w800),
+                        ),
+                        Text(
+                          '${completed.length} of ${missions.length}',
+                          style: const TextStyle(
+                            color: AppColors.purple,
+                            fontWeight: FontWeight.w800,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 7),
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(8),
+                      child: LinearProgressIndicator(
+                        value: progress,
+                        minHeight: 9,
+                        color: AppColors.purple,
+                        backgroundColor: AppColors.softPurple,
+                      ),
+                    ),
+                    const SizedBox(height: 6),
+                    Text(
+                      completed.length == missions.length
+                          ? 'Amazing! You unlocked today’s explorer badge.'
+                          : 'Finish the path to unlock an explorer badge!',
+                      style: const TextStyle(
+                        fontSize: 12,
+                        color: AppColors.gray500,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 10),
+          ...List.generate(missions.length, (index) {
+            final mission = missions[index];
+            final done = completed.contains(index);
+            return ListTile(
+              dense: true,
+              contentPadding: EdgeInsets.zero,
+              leading: CircleAvatar(
+                backgroundColor: done
+                    ? AppColors.softGreen
+                    : AppColors.softBlue,
+                child: Icon(
+                  done ? Icons.check_rounded : mission.$3,
+                  color: done ? AppColors.green : AppColors.blue,
+                  size: 20,
+                ),
+              ),
+              title: Text(
+                mission.$1,
+                style: TextStyle(
+                  fontWeight: FontWeight.w700,
+                  decoration: done ? TextDecoration.lineThrough : null,
+                ),
+              ),
+              trailing: const Icon(
+                Icons.play_circle_fill_rounded,
+                color: AppColors.purple,
+              ),
+              onTap: () {
+                setState(() => completed.add(index));
+                widget.onOpen(mission.$2);
+              },
+            );
+          }),
+        ],
+      ),
+    );
+  }
+}
+
+class _QuickChallenge extends StatefulWidget {
+  const _QuickChallenge();
+  @override
+  State<_QuickChallenge> createState() => _QuickChallengeState();
+}
+
+class _QuickChallengeState extends State<_QuickChallenge> {
+  static const questions = [
+    (
+      question: 'Which animal is the tallest in the world?',
+      options: ['Elephant', 'Giraffe', 'Lion'],
+      answer: 'Giraffe',
+      explanation: 'A giraffe can grow taller than 5 meters.',
     ),
-  );
+    (
+      question: 'What do plants need to make their food?',
+      options: ['Sunlight', 'Moonlight', 'Sand'],
+      answer: 'Sunlight',
+      explanation: 'Plants use sunlight, water, and air in photosynthesis.',
+    ),
+    (
+      question: 'Which word means the opposite of “fast”?',
+      options: ['Quick', 'Slow', 'Bright'],
+      answer: 'Slow',
+      explanation: 'Slow is an antonym, or opposite word, for fast.',
+    ),
+  ];
+
+  int questionIndex = 0;
+  int score = 0;
+  String? answer;
+
+  void _selectAnswer(String option) {
+    if (answer != null) return;
+    setState(() {
+      answer = option;
+      if (option == questions[questionIndex].answer) score++;
+    });
+  }
+
+  void _next() {
+    setState(() {
+      questionIndex++;
+      answer = null;
+    });
+  }
+
+  void _restart() {
+    setState(() {
+      questionIndex = 0;
+      score = 0;
+      answer = null;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final finished = questionIndex == questions.length;
+    final question = finished ? null : questions[questionIndex];
+    final answered = answer != null;
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(18),
+      decoration: BoxDecoration(
+        gradient: const LinearGradient(
+          colors: [AppColors.softOrange, AppColors.softYellow],
+        ),
+        borderRadius: BorderRadius.circular(24),
+        border: Border.all(color: AppColors.yellow.withValues(alpha: .25)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              const Icon(Icons.psychology_alt_rounded, color: AppColors.orange),
+              const SizedBox(width: 8),
+              const Text(
+                'Brain boost challenge',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800),
+              ),
+              const Spacer(),
+              const Icon(Icons.star_rounded, color: AppColors.yellow),
+              const SizedBox(width: 3),
+              Text('$score', style: TextStyle(fontWeight: FontWeight.w800)),
+            ],
+          ),
+          const SizedBox(height: 10),
+          if (finished) ...[
+            Center(
+              child: Column(
+                children: [
+                  Icon(
+                    score == questions.length
+                        ? Icons.emoji_events_rounded
+                        : Icons.auto_awesome_rounded,
+                    size: 52,
+                    color: AppColors.orange,
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    'You scored $score of ${questions.length}!',
+                    style: const TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w800,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  const Text('Every answer helps your brain grow.'),
+                  const SizedBox(height: 12),
+                  OutlinedButton.icon(
+                    onPressed: _restart,
+                    icon: const Icon(Icons.replay_rounded),
+                    label: const Text('Play again'),
+                  ),
+                ],
+              ),
+            ),
+          ] else ...[
+            Row(
+              children: [
+                Text(
+                  'Question ${questionIndex + 1} of ${questions.length}',
+                  style: const TextStyle(
+                    color: AppColors.gray500,
+                    fontSize: 12,
+                  ),
+                ),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: LinearProgressIndicator(
+                    value: (questionIndex + 1) / questions.length,
+                    borderRadius: BorderRadius.circular(8),
+                    color: AppColors.orange,
+                    backgroundColor: Colors.white,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 10),
+            Text(
+              question!.question,
+              style: const TextStyle(fontWeight: FontWeight.w700),
+            ),
+            const SizedBox(height: 12),
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: question.options.map((option) {
+                final selected = answer == option;
+                final isCorrect = answered && option == question.answer;
+                return ChoiceChip(
+                  label: Text(option),
+                  selected: selected || isCorrect,
+                  onSelected: answered ? null : (_) => _selectAnswer(option),
+                  selectedColor: isCorrect ? AppColors.green : AppColors.error,
+                  labelStyle: TextStyle(
+                    color: selected || isCorrect
+                        ? Colors.white
+                        : AppColors.navy,
+                  ),
+                );
+              }).toList(),
+            ),
+            if (answered) ...[
+              const SizedBox(height: 12),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Icon(
+                    answer == question.answer
+                        ? Icons.check_circle_rounded
+                        : Icons.lightbulb_rounded,
+                    color: answer == question.answer
+                        ? AppColors.green
+                        : AppColors.orange,
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      '${answer == question.answer ? 'Correct! ' : 'Nice try! '}${question.explanation}',
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w700,
+                        color: AppColors.navy,
+                      ),
+                    ),
+                  ),
+                  IconButton.filled(
+                    tooltip: questionIndex == questions.length - 1
+                        ? 'See score'
+                        : 'Next question',
+                    onPressed: _next,
+                    icon: const Icon(Icons.arrow_forward_rounded),
+                  ),
+                ],
+              ),
+            ],
+          ],
+        ],
+      ),
+    );
+  }
 }
 
 class _SectionHeader extends StatelessWidget {

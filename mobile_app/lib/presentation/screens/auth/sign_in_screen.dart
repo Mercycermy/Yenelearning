@@ -4,8 +4,15 @@ import '../../../core/app_colors.dart';
 import '../../../data/auth_repository.dart';
 import '../../../data/user_prefs.dart';
 
+enum SignInDestination { kidDashboard, parentDashboard }
+
 class SignInScreen extends StatefulWidget {
-  const SignInScreen({super.key});
+  final SignInDestination destination;
+
+  const SignInScreen({
+    super.key,
+    this.destination = SignInDestination.kidDashboard,
+  });
 
   @override
   State<SignInScreen> createState() => _SignInScreenState();
@@ -49,8 +56,12 @@ class _SignInScreenState extends State<SignInScreen> {
         accessToken: response.accessToken,
         userJson: jsonEncode(response.user),
       );
+      await _prefs.markFamilySetupComplete();
       if (!mounted) return;
-      Navigator.pushReplacementNamed(context, '/parent-dashboard');
+      final route = widget.destination == SignInDestination.parentDashboard
+          ? '/parent-dashboard'
+          : '/dashboard';
+      Navigator.pushNamedAndRemoveUntil(context, route, (_) => false);
     } catch (error) {
       setState(() {
         errorMessage = 'Sign in failed. Please check your credentials.';
@@ -65,6 +76,7 @@ class _SignInScreenState extends State<SignInScreen> {
   }
 
   void _returnToKidMode() {
+    if (widget.destination == SignInDestination.kidDashboard) return;
     if (Navigator.canPop(context)) {
       Navigator.pop(context);
       return;
@@ -79,12 +91,20 @@ class _SignInScreenState extends State<SignInScreen> {
       appBar: AppBar(
         backgroundColor: AppColors.softMint,
         centerTitle: false,
-        leading: IconButton(
+        automaticallyImplyLeading:
+            widget.destination == SignInDestination.parentDashboard,
+        leading: widget.destination == SignInDestination.parentDashboard
+            ? IconButton(
           tooltip: 'Back to kid mode',
           onPressed: _returnToKidMode,
           icon: const Icon(Icons.arrow_back_rounded),
+              )
+            : null,
+        title: Text(
+          widget.destination == SignInDestination.parentDashboard
+              ? 'Parent access'
+              : 'Welcome to Yene Teacher',
         ),
-        title: const Text('Parent access'),
       ),
       body: SafeArea(
         child: SingleChildScrollView(
@@ -96,7 +116,9 @@ class _SignInScreenState extends State<SignInScreen> {
               _MascotHeader(),
               const SizedBox(height: 24),
               Text(
-                'Parent sign in',
+                widget.destination == SignInDestination.parentDashboard
+                    ? 'Parent sign in'
+                    : 'Parent sign in to get started',
                 style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                   color: AppColors.navy,
                   fontWeight: FontWeight.w700,
@@ -104,8 +126,10 @@ class _SignInScreenState extends State<SignInScreen> {
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 8),
-              const Text(
-                'A private space for progress, limits, and family settings.',
+              Text(
+                widget.destination == SignInDestination.parentDashboard
+                    ? 'A private space for progress, goals, and family settings.'
+                    : 'Set up your family account, then your child can start learning.',
                 textAlign: TextAlign.center,
                 style: TextStyle(color: AppColors.gray500, fontSize: 14),
               ),

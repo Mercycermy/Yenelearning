@@ -12,6 +12,8 @@ class UserPrefs {
   static const _avatarPitchLevelKey = 'selected_avatar_pitch_level';
   static const _accessTokenKey = 'auth_access_token';
   static const _userJsonKey = 'auth_user_json';
+  static const _familySetupKey = 'family_setup_complete';
+  static const _learningFocusKey = 'parent_learning_focus';
 
   Future<void> saveLanguage(String language) async {
     final prefs = await SharedPreferences.getInstance();
@@ -101,6 +103,26 @@ class UserPrefs {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(_accessTokenKey, accessToken);
     await prefs.setString(_userJsonKey, userJson);
+  }
+
+  Future<void> markFamilySetupComplete() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(_familySetupKey, true);
+  }
+
+  Future<bool> isFamilySetupComplete() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getBool(_familySetupKey) ?? false;
+  }
+
+  Future<void> saveLearningFocus(String focus) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_learningFocusKey, focus);
+  }
+
+  Future<String> getLearningFocus() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString(_learningFocusKey) ?? 'Reading';
   }
 
   Future<String?> getAccessToken() async {

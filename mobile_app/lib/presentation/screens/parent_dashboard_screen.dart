@@ -16,6 +16,7 @@ class _ParentDashboardScreenState extends State<ParentDashboardScreen> {
   int dailyMinutes = 30;
   bool contentFilter = true;
   bool learningReminders = true;
+  String learningFocus = 'Reading';
 
   @override
   void initState() {
@@ -24,8 +25,14 @@ class _ParentDashboardScreenState extends State<ParentDashboardScreen> {
   }
 
   Future<void> _loadParent() async {
-    final rawUser = await _prefs.getUserJson();
-    if (rawUser == null || !mounted) return;
+    final values = await Future.wait([
+      _prefs.getUserJson(),
+      _prefs.getLearningFocus(),
+    ]);
+    if (!mounted) return;
+    setState(() => learningFocus = values[1] ?? 'Reading');
+    final rawUser = values[0];
+    if (rawUser == null) return;
     try {
       final user = jsonDecode(rawUser) as Map<String, dynamic>;
       final firstName = (user['firstName'] as String?)?.trim();
@@ -163,6 +170,28 @@ class _ParentDashboardScreenState extends State<ParentDashboardScreen> {
                     _ParentHero(name: parentName),
                     const SizedBox(height: 18),
                     const _InsightBanner(),
+                    const SizedBox(height: 18),
+                    _LearningPlanCard(
+                      selectedFocus: learningFocus,
+                      onFocusChanged: (value) async {
+                        setState(() => learningFocus = value);
+                        await _prefs.saveLearningFocus(value);
+                        if (!mounted) return;
+                        _message('$value is now this week’s learning focus.');
+                      },
+                      onStartActivity: () {
+                        final route = switch (learningFocus) {
+                          'Reading' => '/stories',
+                          'Speaking' => '/tutor',
+                          _ => '/words',
+                        };
+                        Navigator.pushNamedAndRemoveUntil(
+                          context,
+                          route,
+                          (_) => false,
+                        );
+                      },
+                    ),
                     const SizedBox(height: 26),
                     const _SectionTitle(
                       'Children',
@@ -263,6 +292,101 @@ class _ParentDashboardScreenState extends State<ParentDashboardScreen> {
         onTap: () => setState(() => learningReminders = !learningReminders),
       ),
     ],
+  );
+}
+
+class _LearningPlanCard extends StatelessWidget {
+  final String selectedFocus;
+  final ValueChanged<String> onFocusChanged;
+  final VoidCallback onStartActivity;
+
+  const _LearningPlanCard({
+    required this.selectedFocus,
+    required this.onFocusChanged,
+    required this.onStartActivity,
+  });
+
+  @override
+  Widget build(BuildContext context) => Container(
+    width: double.infinity,
+    padding: const EdgeInsets.all(20),
+    decoration: BoxDecoration(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(26),
+      border: Border.all(color: AppColors.gray200),
+      boxShadow: [
+        BoxShadow(
+          color: AppColors.navy.withValues(alpha: .05),
+          blurRadius: 18,
+          offset: const Offset(0, 8),
+        ),
+      ],
+    ),
+    child: LayoutBuilder(
+      builder: (context, constraints) {
+        final compact = constraints.maxWidth < 620;
+        final details = Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Row(
+              children: [
+                Icon(Icons.track_changes_rounded, color: AppColors.purple),
+                SizedBox(width: 9),
+                Text(
+                  'This week’s learning plan',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800),
+                ),
+              ],
+            ),
+            const SizedBox(height: 7),
+            const Text(
+              'Choose one focus and launch a recommended activity to learn together.',
+              style: TextStyle(color: AppColors.gray500, height: 1.35),
+            ),
+            const SizedBox(height: 13),
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: ['Reading', 'Vocabulary', 'Speaking']
+                  .map(
+                    (focus) => ChoiceChip(
+                      label: Text(focus),
+                      selected: focus == selectedFocus,
+                      avatar: Icon(
+                        focus == 'Reading'
+                            ? Icons.menu_book_rounded
+                            : focus == 'Vocabulary'
+                            ? Icons.abc_rounded
+                            : Icons.record_voice_over_rounded,
+                        size: 17,
+                      ),
+                      onSelected: (_) => onFocusChanged(focus),
+                    ),
+                  )
+                  .toList(),
+            ),
+          ],
+        );
+        final action = FilledButton.icon(
+          onPressed: onStartActivity,
+          icon: const Icon(Icons.play_arrow_rounded),
+          label: const Text('Learn together'),
+        );
+        if (compact) {
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [details, const SizedBox(height: 16), action],
+          );
+        }
+        return Row(
+          children: [
+            Expanded(child: details),
+            const SizedBox(width: 18),
+            action,
+          ],
+        );
+      },
+    ),
   );
 }
 
