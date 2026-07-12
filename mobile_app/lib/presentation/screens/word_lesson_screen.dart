@@ -93,7 +93,10 @@ class _WordLessonScreenState extends State<WordLessonScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(errorMessage!, style: const TextStyle(color: AppColors.error)),
+                Text(
+                  errorMessage!,
+                  style: const TextStyle(color: AppColors.error),
+                ),
                 const SizedBox(height: 16),
                 ElevatedButton(
                   onPressed: _loadWords,
@@ -135,8 +138,10 @@ class _WordLessonScreenState extends State<WordLessonScreen> {
     }
 
     final word = words[currentIndex];
-    final translation = (word.description ?? '').isNotEmpty ? word.description! : '...';
-    
+    final translation = (word.description ?? '').isNotEmpty
+        ? word.description!
+        : '...';
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Learn Words'),
@@ -164,7 +169,7 @@ class _WordLessonScreenState extends State<WordLessonScreen> {
               borderRadius: BorderRadius.circular(10),
             ),
             const SizedBox(height: 40),
-            
+
             // Flashcard
             Expanded(
               child: Container(
@@ -192,7 +197,8 @@ class _WordLessonScreenState extends State<WordLessonScreen> {
                           width: 120,
                           child: CircularProgressIndicator(strokeWidth: 2),
                         ),
-                        errorWidget: (context, url, error) => const Icon(Icons.image, size: 120),
+                        errorWidget: (context, url, error) =>
+                            const Icon(Icons.image, size: 120),
                       )
                     else
                       Container(
@@ -200,13 +206,20 @@ class _WordLessonScreenState extends State<WordLessonScreen> {
                         width: 220,
                         decoration: BoxDecoration(
                           gradient: const LinearGradient(
-                            colors: [AppColors.softYellow, AppColors.softOrange],
+                            colors: [
+                              AppColors.softYellow,
+                              AppColors.softOrange,
+                            ],
                             begin: Alignment.topLeft,
                             end: Alignment.bottomRight,
                           ),
                           borderRadius: BorderRadius.circular(32),
                         ),
-                        child: const Icon(Icons.auto_awesome_rounded, size: 120, color: AppColors.orange),
+                        child: const Icon(
+                          Icons.auto_awesome_rounded,
+                          size: 120,
+                          color: AppColors.orange,
+                        ),
                       ),
                     const SizedBox(height: 32),
                     Text(
@@ -226,7 +239,11 @@ class _WordLessonScreenState extends State<WordLessonScreen> {
                     ),
                     const SizedBox(height: 24),
                     IconButton(
-                      icon: const Icon(Icons.volume_up_rounded, size: 72, color: AppColors.accent),
+                      icon: const Icon(
+                        Icons.volume_up_rounded,
+                        size: 72,
+                        color: AppColors.accent,
+                      ),
                       onPressed: () {
                         // Play audio pronunciation
                       },
@@ -235,15 +252,17 @@ class _WordLessonScreenState extends State<WordLessonScreen> {
                 ),
               ),
             ),
-            
+
             const SizedBox(height: 40),
-            
+
             // Interaction Row
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 _InteractionButton(
-                  icon: isListening ? Icons.mic_rounded : Icons.mic_none_rounded,
+                  icon: isListening
+                      ? Icons.mic_rounded
+                      : Icons.mic_none_rounded,
                   label: 'Speak',
                   color: isListening ? AppColors.error : AppColors.blue,
                   onTap: () {
@@ -301,7 +320,10 @@ class _InteractionButton extends StatelessWidget {
             child: Icon(icon, size: 42, color: Colors.white),
           ),
           const SizedBox(height: 8),
-          Text(label, style: TextStyle(color: color, fontWeight: FontWeight.bold)),
+          Text(
+            label,
+            style: TextStyle(color: color, fontWeight: FontWeight.bold),
+          ),
         ],
       ),
     );

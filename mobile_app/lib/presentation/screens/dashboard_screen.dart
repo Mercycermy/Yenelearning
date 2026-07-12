@@ -91,17 +91,25 @@ class _DashboardScreenState extends State<DashboardScreen> {
     setState(() {
       language = value;
     });
-    final label = languages.firstWhere((lang) => lang['id'] == value, orElse: () => {'name': value})['name'] ?? value;
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Language set to $label')),
-    );
+    final label =
+        languages.firstWhere(
+          (lang) => lang['id'] == value,
+          orElse: () => {'name': value},
+        )['name'] ??
+        value;
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text('Language set to $label')));
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Yene Teacher', style: TextStyle(fontWeight: FontWeight.bold)),
+        title: const Text(
+          'Yene Teacher',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
         actions: [
           IconButton(
             icon: const Icon(Icons.person_pin_rounded, size: 32),
@@ -121,7 +129,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
                 gradient: const LinearGradient(
-                  colors: [Color(0xFF6C63FF), Color(0xFF38BDF8), Color(0xFF7EEAD2)],
+                  colors: [
+                    Color(0xFF6C63FF),
+                    Color(0xFF38BDF8),
+                    Color(0xFF7EEAD2),
+                  ],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                 ),
@@ -148,22 +160,31 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                     width: 60,
                                     height: 60,
                                     fit: BoxFit.cover,
-                                    errorBuilder: (context, error, stackTrace) => const Icon(
-                                      Icons.person,
-                                      color: AppColors.blue,
-                                    ),
+                                    errorBuilder:
+                                        (context, error, stackTrace) =>
+                                            const Icon(
+                                              Icons.person,
+                                              color: AppColors.blue,
+                                            ),
                                   )
                                 : CachedNetworkImage(
                                     imageUrl: avatarImageUrl!,
                                     width: 60,
                                     height: 60,
                                     fit: BoxFit.cover,
-                                    placeholder: (context, url) => const SizedBox(
-                                      width: 40,
-                                      height: 40,
-                                      child: CircularProgressIndicator(strokeWidth: 2),
-                                    ),
-                                    errorWidget: (context, url, error) => const Icon(Icons.person, color: AppColors.blue),
+                                    placeholder: (context, url) =>
+                                        const SizedBox(
+                                          width: 40,
+                                          height: 40,
+                                          child: CircularProgressIndicator(
+                                            strokeWidth: 2,
+                                          ),
+                                        ),
+                                    errorWidget: (context, url, error) =>
+                                        const Icon(
+                                          Icons.person,
+                                          color: AppColors.blue,
+                                        ),
                                   ),
                           ),
                   ),
@@ -174,19 +195,28 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       children: [
                         Text(
                           'Hello${avatarName != null ? ', $avatarName!' : ', Learner!'}',
-                          style: Theme.of(context).textTheme.headlineMedium?.copyWith(color: Colors.white),
+                          style: Theme.of(context).textTheme.headlineMedium
+                              ?.copyWith(color: Colors.white),
                         ),
                         const SizedBox(height: 4),
                         Text(
-                          language == null ? 'Ready to learn today?' : 'Learning in ${language!}',
+                          language == null
+                              ? 'Ready to learn today?'
+                              : 'Learning in ${language!}',
                           style: const TextStyle(color: Colors.white70),
                         ),
                         const SizedBox(height: 10),
                         Row(
                           children: [
-                            _HeaderBadge(label: 'Streak 3', icon: Icons.local_fire_department_rounded),
+                            _HeaderBadge(
+                              label: 'Streak 3',
+                              icon: Icons.local_fire_department_rounded,
+                            ),
                             const SizedBox(width: 8),
-                            _HeaderBadge(label: 'Coins 120', icon: Icons.star_rounded),
+                            _HeaderBadge(
+                              label: 'Coins 120',
+                              icon: Icons.star_rounded,
+                            ),
                           ],
                         ),
                       ],
@@ -196,7 +226,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
               ),
             ),
             const SizedBox(height: 24),
-            const Text('Choose a language', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            const Text(
+              'Choose a language',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
             const SizedBox(height: 10),
             Wrap(
               spacing: 12,
@@ -214,7 +247,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
             const SizedBox(height: 24),
             Row(
               children: [
-                const Text('Let’s explore!', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                const Text(
+                  'Let’s explore!',
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                ),
                 const SizedBox(width: 12),
                 TextButton.icon(
                   onPressed: () => Navigator.pushNamed(context, '/parent'),
@@ -277,7 +313,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           Text(
                             activity['subtitle'],
                             textAlign: TextAlign.center,
-                            style: const TextStyle(fontSize: 13, color: AppColors.gray500),
+                            style: const TextStyle(
+                              fontSize: 13,
+                              color: AppColors.gray500,
+                            ),
                           ),
                         ],
                       ),
@@ -312,7 +351,14 @@ class _HeaderBadge extends StatelessWidget {
         children: [
           Icon(icon, size: 14, color: Colors.white),
           const SizedBox(width: 6),
-          Text(label, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w600, fontSize: 12)),
+          Text(
+            label,
+            style: const TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.w600,
+              fontSize: 12,
+            ),
+          ),
         ],
       ),
     );
@@ -341,7 +387,10 @@ class _LanguageChip extends StatelessWidget {
         decoration: BoxDecoration(
           color: isSelected ? AppColors.softMint : AppColors.white,
           borderRadius: BorderRadius.circular(18),
-          border: Border.all(color: isSelected ? AppColors.mint : AppColors.gray200, width: 2),
+          border: Border.all(
+            color: isSelected ? AppColors.mint : AppColors.gray200,
+            width: 2,
+          ),
           boxShadow: [
             BoxShadow(
               color: AppColors.navy.withOpacity(0.08),
@@ -355,7 +404,10 @@ class _LanguageChip extends StatelessWidget {
           children: [
             Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
             const SizedBox(height: 2),
-            Text(subtitle, style: const TextStyle(fontSize: 12, color: AppColors.gray500)),
+            Text(
+              subtitle,
+              style: const TextStyle(fontSize: 12, color: AppColors.gray500),
+            ),
           ],
         ),
       ),

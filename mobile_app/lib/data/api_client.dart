@@ -7,9 +7,17 @@ class ApiClient {
 
   ApiClient({http.Client? client}) : _client = client ?? http.Client();
 
-  Future<Map<String, dynamic>> getJson(String path, {Map<String, String>? query}) async {
-    final uri = Uri.parse('${ApiConfig.baseUrl}$path').replace(queryParameters: query);
-    final response = await _client.get(uri, headers: {'Accept': 'application/json'});
+  Future<Map<String, dynamic>> getJson(
+    String path, {
+    Map<String, String>? query,
+  }) async {
+    final uri = Uri.parse(
+      '${ApiConfig.baseUrl}$path',
+    ).replace(queryParameters: query);
+    final response = await _client.get(
+      uri,
+      headers: {'Accept': 'application/json'},
+    );
 
     if (response.statusCode >= 200 && response.statusCode < 300) {
       if (response.body.isEmpty) {
@@ -21,9 +29,17 @@ class ApiClient {
     throw ApiException(response.statusCode, response.body);
   }
 
-  Future<List<dynamic>> getJsonList(String path, {Map<String, String>? query}) async {
-    final uri = Uri.parse('${ApiConfig.baseUrl}$path').replace(queryParameters: query);
-    final response = await _client.get(uri, headers: {'Accept': 'application/json'});
+  Future<List<dynamic>> getJsonList(
+    String path, {
+    Map<String, String>? query,
+  }) async {
+    final uri = Uri.parse(
+      '${ApiConfig.baseUrl}$path',
+    ).replace(queryParameters: query);
+    final response = await _client.get(
+      uri,
+      headers: {'Accept': 'application/json'},
+    );
 
     if (response.statusCode >= 200 && response.statusCode < 300) {
       if (response.body.isEmpty) {
@@ -35,7 +51,10 @@ class ApiClient {
     throw ApiException(response.statusCode, response.body);
   }
 
-  Future<Map<String, dynamic>> postJson(String path, Map<String, dynamic> body) async {
+  Future<Map<String, dynamic>> postJson(
+    String path,
+    Map<String, dynamic> body,
+  ) async {
     final uri = Uri.parse('${ApiConfig.baseUrl}$path');
     final response = await _client.post(
       uri,

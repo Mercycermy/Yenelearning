@@ -80,9 +80,9 @@ class _SignInScreenState extends State<SignInScreen> {
               Text(
                 'Parent sign in',
                 style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                      color: AppColors.navy,
-                      fontWeight: FontWeight.w700,
-                    ),
+                  color: AppColors.navy,
+                  fontWeight: FontWeight.w700,
+                ),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 8),
@@ -112,8 +112,12 @@ class _SignInScreenState extends State<SignInScreen> {
                       TextFormField(
                         controller: _emailController,
                         keyboardType: TextInputType.emailAddress,
-                        decoration: _inputDecoration('Email address', Icons.mail_outline),
-                        validator: (value) => value == null || value.trim().isEmpty
+                        decoration: _inputDecoration(
+                          'Email address',
+                          Icons.mail_outline,
+                        ),
+                        validator: (value) =>
+                            value == null || value.trim().isEmpty
                             ? 'Email is required'
                             : null,
                       ),
@@ -122,15 +126,29 @@ class _SignInScreenState extends State<SignInScreen> {
                         controller: _passwordController,
                         obscureText: obscurePassword,
                         textInputAction: TextInputAction.done,
-                        onFieldSubmitted: (_) => isLoading ? null : _handleSignIn(),
-                        decoration: _inputDecoration('Password', Icons.lock_outline).copyWith(
-                          suffixIcon: IconButton(
-                            tooltip: obscurePassword ? 'Show password' : 'Hide password',
-                            onPressed: () => setState(() => obscurePassword = !obscurePassword),
-                            icon: Icon(obscurePassword ? Icons.visibility_outlined : Icons.visibility_off_outlined),
-                          ),
-                        ),
-                        validator: (value) => value == null || value.trim().length < 6
+                        onFieldSubmitted: (_) =>
+                            isLoading ? null : _handleSignIn(),
+                        decoration:
+                            _inputDecoration(
+                              'Password',
+                              Icons.lock_outline,
+                            ).copyWith(
+                              suffixIcon: IconButton(
+                                tooltip: obscurePassword
+                                    ? 'Show password'
+                                    : 'Hide password',
+                                onPressed: () => setState(
+                                  () => obscurePassword = !obscurePassword,
+                                ),
+                                icon: Icon(
+                                  obscurePassword
+                                      ? Icons.visibility_outlined
+                                      : Icons.visibility_off_outlined,
+                                ),
+                              ),
+                            ),
+                        validator: (value) =>
+                            value == null || value.trim().length < 6
                             ? 'Password is too short'
                             : null,
                       ),
@@ -138,13 +156,18 @@ class _SignInScreenState extends State<SignInScreen> {
                       if (errorMessage != null)
                         Padding(
                           padding: const EdgeInsets.only(bottom: 8),
-                          child: Text(errorMessage!, style: const TextStyle(color: AppColors.error)),
+                          child: Text(
+                            errorMessage!,
+                            style: const TextStyle(color: AppColors.error),
+                          ),
                         ),
                       const SizedBox(height: 8),
                       GestureDetector(
-                        onTapDown: (_) => setState(() => isButtonPressed = true),
+                        onTapDown: (_) =>
+                            setState(() => isButtonPressed = true),
                         onTapUp: (_) => setState(() => isButtonPressed = false),
-                        onTapCancel: () => setState(() => isButtonPressed = false),
+                        onTapCancel: () =>
+                            setState(() => isButtonPressed = false),
                         child: AnimatedScale(
                           duration: const Duration(milliseconds: 120),
                           scale: isButtonPressed ? 0.97 : 1,
@@ -152,7 +175,10 @@ class _SignInScreenState extends State<SignInScreen> {
                             onPressed: isLoading ? null : _handleSignIn,
                             style: ElevatedButton.styleFrom(
                               backgroundColor: AppColors.accent,
-                              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 24,
+                                vertical: 16,
+                              ),
                               elevation: 6,
                               shadowColor: AppColors.accent.withOpacity(0.35),
                               shape: RoundedRectangleBorder(
@@ -163,7 +189,10 @@ class _SignInScreenState extends State<SignInScreen> {
                                 ? const SizedBox(
                                     height: 20,
                                     width: 20,
-                                    child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 2,
+                                      color: Colors.white,
+                                    ),
                                   )
                                 : const Text('Sign in as parent'),
                           ),
@@ -259,7 +288,11 @@ class _MascotHeader extends StatelessWidget {
                 ],
               ),
               child: Center(
-                child: Icon(Icons.auto_awesome_rounded, color: AppColors.navy, size: 48),
+                child: Icon(
+                  Icons.auto_awesome_rounded,
+                  color: AppColors.navy,
+                  size: 48,
+                ),
               ),
             ),
           ],

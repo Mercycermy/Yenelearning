@@ -7,7 +7,11 @@ import '../../data/models/story_models.dart';
 class StoryReaderScreen extends StatefulWidget {
   final String storyId;
   final String title;
-  const StoryReaderScreen({super.key, required this.storyId, required this.title});
+  const StoryReaderScreen({
+    super.key,
+    required this.storyId,
+    required this.title,
+  });
 
   @override
   State<StoryReaderScreen> createState() => _StoryReaderScreenState();
@@ -79,25 +83,24 @@ class _StoryReaderScreenState extends State<StoryReaderScreen> {
   Widget build(BuildContext context) {
     if (isLoading) {
       return Scaffold(
-        appBar: AppBar(
-          title: Text(widget.title),
-        ),
+        appBar: AppBar(title: Text(widget.title)),
         body: const Center(child: CircularProgressIndicator()),
       );
     }
 
     if (errorMessage != null) {
       return Scaffold(
-        appBar: AppBar(
-          title: Text(widget.title),
-        ),
+        appBar: AppBar(title: Text(widget.title)),
         body: Center(
           child: Padding(
             padding: const EdgeInsets.all(24),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(errorMessage!, style: const TextStyle(color: AppColors.error)),
+                Text(
+                  errorMessage!,
+                  style: const TextStyle(color: AppColors.error),
+                ),
                 const SizedBox(height: 16),
                 ElevatedButton(
                   onPressed: _loadPage,
@@ -111,11 +114,9 @@ class _StoryReaderScreenState extends State<StoryReaderScreen> {
     }
 
     final page = pageResponse!.page;
-    
+
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
+      appBar: AppBar(title: Text(widget.title)),
       body: Padding(
         padding: const EdgeInsets.all(24.0),
         child: Column(
@@ -130,7 +131,11 @@ class _StoryReaderScreenState extends State<StoryReaderScreen> {
               ),
               child: Center(
                 child: page.imageUrl == null
-                    ? const Icon(Icons.image, size: 80, color: AppColors.gray500)
+                    ? const Icon(
+                        Icons.image,
+                        size: 80,
+                        color: AppColors.gray500,
+                      )
                     : CachedNetworkImage(
                         imageUrl: page.imageUrl!,
                         height: 260,
@@ -141,12 +146,13 @@ class _StoryReaderScreenState extends State<StoryReaderScreen> {
                           width: 80,
                           child: CircularProgressIndicator(strokeWidth: 2),
                         ),
-                        errorWidget: (context, url, error) => const Icon(Icons.image, size: 80),
+                        errorWidget: (context, url, error) =>
+                            const Icon(Icons.image, size: 80),
                       ),
               ),
             ),
             const SizedBox(height: 24),
-            
+
             // Text Content
             Expanded(
               flex: 3,
@@ -156,7 +162,10 @@ class _StoryReaderScreenState extends State<StoryReaderScreen> {
                   color: AppColors.white,
                   borderRadius: BorderRadius.circular(24),
                   boxShadow: [
-                    BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10),
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.05),
+                      blurRadius: 10,
+                    ),
                   ],
                 ),
                 child: Center(
@@ -172,9 +181,9 @@ class _StoryReaderScreenState extends State<StoryReaderScreen> {
                 ),
               ),
             ),
-            
+
             const SizedBox(height: 32),
-            
+
             // Navigation
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -191,7 +200,7 @@ class _StoryReaderScreenState extends State<StoryReaderScreen> {
                   )
                 else
                   const SizedBox(width: 120),
-                
+
                 Text(
                   '${pageResponse!.pageNumber} / ${pageResponse!.totalPages}',
                   style: const TextStyle(fontWeight: FontWeight.bold),
@@ -203,7 +212,11 @@ class _StoryReaderScreenState extends State<StoryReaderScreen> {
                     backgroundColor: AppColors.mint,
                     minimumSize: const Size(120, 60),
                   ),
-                  child: Text(currentPage < (pageResponse?.totalPages ?? 0) ? 'Next Page' : 'Done!'),
+                  child: Text(
+                    currentPage < (pageResponse?.totalPages ?? 0)
+                        ? 'Next Page'
+                        : 'Done!',
+                  ),
                 ),
               ],
             ),

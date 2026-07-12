@@ -45,9 +45,7 @@ class _KnowledgeDetailScreenState extends State<KnowledgeDetailScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Knowledge Details'),
-      ),
+      appBar: AppBar(title: const Text('Knowledge Details')),
       body: Builder(
         builder: (context) {
           if (isLoading) {
@@ -61,7 +59,10 @@ class _KnowledgeDetailScreenState extends State<KnowledgeDetailScreen> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(errorMessage!, style: const TextStyle(color: AppColors.error)),
+                    Text(
+                      errorMessage!,
+                      style: const TextStyle(color: AppColors.error),
+                    ),
                     const SizedBox(height: 16),
                     ElevatedButton(
                       onPressed: _loadDetail,
@@ -89,7 +90,11 @@ class _KnowledgeDetailScreenState extends State<KnowledgeDetailScreen> {
                     ? Container(
                         height: 220,
                         color: AppColors.softOrange,
-                        child: const Icon(Icons.lightbulb_rounded, color: Colors.orange, size: 64),
+                        child: const Icon(
+                          Icons.lightbulb_rounded,
+                          color: Colors.orange,
+                          size: 64,
+                        ),
                       )
                     : CachedNetworkImage(
                         imageUrl: content.imageUrl!,
@@ -98,19 +103,27 @@ class _KnowledgeDetailScreenState extends State<KnowledgeDetailScreen> {
                         fit: BoxFit.cover,
                         placeholder: (context, url) => const SizedBox(
                           height: 220,
-                          child: Center(child: CircularProgressIndicator(strokeWidth: 2)),
+                          child: Center(
+                            child: CircularProgressIndicator(strokeWidth: 2),
+                          ),
                         ),
                         errorWidget: (context, url, error) => Container(
                           height: 220,
                           color: AppColors.softOrange,
-                          child: const Icon(Icons.lightbulb_rounded, color: Colors.orange, size: 64),
+                          child: const Icon(
+                            Icons.lightbulb_rounded,
+                            color: Colors.orange,
+                            size: 64,
+                          ),
                         ),
                       ),
               ),
               const SizedBox(height: 20),
               Text(
                 content.title,
-                style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
+                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
               ),
               const SizedBox(height: 12),
               if (category != null && category.trim().isNotEmpty)
@@ -130,7 +143,10 @@ class _KnowledgeDetailScreenState extends State<KnowledgeDetailScreen> {
                 children: [
                   _InfoChip(label: 'Language', value: content.language),
                   _InfoChip(label: 'Difficulty', value: content.difficulty),
-                  _InfoChip(label: 'Ages', value: '${content.minAge}-${content.maxAge}'),
+                  _InfoChip(
+                    label: 'Ages',
+                    value: '${content.minAge}-${content.maxAge}',
+                  ),
                 ],
               ),
             ],

@@ -53,9 +53,7 @@ class _KnowledgeScreenState extends State<KnowledgeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Knowledge'),
-      ),
+      appBar: AppBar(title: const Text('Knowledge')),
       body: Builder(
         builder: (context) {
           if (isLoading) {
@@ -69,7 +67,10 @@ class _KnowledgeScreenState extends State<KnowledgeScreen> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(errorMessage!, style: const TextStyle(color: AppColors.error)),
+                    Text(
+                      errorMessage!,
+                      style: const TextStyle(color: AppColors.error),
+                    ),
                     const SizedBox(height: 16),
                     ElevatedButton(
                       onPressed: _loadLessons,
@@ -96,9 +97,9 @@ class _KnowledgeScreenState extends State<KnowledgeScreen> {
                     const SizedBox(height: 24),
                     Text(
                       'No knowledge yet',
-                      style: Theme.of(context).textTheme.displayLarge?.copyWith(
-                        color: Colors.orange,
-                      ),
+                      style: Theme.of(
+                        context,
+                      ).textTheme.displayLarge?.copyWith(color: Colors.orange),
                     ),
                     const SizedBox(height: 12),
                     const Text(
@@ -139,7 +140,8 @@ class _KnowledgeScreenState extends State<KnowledgeScreen> {
                   onTap: () {
                     Navigator.of(context).push(
                       MaterialPageRoute(
-                        builder: (_) => KnowledgeDetailScreen(contentId: lesson.id),
+                        builder: (_) =>
+                            KnowledgeDetailScreen(contentId: lesson.id),
                       ),
                     );
                   },
@@ -166,8 +168,18 @@ class _KnowledgeTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = [AppColors.softOrange, AppColors.softBlue, AppColors.softGreen, AppColors.softPink];
-    final accent = [Colors.orange, AppColors.blue, AppColors.green, AppColors.pink];
+    final colors = [
+      AppColors.softOrange,
+      AppColors.softBlue,
+      AppColors.softGreen,
+      AppColors.softPink,
+    ];
+    final accent = [
+      Colors.orange,
+      AppColors.blue,
+      AppColors.green,
+      AppColors.pink,
+    ];
     final bgColor = colors[index % colors.length];
     final iconColor = accent[index % accent.length];
     final progress = ((index % 5) + 1) / 5;
@@ -181,7 +193,11 @@ class _KnowledgeTile extends StatelessWidget {
           color: bgColor,
           borderRadius: BorderRadius.circular(24),
           boxShadow: [
-            BoxShadow(color: iconColor.withOpacity(0.15), blurRadius: 12, offset: const Offset(0, 6)),
+            BoxShadow(
+              color: iconColor.withOpacity(0.15),
+              blurRadius: 12,
+              offset: const Offset(0, 6),
+            ),
           ],
         ),
         child: Column(
@@ -194,7 +210,11 @@ class _KnowledgeTile extends StatelessWidget {
                       height: 90,
                       width: double.infinity,
                       color: Colors.white.withOpacity(0.6),
-                      child: Icon(Icons.lightbulb_rounded, color: iconColor, size: 40),
+                      child: Icon(
+                        Icons.lightbulb_rounded,
+                        color: iconColor,
+                        size: 40,
+                      ),
                     )
                   : CachedNetworkImage(
                       imageUrl: lesson.imageUrl!,
@@ -203,12 +223,18 @@ class _KnowledgeTile extends StatelessWidget {
                       fit: BoxFit.cover,
                       placeholder: (context, url) => const SizedBox(
                         height: 90,
-                        child: Center(child: CircularProgressIndicator(strokeWidth: 2)),
+                        child: Center(
+                          child: CircularProgressIndicator(strokeWidth: 2),
+                        ),
                       ),
                       errorWidget: (context, url, error) => Container(
                         height: 90,
                         color: Colors.white.withOpacity(0.6),
-                        child: Icon(Icons.lightbulb_rounded, color: iconColor, size: 40),
+                        child: Icon(
+                          Icons.lightbulb_rounded,
+                          color: iconColor,
+                          size: 40,
+                        ),
                       ),
                     ),
             ),

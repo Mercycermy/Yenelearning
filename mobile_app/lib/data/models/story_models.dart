@@ -56,7 +56,8 @@ class StoryListResponse {
   });
 
   factory StoryListResponse.fromJson(Map<String, dynamic> json) {
-    final itemsJson = (json['items'] as List<dynamic>? ?? []).cast<Map<String, dynamic>>();
+    final itemsJson = (json['items'] as List<dynamic>? ?? [])
+        .cast<Map<String, dynamic>>();
     return StoryListResponse(
       items: itemsJson.map(StoryListItem.fromJson).toList(),
       total: (json['total'] ?? 0) as int,

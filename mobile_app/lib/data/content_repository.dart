@@ -6,11 +6,14 @@ import 'models/avatar_models.dart';
 class ContentRepository {
   final ApiClient _apiClient;
 
-  ContentRepository({ApiClient? apiClient}) : _apiClient = apiClient ?? ApiClient();
+  ContentRepository({ApiClient? apiClient})
+    : _apiClient = apiClient ?? ApiClient();
 
   Future<List<AvatarItem>> fetchAvatars() async {
     final data = await _apiClient.getJsonList('/content/avatars/all');
-    return data.map((e) => AvatarItem.fromJson(e as Map<String, dynamic>)).toList();
+    return data
+        .map((e) => AvatarItem.fromJson(e as Map<String, dynamic>))
+        .toList();
   }
 
   Future<ContentListResponse> fetchContentPaged({
@@ -56,7 +59,9 @@ class ContentRepository {
     required String storyId,
     required int pageNumber,
   }) async {
-    final data = await _apiClient.getJson('/content/stories/$storyId/pages/$pageNumber');
+    final data = await _apiClient.getJson(
+      '/content/stories/$storyId/pages/$pageNumber',
+    );
     return StoryPageResponse.fromJson(data);
   }
 }

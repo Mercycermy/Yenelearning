@@ -78,7 +78,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
               const SizedBox(height: 20),
               const Text(
                 'Create Account',
-                style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold, color: AppColors.blue),
+                style: TextStyle(
+                  fontSize: 26,
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.blue,
+                ),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 8),
@@ -111,7 +115,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           labelText: 'First name',
                           prefixIcon: Icon(Icons.person_outline),
                         ),
-                        validator: (value) => value == null || value.trim().isEmpty
+                        validator: (value) =>
+                            value == null || value.trim().isEmpty
                             ? 'First name is required'
                             : null,
                       ),
@@ -122,7 +127,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           labelText: 'Last name',
                           prefixIcon: Icon(Icons.person_outline),
                         ),
-                        validator: (value) => value == null || value.trim().isEmpty
+                        validator: (value) =>
+                            value == null || value.trim().isEmpty
                             ? 'Last name is required'
                             : null,
                       ),
@@ -134,7 +140,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           labelText: 'Email',
                           prefixIcon: Icon(Icons.mail_outline),
                         ),
-                        validator: (value) => value == null || value.trim().isEmpty
+                        validator: (value) =>
+                            value == null || value.trim().isEmpty
                             ? 'Email is required'
                             : null,
                       ),
@@ -146,7 +153,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           labelText: 'Password',
                           prefixIcon: Icon(Icons.lock_outline),
                         ),
-                        validator: (value) => value == null || value.trim().length < 8
+                        validator: (value) =>
+                            value == null || value.trim().length < 8
                             ? 'Password must be at least 8 characters'
                             : null,
                       ),
@@ -154,19 +162,28 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       if (errorMessage != null)
                         Padding(
                           padding: const EdgeInsets.only(bottom: 8),
-                          child: Text(errorMessage!, style: const TextStyle(color: AppColors.error)),
+                          child: Text(
+                            errorMessage!,
+                            style: const TextStyle(color: AppColors.error),
+                          ),
                         ),
                       ElevatedButton(
                         onPressed: isLoading ? null : _handleSignUp,
                         style: ElevatedButton.styleFrom(
                           backgroundColor: AppColors.blue,
-                          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 24,
+                            vertical: 12,
+                          ),
                         ),
                         child: isLoading
                             ? const SizedBox(
                                 height: 20,
                                 width: 20,
-                                child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                  color: Colors.white,
+                                ),
                               )
                             : const Text('Create account'),
                       ),

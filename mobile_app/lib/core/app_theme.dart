@@ -20,7 +20,7 @@ class AppTheme {
           color: AppColors.gray900,
         ),
       ),
-      
+
       // Typography
       textTheme: baseTextTheme.copyWith(
         displayLarge: baseTextTheme.displayLarge?.copyWith(
@@ -52,16 +52,14 @@ class AppTheme {
           color: AppColors.gray900,
         ),
       ),
-      
+
       // Card Theme
       cardTheme: CardThemeData(
         elevation: 0,
         color: AppColors.gray100,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(24),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
       ),
-      
+
       // Button Theme
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
@@ -71,10 +69,7 @@ class AppTheme {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20),
           ),
-          textStyle: const TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-          ),
+          textStyle: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           elevation: 4,
           shadowColor: AppColors.blue.withOpacity(0.3),
         ),
@@ -91,7 +86,7 @@ class AppTheme {
           side: const BorderSide(color: Colors.transparent),
         ),
       ),
-      
+
       // Input Theme
       inputDecorationTheme: InputDecorationTheme(
         filled: true,

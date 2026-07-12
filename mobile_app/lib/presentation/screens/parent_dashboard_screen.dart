@@ -26,7 +26,8 @@ class _ParentDashboardScreenState extends State<ParentDashboardScreen> {
     try {
       final user = jsonDecode(rawUser) as Map<String, dynamic>;
       final firstName = (user['firstName'] as String?)?.trim();
-      if (firstName != null && firstName.isNotEmpty) setState(() => parentName = firstName);
+      if (firstName != null && firstName.isNotEmpty)
+        setState(() => parentName = firstName);
     } catch (_) {}
   }
 
@@ -36,10 +37,18 @@ class _ParentDashboardScreenState extends State<ParentDashboardScreen> {
       builder: (dialogContext) => AlertDialog(
         icon: const Icon(Icons.logout_rounded, color: AppColors.navy),
         title: const Text('Sign out?'),
-        content: const Text('Your child’s saved learning preferences will stay on this device.'),
+        content: const Text(
+          'Your child’s saved learning preferences will stay on this device.',
+        ),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(dialogContext, false), child: const Text('Cancel')),
-          FilledButton(onPressed: () => Navigator.pop(dialogContext, true), child: const Text('Sign out')),
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext, false),
+            child: const Text('Cancel'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.pop(dialogContext, true),
+            child: const Text('Sign out'),
+          ),
         ],
       ),
     );
@@ -58,7 +67,11 @@ class _ParentDashboardScreenState extends State<ParentDashboardScreen> {
         foregroundColor: AppColors.gray900,
         elevation: 0,
         actions: [
-          IconButton(tooltip: 'Sign out', onPressed: _logout, icon: const Icon(Icons.logout_rounded)),
+          IconButton(
+            tooltip: 'Sign out',
+            onPressed: _logout,
+            icon: const Icon(Icons.logout_rounded),
+          ),
           const SizedBox(width: 8),
         ],
       ),
@@ -92,7 +105,10 @@ class _ParentDashboardScreenState extends State<ParentDashboardScreen> {
                       color: Colors.white.withOpacity(0.2),
                       borderRadius: BorderRadius.circular(16),
                     ),
-                    child: const Icon(Icons.family_restroom_rounded, color: Colors.white),
+                    child: const Icon(
+                      Icons.family_restroom_rounded,
+                      color: Colors.white,
+                    ),
                   ),
                   const SizedBox(width: 12),
                   Expanded(
@@ -101,7 +117,11 @@ class _ParentDashboardScreenState extends State<ParentDashboardScreen> {
                       children: [
                         Text(
                           'Hi, $parentName',
-                          style: const TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                         const SizedBox(height: 4),
                         const Text(
@@ -128,9 +148,9 @@ class _ParentDashboardScreenState extends State<ParentDashboardScreen> {
                 _ChildProfileAddButton(),
               ],
             ),
-            
+
             const SizedBox(height: 32),
-            
+
             // Progress Section
             const Text(
               'Learning Progress',
@@ -138,9 +158,9 @@ class _ParentDashboardScreenState extends State<ParentDashboardScreen> {
             ),
             const SizedBox(height: 16),
             const _ProgressOverviewCard(),
-            
+
             const SizedBox(height: 32),
-            
+
             // Controls Section
             const Text(
               'Controls & Limits',
@@ -207,11 +227,17 @@ class _ChildProfileCard extends StatelessWidget {
           CircleAvatar(
             radius: 25,
             backgroundColor: AppColors.softBlue,
-            child: Text(name[0], style: const TextStyle(fontWeight: FontWeight.bold)),
+            child: Text(
+              name[0],
+              style: const TextStyle(fontWeight: FontWeight.bold),
+            ),
           ),
           const SizedBox(height: 8),
           Text(name, style: const TextStyle(fontWeight: FontWeight.bold)),
-          Text('$age years old', style: const TextStyle(fontSize: 12, color: AppColors.gray500)),
+          Text(
+            '$age years old',
+            style: const TextStyle(fontSize: 12, color: AppColors.gray500),
+          ),
           const SizedBox(height: 8),
           if (isSelected)
             Container(
@@ -222,7 +248,11 @@ class _ChildProfileCard extends StatelessWidget {
               ),
               child: const Text(
                 'Active',
-                style: TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.bold),
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 11,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
         ],
@@ -270,10 +300,16 @@ class _ProgressOverviewCard extends StatelessWidget {
                   color: AppColors.green.withOpacity(0.15),
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: const Icon(Icons.insights_rounded, color: AppColors.green),
+                child: const Icon(
+                  Icons.insights_rounded,
+                  color: AppColors.green,
+                ),
               ),
               const SizedBox(width: 10),
-              const Text('This week', style: TextStyle(fontWeight: FontWeight.bold)),
+              const Text(
+                'This week',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
             ],
           ),
           const SizedBox(height: 16),
@@ -281,7 +317,11 @@ class _ProgressOverviewCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               _StatItem(label: 'Words', value: '45', color: AppColors.blue),
-              _StatItem(label: 'Accuracy', value: '82%', color: AppColors.green),
+              _StatItem(
+                label: 'Accuracy',
+                value: '82%',
+                color: AppColors.green,
+              ),
               _StatItem(label: 'Time', value: '1.5h', color: AppColors.yellow),
             ],
           ),
@@ -293,15 +333,27 @@ class _ProgressOverviewCard extends StatelessWidget {
           const Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('Weekly Goal', style: TextStyle(fontWeight: FontWeight.bold)),
-              Text('75%', style: TextStyle(color: AppColors.green, fontWeight: FontWeight.bold)),
+              Text(
+                'Weekly Goal',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              Text(
+                '75%',
+                style: TextStyle(
+                  color: AppColors.green,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
             ],
           ),
           const SizedBox(height: 8),
           Container(
             decoration: BoxDecoration(
               boxShadow: [
-                BoxShadow(color: AppColors.green.withOpacity(0.35), blurRadius: 10),
+                BoxShadow(
+                  color: AppColors.green.withOpacity(0.35),
+                  blurRadius: 10,
+                ),
               ],
             ),
             child: LinearProgressIndicator(
@@ -323,14 +375,28 @@ class _StatItem extends StatelessWidget {
   final String value;
   final Color color;
 
-  const _StatItem({required this.label, required this.value, required this.color});
+  const _StatItem({
+    required this.label,
+    required this.value,
+    required this.color,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Text(value, style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: color)),
-        Text(label, style: const TextStyle(fontSize: 14, color: AppColors.gray500)),
+        Text(
+          value,
+          style: TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+            color: color,
+          ),
+        ),
+        Text(
+          label,
+          style: const TextStyle(fontSize: 14, color: AppColors.gray500),
+        ),
       ],
     );
   }
@@ -373,16 +439,21 @@ class _ToggleTile extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
-                Text(subtitle, style: const TextStyle(color: AppColors.gray500, fontSize: 12)),
+                Text(
+                  title,
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
+                Text(
+                  subtitle,
+                  style: const TextStyle(
+                    color: AppColors.gray500,
+                    fontSize: 12,
+                  ),
+                ),
               ],
             ),
           ),
-          Switch(
-            value: value,
-            onChanged: (_) {},
-            activeColor: AppColors.mint,
-          ),
+          Switch(value: value, onChanged: (_) {}, activeColor: AppColors.mint),
         ],
       ),
     );
@@ -394,10 +465,7 @@ class _ProgressLineChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CustomPaint(
-      painter: _LineChartPainter(),
-      child: Container(),
-    );
+    return CustomPaint(painter: _LineChartPainter(), child: Container());
   }
 }
 

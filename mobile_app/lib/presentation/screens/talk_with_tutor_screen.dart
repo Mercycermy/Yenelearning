@@ -23,7 +23,11 @@ class _TalkWithTutorScreenState extends State<TalkWithTutorScreen> {
     return value
         .replaceAll('_', ' ')
         .split(' ')
-        .map((word) => word.isEmpty ? word : '${word[0].toUpperCase()}${word.substring(1)}')
+        .map(
+          (word) => word.isEmpty
+              ? word
+              : '${word[0].toUpperCase()}${word.substring(1)}',
+        )
         .join(' ');
   }
 
@@ -53,7 +57,9 @@ class _TalkWithTutorScreenState extends State<TalkWithTutorScreen> {
       backgroundColor: AppColors.softBlue,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
-        title: Text(avatarName == null ? 'Talk with Tutor' : 'Talk with ${avatarName!}'),
+        title: Text(
+          avatarName == null ? 'Talk with Tutor' : 'Talk with ${avatarName!}',
+        ),
         actions: [
           IconButton(
             icon: const Icon(Icons.info_outline_rounded),
@@ -64,8 +70,10 @@ class _TalkWithTutorScreenState extends State<TalkWithTutorScreen> {
                   title: const Text('Tutor Info'),
                   content: Text(
                     [
-                      if ((teachingStyle ?? '').isNotEmpty) _formatTeachingStyle(teachingStyle),
-                      if ((personalityDescription ?? '').isNotEmpty) personalityDescription!,
+                      if ((teachingStyle ?? '').isNotEmpty)
+                        _formatTeachingStyle(teachingStyle),
+                      if ((personalityDescription ?? '').isNotEmpty)
+                        personalityDescription!,
                     ].join('\n'),
                   ),
                   actions: [
@@ -103,20 +111,25 @@ class _TalkWithTutorScreenState extends State<TalkWithTutorScreen> {
                 ),
                 child: ClipOval(
                   child: avatarImageUrl == null
-                      ? const Icon(Icons.person, size: 120, color: AppColors.blue)
+                      ? const Icon(
+                          Icons.person,
+                          size: 120,
+                          color: AppColors.blue,
+                        )
                       : Image.network(
                           avatarImageUrl!,
                           fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) => const Icon(
-                            Icons.person,
-                            size: 120,
-                            color: AppColors.blue,
-                          ),
+                          errorBuilder: (context, error, stackTrace) =>
+                              const Icon(
+                                Icons.person,
+                                size: 120,
+                                color: AppColors.blue,
+                              ),
                         ),
                 ),
               ),
               const SizedBox(height: 48),
-              
+
               // Speech Bubble
               Container(
                 padding: const EdgeInsets.all(24),
@@ -140,14 +153,20 @@ class _TalkWithTutorScreenState extends State<TalkWithTutorScreen> {
                   ),
                 ),
               ),
-              
+
               const SizedBox(height: 60),
-              
+
               // Voice Indicator
               if (isTutorSpeaking)
                 const Column(
                   children: [
-                    Text('Tutor is speaking...', style: TextStyle(color: AppColors.blue, fontWeight: FontWeight.bold)),
+                    Text(
+                      'Tutor is speaking...',
+                      style: TextStyle(
+                        color: AppColors.blue,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                     SizedBox(height: 20),
                     _SoundWaveWidget(),
                   ],
@@ -155,7 +174,10 @@ class _TalkWithTutorScreenState extends State<TalkWithTutorScreen> {
               else
                 Column(
                   children: [
-                    const Text('Your turn! Tap to speak', style: TextStyle(color: AppColors.green)),
+                    const Text(
+                      'Your turn! Tap to speak',
+                      style: TextStyle(color: AppColors.green),
+                    ),
                     const SizedBox(height: 16),
                     GestureDetector(
                       onTap: () {
@@ -167,18 +189,25 @@ class _TalkWithTutorScreenState extends State<TalkWithTutorScreen> {
                           color: AppColors.green,
                           shape: BoxShape.circle,
                         ),
-                        child: const Icon(Icons.mic_rounded, size: 48, color: Colors.white),
+                        child: const Icon(
+                          Icons.mic_rounded,
+                          size: 48,
+                          color: Colors.white,
+                        ),
                       ),
                     ),
                   ],
                 ),
-              
+
               const SizedBox(height: 40),
-              
+
               // Temporary Toggle for Demo
               TextButton(
-                onPressed: () => setState(() => isTutorSpeaking = !isTutorSpeaking),
-                child: Text(isTutorSpeaking ? 'Switch to Me' : 'Switch to Tutor'),
+                onPressed: () =>
+                    setState(() => isTutorSpeaking = !isTutorSpeaking),
+                child: Text(
+                  isTutorSpeaking ? 'Switch to Me' : 'Switch to Tutor',
+                ),
               ),
             ],
           ),

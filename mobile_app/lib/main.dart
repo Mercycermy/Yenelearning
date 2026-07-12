@@ -38,11 +38,9 @@ class YeneTeacherApp extends StatelessWidget {
         '/parent': (context) => const ParentDashboardScreen(),
         '/stories': (context) => const StoriesScreen(),
         '/story-reader': (context) {
-          final args = ModalRoute.of(context)!.settings.arguments as Map<String, String>;
-          return StoryReaderScreen(
-            storyId: args['id']!,
-            title: args['title']!,
-          );
+          final args =
+              ModalRoute.of(context)!.settings.arguments as Map<String, String>;
+          return StoryReaderScreen(storyId: args['id']!, title: args['title']!);
         },
         '/games': (context) => const GamesScreen(),
         '/knowledge': (context) => const KnowledgeScreen(),

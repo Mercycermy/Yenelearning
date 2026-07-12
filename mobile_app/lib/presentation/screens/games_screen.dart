@@ -52,9 +52,7 @@ class _GamesScreenState extends State<GamesScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Games'),
-      ),
+      appBar: AppBar(title: const Text('Games')),
       body: Builder(
         builder: (context) {
           if (isLoading) {
@@ -68,7 +66,10 @@ class _GamesScreenState extends State<GamesScreen> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(errorMessage!, style: const TextStyle(color: AppColors.error)),
+                    Text(
+                      errorMessage!,
+                      style: const TextStyle(color: AppColors.error),
+                    ),
                     const SizedBox(height: 16),
                     ElevatedButton(
                       onPressed: _loadGames,
@@ -133,7 +134,10 @@ class _GamesScreenState extends State<GamesScreen> {
                     color: AppColors.softYellow,
                     borderRadius: BorderRadius.circular(20),
                     boxShadow: [
-                      BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10),
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.05),
+                        blurRadius: 10,
+                      ),
                     ],
                   ),
                   child: Row(
@@ -145,7 +149,11 @@ class _GamesScreenState extends State<GamesScreen> {
                                 width: 84,
                                 height: 84,
                                 color: AppColors.softYellow,
-                                child: const Icon(Icons.videogame_asset_rounded, color: AppColors.yellow, size: 36),
+                                child: const Icon(
+                                  Icons.videogame_asset_rounded,
+                                  color: AppColors.yellow,
+                                  size: 36,
+                                ),
                               )
                             : CachedNetworkImage(
                                 imageUrl: game.imageUrl!,
@@ -155,13 +163,21 @@ class _GamesScreenState extends State<GamesScreen> {
                                 placeholder: (context, url) => const SizedBox(
                                   width: 84,
                                   height: 84,
-                                  child: Center(child: CircularProgressIndicator(strokeWidth: 2)),
+                                  child: Center(
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 2,
+                                    ),
+                                  ),
                                 ),
                                 errorWidget: (context, url, error) => Container(
                                   width: 84,
                                   height: 84,
                                   color: AppColors.softYellow,
-                                  child: const Icon(Icons.videogame_asset_rounded, color: AppColors.yellow, size: 36),
+                                  child: const Icon(
+                                    Icons.videogame_asset_rounded,
+                                    color: AppColors.yellow,
+                                    size: 36,
+                                  ),
                                 ),
                               ),
                       ),
@@ -170,7 +186,13 @@ class _GamesScreenState extends State<GamesScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(game.title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                            Text(
+                              game.title,
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16,
+                              ),
+                            ),
                             const SizedBox(height: 6),
                             Text(
                               game.description ?? 'Tap to start playing',
@@ -180,7 +202,10 @@ class _GamesScreenState extends State<GamesScreen> {
                             ),
                             const SizedBox(height: 10),
                             Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 12,
+                                vertical: 6,
+                              ),
                               decoration: BoxDecoration(
                                 color: AppColors.orange,
                                 borderRadius: BorderRadius.circular(14),
@@ -194,13 +219,20 @@ class _GamesScreenState extends State<GamesScreen> {
                               ),
                               child: const Text(
                                 'Play',
-                                style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 12),
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 12,
+                                ),
                               ),
                             ),
                           ],
                         ),
                       ),
-                      const Icon(Icons.chevron_right_rounded, color: AppColors.gray500),
+                      const Icon(
+                        Icons.chevron_right_rounded,
+                        color: AppColors.gray500,
+                      ),
                     ],
                   ),
                 );

@@ -53,7 +53,11 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     return value
         .replaceAll('_', ' ')
         .split(' ')
-        .map((word) => word.isEmpty ? word : '${word[0].toUpperCase()}${word.substring(1)}')
+        .map(
+          (word) => word.isEmpty
+              ? word
+              : '${word[0].toUpperCase()}${word.substring(1)}',
+        )
         .join(' ');
   }
 
@@ -172,17 +176,24 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                                 color: AppColors.softMint,
                                 borderRadius: BorderRadius.circular(16),
                               ),
-                              child: const Icon(Icons.auto_awesome_rounded, color: AppColors.navy),
+                              child: const Icon(
+                                Icons.auto_awesome_rounded,
+                                color: AppColors.navy,
+                              ),
                             ),
                             const SizedBox(width: 12),
                             const Text(
                               'Yene Teacher',
-                              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                           ],
                         ),
                         TextButton.icon(
-                          onPressed: () => Navigator.pushNamed(context, '/parent'),
+                          onPressed: () =>
+                              Navigator.pushNamed(context, '/parent'),
                           icon: const Icon(Icons.shield_rounded, size: 18),
                           label: const Text('Parent'),
                         ),
@@ -210,14 +221,18 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                               children: [
                                 Text(
                                   'Welcome to\nYene Teacher!',
-                                  style: Theme.of(context).textTheme.displayLarge?.copyWith(
-                                    color: AppColors.navy,
-                                  ),
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .displayLarge
+                                      ?.copyWith(color: AppColors.navy),
                                 ),
                                 const SizedBox(height: 8),
                                 const Text(
                                   'Pick a buddy and a language to start learning and playing!',
-                                  style: TextStyle(fontSize: 16, color: AppColors.gray500),
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    color: AppColors.gray500,
+                                  ),
                                 ),
                               ],
                             ),
@@ -226,7 +241,11 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                           CircleAvatar(
                             radius: 34,
                             backgroundColor: AppColors.softMint,
-                            child: const Icon(Icons.favorite_rounded, color: AppColors.accent, size: 30),
+                            child: const Icon(
+                              Icons.favorite_rounded,
+                              color: AppColors.accent,
+                              size: 30,
+                            ),
                           ),
                         ],
                       ),
@@ -238,10 +257,16 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                       children: [
                         const Text(
                           '1. Pick a Buddy',
-                          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                         IconButton(
-                          icon: const Icon(Icons.refresh, color: AppColors.blue),
+                          icon: const Icon(
+                            Icons.refresh,
+                            color: AppColors.blue,
+                          ),
                           onPressed: () {
                             setState(() {
                               isLoading = true;
@@ -262,7 +287,10 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                       if (errorMessage != null)
                         Padding(
                           padding: const EdgeInsets.symmetric(vertical: 12),
-                          child: Text(errorMessage!, style: const TextStyle(color: AppColors.error)),
+                          child: Text(
+                            errorMessage!,
+                            style: const TextStyle(color: AppColors.error),
+                          ),
                         ),
                       if (avatars.isNotEmpty)
                         Wrap(
@@ -272,16 +300,23 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                             final index = entry.key;
                             final avatar = entry.value;
                             final isSelected = selectedAvatar == avatar.id;
-                            final accentColor = index % 2 == 0 ? AppColors.blue : AppColors.yellow;
-                            final cardColor = index % 2 == 0 ? AppColors.softBlue : AppColors.softYellow;
+                            final accentColor = index % 2 == 0
+                                ? AppColors.blue
+                                : AppColors.yellow;
+                            final cardColor = index % 2 == 0
+                                ? AppColors.softBlue
+                                : AppColors.softYellow;
 
                             return _BuddyCard(
                               avatar: avatar,
                               accentColor: accentColor,
                               cardColor: cardColor,
                               isSelected: isSelected,
-                              onTap: () => setState(() => selectedAvatar = avatar.id),
-                              subtitle: _formatTeachingStyle(avatar.teachingStyle),
+                              onTap: () =>
+                                  setState(() => selectedAvatar = avatar.id),
+                              subtitle: _formatTeachingStyle(
+                                avatar.teachingStyle,
+                              ),
                             );
                           }).toList(),
                         ),
@@ -291,7 +326,10 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
 
                     const Text(
                       '2. Pick a Language',
-                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                     const SizedBox(height: 12),
                     Wrap(
@@ -301,20 +339,31 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                         final isSelected = selectedLanguage == lang['id'];
                         final isPressed = pressedLanguage == lang['id'];
                         return GestureDetector(
-                          onTapDown: (_) => setState(() => pressedLanguage = lang['id']),
-                          onTapUp: (_) => setState(() => pressedLanguage = null),
-                          onTapCancel: () => setState(() => pressedLanguage = null),
-                          onTap: () => setState(() => selectedLanguage = lang['id']),
+                          onTapDown: (_) =>
+                              setState(() => pressedLanguage = lang['id']),
+                          onTapUp: (_) =>
+                              setState(() => pressedLanguage = null),
+                          onTapCancel: () =>
+                              setState(() => pressedLanguage = null),
+                          onTap: () =>
+                              setState(() => selectedLanguage = lang['id']),
                           child: AnimatedScale(
                             duration: const Duration(milliseconds: 120),
                             scale: isPressed ? 0.97 : 1,
                             child: Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 18,
+                                vertical: 14,
+                              ),
                               decoration: BoxDecoration(
-                                color: isSelected ? AppColors.softMint : AppColors.white,
+                                color: isSelected
+                                    ? AppColors.softMint
+                                    : AppColors.white,
                                 borderRadius: BorderRadius.circular(18),
                                 border: Border.all(
-                                  color: isSelected ? AppColors.mint : AppColors.gray200,
+                                  color: isSelected
+                                      ? AppColors.mint
+                                      : AppColors.gray200,
                                   width: 2,
                                 ),
                                 boxShadow: [
@@ -328,9 +377,21 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                               child: Column(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  Text(lang['name']!, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                                  Text(
+                                    lang['name']!,
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16,
+                                    ),
+                                  ),
                                   const SizedBox(height: 4),
-                                  Text(lang['native']!, style: const TextStyle(fontSize: 13, color: AppColors.gray500)),
+                                  Text(
+                                    lang['native']!,
+                                    style: const TextStyle(
+                                      fontSize: 13,
+                                      color: AppColors.gray500,
+                                    ),
+                                  ),
                                 ],
                               ),
                             ),
@@ -366,13 +427,19 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                           backgroundColor: Colors.transparent,
                           shadowColor: Colors.transparent,
                           padding: const EdgeInsets.symmetric(vertical: 16),
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(22)),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(22),
+                          ),
                         ),
-                        onPressed: (selectedAvatar != null && selectedLanguage != null)
+                        onPressed:
+                            (selectedAvatar != null && selectedLanguage != null)
                             ? () async {
                                 await _saveSelections();
                                 if (!mounted) return;
-                                Navigator.pushReplacementNamed(context, '/dashboard');
+                                Navigator.pushReplacementNamed(
+                                  context,
+                                  '/dashboard',
+                                );
                               }
                             : null,
                         child: const Row(
@@ -447,7 +514,8 @@ class _BuddyCard extends StatelessWidget {
                       height: 90,
                       width: 90,
                       fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) => Icon(Icons.person, size: 64, color: accentColor),
+                      errorBuilder: (context, error, stackTrace) =>
+                          Icon(Icons.person, size: 64, color: accentColor),
                     )
                   : CachedNetworkImage(
                       imageUrl: avatar.imageUrl,
@@ -459,11 +527,15 @@ class _BuddyCard extends StatelessWidget {
                         width: 90,
                         child: CircularProgressIndicator(strokeWidth: 2),
                       ),
-                      errorWidget: (context, url, error) => Icon(Icons.person, size: 64, color: accentColor),
+                      errorWidget: (context, url, error) =>
+                          Icon(Icons.person, size: 64, color: accentColor),
                     ),
             ),
             const SizedBox(height: 10),
-            Text(avatar.name, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+            Text(
+              avatar.name,
+              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+            ),
             const SizedBox(height: 6),
             Text(
               subtitle,
@@ -473,14 +545,21 @@ class _BuddyCard extends StatelessWidget {
             const SizedBox(height: 8),
             if (isSelected)
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 6,
+                ),
                 decoration: BoxDecoration(
                   color: accentColor,
                   borderRadius: BorderRadius.circular(14),
                 ),
                 child: const Text(
                   'Chosen',
-                  style: TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 12,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
           ],

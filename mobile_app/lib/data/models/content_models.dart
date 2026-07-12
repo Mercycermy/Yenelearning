@@ -38,7 +38,9 @@ class ContentListItem {
       minAge: (json['minAge'] ?? 0) as int,
       maxAge: (json['maxAge'] ?? 0) as int,
       imageUrl: json['imageUrl'] as String?,
-      tags: (json['tags'] as List<dynamic>? ?? []).map((e) => e.toString()).toList(),
+      tags: (json['tags'] as List<dynamic>? ?? [])
+          .map((e) => e.toString())
+          .toList(),
       createdAt: DateTime.parse(json['createdAt'] as String),
       metadata: json['metadata'] as Map<String, dynamic>?,
     );
@@ -59,7 +61,8 @@ class ContentListResponse {
   });
 
   factory ContentListResponse.fromJson(Map<String, dynamic> json) {
-    final itemsJson = (json['items'] as List<dynamic>? ?? []).cast<Map<String, dynamic>>();
+    final itemsJson = (json['items'] as List<dynamic>? ?? [])
+        .cast<Map<String, dynamic>>();
     return ContentListResponse(
       items: itemsJson.map(ContentListItem.fromJson).toList(),
       total: (json['total'] ?? 0) as int,
@@ -114,7 +117,9 @@ class ContentDetail {
       maxAge: (json['maxAge'] ?? 0) as int,
       imageUrl: json['imageUrl'] as String?,
       audioUrl: json['audioUrl'] as String?,
-      tags: (json['tags'] as List<dynamic>? ?? []).map((e) => e.toString()).toList(),
+      tags: (json['tags'] as List<dynamic>? ?? [])
+          .map((e) => e.toString())
+          .toList(),
       createdAt: DateTime.parse(json['createdAt'] as String),
       updatedAt: DateTime.parse(json['updatedAt'] as String),
       metadata: json['metadata'] as Map<String, dynamic>?,
