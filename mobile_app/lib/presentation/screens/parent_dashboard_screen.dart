@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
 import 'dart:convert';
+import 'package:flutter/material.dart';
 import '../../core/app_colors.dart';
 import '../../data/user_prefs.dart';
 
@@ -13,6 +13,9 @@ class ParentDashboardScreen extends StatefulWidget {
 class _ParentDashboardScreenState extends State<ParentDashboardScreen> {
   final UserPrefs _prefs = UserPrefs();
   String parentName = 'Parent';
+  int dailyMinutes = 30;
+  bool contentFilter = true;
+  bool learningReminders = true;
 
   @override
   void initState() {
@@ -26,9 +29,62 @@ class _ParentDashboardScreenState extends State<ParentDashboardScreen> {
     try {
       final user = jsonDecode(rawUser) as Map<String, dynamic>;
       final firstName = (user['firstName'] as String?)?.trim();
-      if (firstName != null && firstName.isNotEmpty)
+      if (firstName != null && firstName.isNotEmpty) {
         setState(() => parentName = firstName);
+      }
     } catch (_) {}
+  }
+
+  void _message(String text) {
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(
+        SnackBar(behavior: SnackBarBehavior.floating, content: Text(text)),
+      );
+  }
+
+  Future<void> _chooseTimeLimit() async {
+    final selected = await showModalBottomSheet<int>(
+      context: context,
+      showDragHandle: true,
+      builder: (context) => SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(22, 4, 22, 20),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'Daily learning time',
+                style: TextStyle(fontSize: 21, fontWeight: FontWeight.w800),
+              ),
+              const SizedBox(height: 6),
+              const Text(
+                'Choose a comfortable daily goal. You can change it any time.',
+                style: TextStyle(color: AppColors.gray500),
+              ),
+              const SizedBox(height: 16),
+              Wrap(
+                spacing: 10,
+                runSpacing: 10,
+                children: [15, 20, 30, 45, 60]
+                    .map(
+                      (minutes) => ChoiceChip(
+                        label: Text('$minutes min'),
+                        selected: minutes == dailyMinutes,
+                        onSelected: (_) => Navigator.pop(context, minutes),
+                      ),
+                    )
+                    .toList(),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+    if (selected == null || !mounted) return;
+    setState(() => dailyMinutes = selected);
+    _message('Daily goal updated to $selected minutes.');
   }
 
   Future<void> _logout() async {
@@ -55,447 +111,654 @@ class _ParentDashboardScreenState extends State<ParentDashboardScreen> {
     if (confirmed != true) return;
     await _prefs.clearAuth();
     if (!mounted) return;
-    Navigator.pushNamedAndRemoveUntil(context, '/login', (route) => false);
+    Navigator.pushNamedAndRemoveUntil(context, '/login', (_) => false);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color(0xFFF7F8FC),
       appBar: AppBar(
+        backgroundColor: const Color(0xFFF7F8FC),
+        centerTitle: false,
         title: const Text('Parent space'),
-        backgroundColor: AppColors.white,
-        foregroundColor: AppColors.gray900,
-        elevation: 0,
         actions: [
           IconButton(
-            tooltip: 'Sign out',
-            onPressed: _logout,
-            icon: const Icon(Icons.logout_rounded),
+            tooltip: 'Notifications',
+            onPressed: () => _message('You’re all caught up!'),
+            icon: const Badge(child: Icon(Icons.notifications_none_rounded)),
+          ),
+          PopupMenuButton<String>(
+            tooltip: 'Account menu',
+            onSelected: (value) {
+              if (value == 'logout') _logout();
+            },
+            itemBuilder: (_) => const [
+              PopupMenuItem(
+                value: 'logout',
+                child: Row(
+                  children: [
+                    Icon(Icons.logout_rounded),
+                    SizedBox(width: 10),
+                    Text('Sign out'),
+                  ],
+                ),
+              ),
+            ],
           ),
           const SizedBox(width: 8),
         ],
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(24.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                gradient: const LinearGradient(
-                  colors: [Color(0xFF2F3A56), Color(0xFF4E5D78)],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
-                borderRadius: BorderRadius.circular(24),
-                boxShadow: [
-                  BoxShadow(
-                    color: AppColors.navy.withOpacity(0.25),
-                    blurRadius: 14,
-                    offset: const Offset(0, 8),
-                  ),
-                ],
-              ),
-              child: Row(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.2),
-                      borderRadius: BorderRadius.circular(16),
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          final wide = constraints.maxWidth >= 820;
+          return SingleChildScrollView(
+            padding: const EdgeInsets.fromLTRB(18, 8, 18, 32),
+            child: Center(
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 980),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _ParentHero(name: parentName),
+                    const SizedBox(height: 18),
+                    const _InsightBanner(),
+                    const SizedBox(height: 26),
+                    const _SectionTitle(
+                      'Children',
+                      'Select a profile to see their learning journey',
                     ),
-                    child: const Icon(
-                      Icons.family_restroom_rounded,
-                      color: Colors.white,
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Hi, $parentName',
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
+                    const SizedBox(height: 12),
+                    SizedBox(
+                      height: 118,
+                      child: ListView(
+                        scrollDirection: Axis.horizontal,
+                        children: [
+                          const _ChildCard(name: 'Abebe', age: 6, active: true),
+                          const SizedBox(width: 12),
+                          _AddChildCard(
+                            onTap: () =>
+                                _message('Child profile setup is coming next.'),
                           ),
-                        ),
-                        const SizedBox(height: 4),
-                        const Text(
-                          'Track progress, set limits, and cheer them on!',
-                          style: TextStyle(color: Colors.white70),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
-                ],
+                    const SizedBox(height: 26),
+                    if (wide)
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Expanded(flex: 6, child: _ProgressCard()),
+                          const SizedBox(width: 18),
+                          Expanded(flex: 5, child: _controls()),
+                        ],
+                      )
+                    else ...[
+                      const _SectionTitle(
+                        'Weekly progress',
+                        'A quick look at Abebe’s learning',
+                      ),
+                      const SizedBox(height: 12),
+                      const _ProgressCard(),
+                      const SizedBox(height: 26),
+                      _controls(),
+                    ],
+                  ],
+                ),
               ),
             ),
-            const SizedBox(height: 24),
-            // Child Profile Selector
-            const Text(
-              'Your Children',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 16),
-            Row(
-              children: [
-                _ChildProfileCard(name: 'Abebe', age: 6, isSelected: true),
-                const SizedBox(width: 16),
-                _ChildProfileAddButton(),
-              ],
-            ),
+          );
+        },
+      ),
+    );
+  }
 
-            const SizedBox(height: 32),
+  Widget _controls() => Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      const _SectionTitle(
+        'Healthy learning',
+        'Simple controls for a balanced routine',
+      ),
+      const SizedBox(height: 12),
+      _SettingTile(
+        icon: Icons.timer_rounded,
+        color: AppColors.blue,
+        title: 'Daily time goal',
+        subtitle: '$dailyMinutes minutes',
+        trailing: const Icon(Icons.chevron_right_rounded),
+        onTap: _chooseTimeLimit,
+      ),
+      _SettingTile(
+        icon: Icons.shield_rounded,
+        color: AppColors.green,
+        title: 'Kid-safe content',
+        subtitle: contentFilter
+            ? 'Extra filtering is on'
+            : 'Standard filtering',
+        trailing: Switch(
+          value: contentFilter,
+          onChanged: (value) {
+            setState(() => contentFilter = value);
+            _message(
+              value
+                  ? 'Extra content filtering enabled.'
+                  : 'Standard content filtering enabled.',
+            );
+          },
+        ),
+        onTap: () => setState(() => contentFilter = !contentFilter),
+      ),
+      _SettingTile(
+        icon: Icons.notifications_active_rounded,
+        color: AppColors.orange,
+        title: 'Learning reminders',
+        subtitle: learningReminders
+            ? 'Weekdays at 4:00 PM'
+            : 'Reminders are off',
+        trailing: Switch(
+          value: learningReminders,
+          onChanged: (value) => setState(() => learningReminders = value),
+        ),
+        onTap: () => setState(() => learningReminders = !learningReminders),
+      ),
+    ],
+  );
+}
 
-            // Progress Section
-            const Text(
-              'Learning Progress',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 16),
-            const _ProgressOverviewCard(),
+class _ParentHero extends StatelessWidget {
+  final String name;
+  const _ParentHero({required this.name});
+  @override
+  Widget build(BuildContext context) => Container(
+    width: double.infinity,
+    padding: const EdgeInsets.all(22),
+    decoration: BoxDecoration(
+      gradient: const LinearGradient(
+        colors: [Color(0xFF17233D), Color(0xFF34496E)],
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+      ),
+      borderRadius: BorderRadius.circular(28),
+      boxShadow: [
+        BoxShadow(
+          color: AppColors.navy.withValues(alpha: .18),
+          blurRadius: 22,
+          offset: const Offset(0, 10),
+        ),
+      ],
+    ),
+    child: Row(
+      children: [
+        Container(
+          width: 58,
+          height: 58,
+          decoration: BoxDecoration(
+            color: Colors.white.withValues(alpha: .13),
+            borderRadius: BorderRadius.circular(19),
+          ),
+          child: const Icon(
+            Icons.family_restroom_rounded,
+            color: AppColors.mint,
+            size: 30,
+          ),
+        ),
+        const SizedBox(width: 16),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Good afternoon, $name',
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 21,
+                  fontWeight: FontWeight.w800,
+                ),
+              ),
+              const SizedBox(height: 5),
+              const Text(
+                'Abebe completed 2 activities today.',
+                style: TextStyle(color: Colors.white70),
+              ),
+            ],
+          ),
+        ),
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 11, vertical: 7),
+          decoration: BoxDecoration(
+            color: AppColors.mint.withValues(alpha: .16),
+            borderRadius: BorderRadius.circular(16),
+          ),
+          child: const Row(
+            children: [
+              Icon(Icons.check_circle_rounded, color: AppColors.mint, size: 17),
+              SizedBox(width: 6),
+              Text(
+                'On track',
+                style: TextStyle(
+                  color: AppColors.mint,
+                  fontWeight: FontWeight.w800,
+                  fontSize: 12,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    ),
+  );
+}
 
-            const SizedBox(height: 32),
+class _InsightBanner extends StatelessWidget {
+  const _InsightBanner();
+  @override
+  Widget build(BuildContext context) => Container(
+    padding: const EdgeInsets.all(15),
+    decoration: BoxDecoration(
+      color: AppColors.softYellow,
+      borderRadius: BorderRadius.circular(20),
+      border: Border.all(color: AppColors.yellow.withValues(alpha: .22)),
+    ),
+    child: const Row(
+      children: [
+        CircleAvatar(
+          backgroundColor: Colors.white,
+          child: Icon(Icons.lightbulb_rounded, color: AppColors.yellow),
+        ),
+        SizedBox(width: 12),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'A little win worth celebrating',
+                style: TextStyle(fontWeight: FontWeight.w800),
+              ),
+              SizedBox(height: 3),
+              Text(
+                'Pronunciation accuracy improved by 8% this week.',
+                style: TextStyle(color: AppColors.gray500, fontSize: 13),
+              ),
+            ],
+          ),
+        ),
+        Icon(Icons.celebration_rounded, color: AppColors.orange),
+      ],
+    ),
+  );
+}
 
-            // Controls Section
-            const Text(
-              'Controls & Limits',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 16),
-            const _ToggleTile(
-              icon: Icons.timer_rounded,
-              title: 'Daily Time Limit',
-              subtitle: '30 Minutes',
-              value: true,
-            ),
-            const _ToggleTile(
-              icon: Icons.security_rounded,
-              title: 'Content Filter',
-              subtitle: 'Strict',
-              value: true,
-            ),
-            const _ToggleTile(
-              icon: Icons.trending_up_rounded,
-              title: 'Difficulty Level',
-              subtitle: 'Beginner',
-              value: false,
+class _SectionTitle extends StatelessWidget {
+  final String title, subtitle;
+  const _SectionTitle(this.title, this.subtitle);
+  @override
+  Widget build(BuildContext context) => Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Text(
+        title,
+        style: const TextStyle(fontSize: 19, fontWeight: FontWeight.w800),
+      ),
+      const SizedBox(height: 2),
+      Text(
+        subtitle,
+        style: const TextStyle(fontSize: 12, color: AppColors.gray500),
+      ),
+    ],
+  );
+}
+
+class _ChildCard extends StatelessWidget {
+  final String name;
+  final int age;
+  final bool active;
+  const _ChildCard({
+    required this.name,
+    required this.age,
+    this.active = false,
+  });
+  @override
+  Widget build(BuildContext context) => Container(
+    width: 220,
+    padding: const EdgeInsets.all(14),
+    decoration: BoxDecoration(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(22),
+      border: Border.all(
+        color: active ? AppColors.blue : AppColors.gray200,
+        width: active ? 2 : 1,
+      ),
+    ),
+    child: Row(
+      children: [
+        const CircleAvatar(
+          radius: 31,
+          backgroundColor: AppColors.softBlue,
+          child: Icon(Icons.face_rounded, color: AppColors.blue, size: 35),
+        ),
+        const SizedBox(width: 12),
+        Expanded(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                name,
+                style: const TextStyle(
+                  fontWeight: FontWeight.w800,
+                  fontSize: 16,
+                ),
+              ),
+              Text(
+                '$age years old',
+                style: const TextStyle(color: AppColors.gray500, fontSize: 12),
+              ),
+              const SizedBox(height: 6),
+              const FittedBox(
+                fit: BoxFit.scaleDown,
+                alignment: Alignment.centerLeft,
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      Icons.local_fire_department_rounded,
+                      color: AppColors.orange,
+                      size: 15,
+                    ),
+                    SizedBox(width: 3),
+                    Text(
+                      '3 day streak',
+                      style: TextStyle(
+                        fontSize: 11,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+        if (active)
+          const Icon(Icons.check_circle_rounded, color: AppColors.blue),
+      ],
+    ),
+  );
+}
+
+class _AddChildCard extends StatelessWidget {
+  final VoidCallback onTap;
+  const _AddChildCard({required this.onTap});
+  @override
+  Widget build(BuildContext context) => Material(
+    color: AppColors.softPurple,
+    borderRadius: BorderRadius.circular(22),
+    child: InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(22),
+      child: const SizedBox(
+        width: 130,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.add_circle_rounded, color: AppColors.purple, size: 30),
+            SizedBox(height: 7),
+            Text(
+              'Add child',
+              style: TextStyle(
+                color: AppColors.purple,
+                fontWeight: FontWeight.w800,
+              ),
             ),
           ],
         ),
       ),
-    );
-  }
+    ),
+  );
 }
 
-class _ChildProfileCard extends StatelessWidget {
-  final String name;
-  final int age;
-  final bool isSelected;
-
-  const _ChildProfileCard({
-    required this.name,
-    required this.age,
-    required this.isSelected,
-  });
-
+class _ProgressCard extends StatelessWidget {
+  const _ProgressCard();
   @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: isSelected ? AppColors.softSky : AppColors.white,
-        borderRadius: BorderRadius.circular(22),
-        border: Border.all(
-          color: isSelected ? AppColors.blue : AppColors.gray200,
-          width: 2,
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.blue.withOpacity(0.08),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Column(
-        children: [
-          CircleAvatar(
-            radius: 25,
-            backgroundColor: AppColors.softBlue,
-            child: Text(
-              name[0],
-              style: const TextStyle(fontWeight: FontWeight.bold),
-            ),
-          ),
-          const SizedBox(height: 8),
-          Text(name, style: const TextStyle(fontWeight: FontWeight.bold)),
-          Text(
-            '$age years old',
-            style: const TextStyle(fontSize: 12, color: AppColors.gray500),
-          ),
-          const SizedBox(height: 8),
-          if (isSelected)
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-              decoration: BoxDecoration(
-                color: AppColors.blue,
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: const Text(
-                'Active',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 11,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-        ],
-      ),
-    );
-  }
-}
-
-class _ChildProfileAddButton extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(24),
-      decoration: BoxDecoration(
-        color: AppColors.softYellow,
-        borderRadius: BorderRadius.circular(22),
-        border: Border.all(color: AppColors.yellow.withOpacity(0.3)),
-      ),
-      child: const Icon(Icons.add_rounded, color: AppColors.yellow),
-    );
-  }
-}
-
-class _ProgressOverviewCard extends StatelessWidget {
-  const _ProgressOverviewCard();
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(24),
-      decoration: BoxDecoration(
-        color: AppColors.white,
-        borderRadius: BorderRadius.circular(24),
-        boxShadow: [
-          BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10),
-        ],
-      ),
-      child: Column(
-        children: [
-          Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: AppColors.green.withOpacity(0.15),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: const Icon(
-                  Icons.insights_rounded,
-                  color: AppColors.green,
-                ),
-              ),
-              const SizedBox(width: 10),
-              const Text(
-                'This week',
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-            ],
-          ),
-          const SizedBox(height: 16),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              _StatItem(label: 'Words', value: '45', color: AppColors.blue),
-              _StatItem(
-                label: 'Accuracy',
-                value: '82%',
-                color: AppColors.green,
-              ),
-              _StatItem(label: 'Time', value: '1.5h', color: AppColors.yellow),
-            ],
-          ),
-          const SizedBox(height: 20),
-          const SizedBox(height: 120, child: _ProgressLineChart()),
-          const SizedBox(height: 24),
-          const Divider(),
-          const SizedBox(height: 16),
-          const Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'Weekly Goal',
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-              Text(
-                '75%',
-                style: TextStyle(
-                  color: AppColors.green,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 8),
-          Container(
-            decoration: BoxDecoration(
-              boxShadow: [
-                BoxShadow(
-                  color: AppColors.green.withOpacity(0.35),
-                  blurRadius: 10,
-                ),
-              ],
-            ),
-            child: LinearProgressIndicator(
-              value: 0.75,
-              backgroundColor: AppColors.gray200,
-              color: AppColors.green,
-              minHeight: 10,
-              borderRadius: BorderRadius.circular(5),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _StatItem extends StatelessWidget {
-  final String label;
-  final String value;
-  final Color color;
-
-  const _StatItem({
-    required this.label,
-    required this.value,
-    required this.color,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Text(
-          value,
-          style: TextStyle(
-            fontSize: 24,
-            fontWeight: FontWeight.bold,
-            color: color,
-          ),
-        ),
-        Text(
-          label,
-          style: const TextStyle(fontSize: 14, color: AppColors.gray500),
+  Widget build(BuildContext context) => Container(
+    padding: const EdgeInsets.all(20),
+    decoration: BoxDecoration(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(24),
+      boxShadow: [
+        BoxShadow(
+          color: AppColors.navy.withValues(alpha: .05),
+          blurRadius: 18,
+          offset: const Offset(0, 8),
         ),
       ],
-    );
-  }
+    ),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              'This week',
+              style: TextStyle(fontWeight: FontWeight.w800, fontSize: 16),
+            ),
+            _TrendPill(),
+          ],
+        ),
+        const SizedBox(height: 18),
+        const Row(
+          children: [
+            Expanded(
+              child: _Metric(
+                value: '45',
+                label: 'Words',
+                color: AppColors.blue,
+              ),
+            ),
+            Expanded(
+              child: _Metric(
+                value: '82%',
+                label: 'Accuracy',
+                color: AppColors.green,
+              ),
+            ),
+            Expanded(
+              child: _Metric(
+                value: '1.5h',
+                label: 'Time',
+                color: AppColors.orange,
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 20),
+        const SizedBox(height: 110, child: _ProgressChart()),
+        const SizedBox(height: 16),
+        const Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text('Weekly goal', style: TextStyle(fontWeight: FontWeight.w700)),
+            Text(
+              '75%',
+              style: TextStyle(
+                color: AppColors.green,
+                fontWeight: FontWeight.w800,
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 8),
+        ClipRRect(
+          borderRadius: BorderRadius.circular(8),
+          child: const LinearProgressIndicator(
+            value: .75,
+            minHeight: 10,
+            backgroundColor: AppColors.softGreen,
+            color: AppColors.green,
+          ),
+        ),
+      ],
+    ),
+  );
 }
 
-class _ToggleTile extends StatelessWidget {
-  final IconData icon;
-  final String title;
-  final String subtitle;
-  final bool value;
+class _TrendPill extends StatelessWidget {
+  const _TrendPill();
+  @override
+  Widget build(BuildContext context) => Container(
+    padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 6),
+    decoration: BoxDecoration(
+      color: AppColors.softGreen,
+      borderRadius: BorderRadius.circular(12),
+    ),
+    child: const Row(
+      children: [
+        Icon(Icons.trending_up_rounded, size: 15, color: AppColors.green),
+        SizedBox(width: 4),
+        Text(
+          '+12%',
+          style: TextStyle(
+            color: AppColors.green,
+            fontWeight: FontWeight.w800,
+            fontSize: 11,
+          ),
+        ),
+      ],
+    ),
+  );
+}
 
-  const _ToggleTile({
+class _Metric extends StatelessWidget {
+  final String value, label;
+  final Color color;
+  const _Metric({
+    required this.value,
+    required this.label,
+    required this.color,
+  });
+  @override
+  Widget build(BuildContext context) => Column(
+    children: [
+      Text(
+        value,
+        style: TextStyle(
+          color: color,
+          fontWeight: FontWeight.w800,
+          fontSize: 22,
+        ),
+      ),
+      Text(
+        label,
+        style: const TextStyle(color: AppColors.gray500, fontSize: 12),
+      ),
+    ],
+  );
+}
+
+class _SettingTile extends StatelessWidget {
+  final IconData icon;
+  final Color color;
+  final String title, subtitle;
+  final Widget trailing;
+  final VoidCallback onTap;
+  const _SettingTile({
     required this.icon,
+    required this.color,
     required this.title,
     required this.subtitle,
-    required this.value,
+    required this.trailing,
+    required this.onTap,
   });
-
   @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: AppColors.gray100,
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: Row(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(10),
-            decoration: BoxDecoration(
-              color: AppColors.navy.withOpacity(0.1),
-              shape: BoxShape.circle,
+  Widget build(BuildContext context) => Card(
+    color: Colors.white,
+    margin: const EdgeInsets.only(bottom: 10),
+    child: InkWell(
+      borderRadius: BorderRadius.circular(22),
+      onTap: onTap,
+      child: Padding(
+        padding: const EdgeInsets.all(14),
+        child: Row(
+          children: [
+            Container(
+              width: 44,
+              height: 44,
+              decoration: BoxDecoration(
+                color: color.withValues(alpha: .12),
+                borderRadius: BorderRadius.circular(14),
+              ),
+              child: Icon(icon, color: color),
             ),
-            child: Icon(icon, color: AppColors.navy),
-          ),
-          const SizedBox(width: 16),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: const TextStyle(fontWeight: FontWeight.bold),
-                ),
-                Text(
-                  subtitle,
-                  style: const TextStyle(
-                    color: AppColors.gray500,
-                    fontSize: 12,
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: const TextStyle(fontWeight: FontWeight.w800),
                   ),
-                ),
-              ],
+                  const SizedBox(height: 2),
+                  Text(
+                    subtitle,
+                    style: const TextStyle(
+                      color: AppColors.gray500,
+                      fontSize: 12,
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ),
-          Switch(value: value, onChanged: (_) {}, activeColor: AppColors.mint),
-        ],
+            trailing,
+          ],
+        ),
       ),
-    );
-  }
+    ),
+  );
 }
 
-class _ProgressLineChart extends StatelessWidget {
-  const _ProgressLineChart();
-
+class _ProgressChart extends StatelessWidget {
+  const _ProgressChart();
   @override
-  Widget build(BuildContext context) {
-    return CustomPaint(painter: _LineChartPainter(), child: Container());
-  }
+  Widget build(BuildContext context) =>
+      CustomPaint(painter: _ChartPainter(), child: const SizedBox.expand());
 }
 
-class _LineChartPainter extends CustomPainter {
+class _ChartPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
-    final paint = Paint()
-      ..color = AppColors.blue
-      ..strokeWidth = 3
-      ..style = PaintingStyle.stroke;
-
+    final grid = Paint()
+      ..color = AppColors.gray200
+      ..strokeWidth = 1;
+    for (var i = 1; i < 4; i++) {
+      final y = size.height * i / 4;
+      canvas.drawLine(Offset(0, y), Offset(size.width, y), grid);
+    }
     final points = [
-      Offset(0, size.height * 0.7),
-      Offset(size.width * 0.2, size.height * 0.55),
-      Offset(size.width * 0.4, size.height * 0.6),
-      Offset(size.width * 0.6, size.height * 0.35),
-      Offset(size.width * 0.8, size.height * 0.4),
-      Offset(size.width, size.height * 0.25),
+      Offset(0, size.height * .78),
+      Offset(size.width * .2, size.height * .6),
+      Offset(size.width * .4, size.height * .66),
+      Offset(size.width * .6, size.height * .34),
+      Offset(size.width * .8, size.height * .43),
+      Offset(size.width, size.height * .2),
     ];
-
     final path = Path()..moveTo(points.first.dx, points.first.dy);
-    for (var point in points.skip(1)) {
+    for (final point in points.skip(1)) {
       path.lineTo(point.dx, point.dy);
     }
-
-    canvas.drawPath(path, paint);
-
-    final dotPaint = Paint()..color = AppColors.mint;
-    for (var point in points) {
-      canvas.drawCircle(point, 4, dotPaint);
+    canvas.drawPath(
+      path,
+      Paint()
+        ..color = AppColors.blue
+        ..strokeWidth = 3
+        ..style = PaintingStyle.stroke
+        ..strokeCap = StrokeCap.round,
+    );
+    for (final point in points) {
+      canvas.drawCircle(point, 4, Paint()..color = AppColors.blue);
+      canvas.drawCircle(point, 2, Paint()..color = Colors.white);
     }
   }
 

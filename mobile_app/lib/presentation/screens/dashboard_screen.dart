@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart';
-import 'package:flutter/foundation.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import '../../core/app_colors.dart';
 import '../../data/user_prefs.dart';
 
@@ -17,53 +17,58 @@ class _DashboardScreenState extends State<DashboardScreen> {
   String? avatarName;
   String? language;
 
-  final List<Map<String, String>> languages = const [
+  static const languages = [
     {'id': 'amharic', 'name': 'Amharic', 'native': 'አማርኛ'},
-    {'id': 'geez', 'name': 'Ge\'ez', 'native': 'ግዕዝ'},
+    {'id': 'geez', 'name': "Ge'ez", 'native': 'ግዕዝ'},
     {'id': 'english', 'name': 'English', 'native': 'English'},
   ];
 
-  final List<Map<String, dynamic>> activities = const [
-    {
-      'title': 'Learn Words',
-      'subtitle': 'New words & sounds',
-      'icon': Icons.abc_rounded,
-      'color': AppColors.blue,
-      'bgColor': AppColors.softBlue,
-      'route': '/words',
-    },
-    {
-      'title': 'Talk with Tutor',
-      'subtitle': 'Practice speaking',
-      'icon': Icons.record_voice_over_rounded,
-      'color': AppColors.purple,
-      'bgColor': AppColors.softPurple,
-      'route': '/tutor',
-    },
-    {
-      'title': 'Stories',
-      'subtitle': 'Read & listen',
-      'icon': Icons.auto_stories_rounded,
-      'color': AppColors.green,
-      'bgColor': AppColors.softGreen,
-      'route': '/stories',
-    },
-    {
-      'title': 'Games',
-      'subtitle': 'Play & learn',
-      'icon': Icons.videogame_asset_rounded,
-      'color': AppColors.yellow,
-      'bgColor': AppColors.softYellow,
-      'route': '/games',
-    },
-    {
-      'title': 'Knowledge',
-      'subtitle': 'Fun facts',
-      'icon': Icons.lightbulb_rounded,
-      'color': Colors.orange,
-      'bgColor': Color(0xFFFFF3E0),
-      'route': '/knowledge',
-    },
+  static const activities = [
+    _Activity(
+      'Learn Words',
+      'Build your word power',
+      Icons.abc_rounded,
+      AppColors.blue,
+      AppColors.softBlue,
+      '/words',
+      '5 min',
+    ),
+    _Activity(
+      'Talk with Tutor',
+      'Say it out loud',
+      Icons.mic_rounded,
+      AppColors.purple,
+      AppColors.softPurple,
+      '/tutor',
+      'Live',
+    ),
+    _Activity(
+      'Story Time',
+      'Read a little adventure',
+      Icons.auto_stories_rounded,
+      AppColors.green,
+      AppColors.softGreen,
+      '/stories',
+      '3 new',
+    ),
+    _Activity(
+      'Play Games',
+      'Win stars while learning',
+      Icons.sports_esports_rounded,
+      AppColors.yellow,
+      AppColors.softYellow,
+      '/games',
+      '+20 ★',
+    ),
+    _Activity(
+      'Wonder Lab',
+      'Discover amazing facts',
+      Icons.lightbulb_rounded,
+      AppColors.orange,
+      AppColors.softOrange,
+      '/knowledge',
+      'Explore',
+    ),
   ];
 
   @override
@@ -73,344 +78,614 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
   Future<void> _loadProfile() async {
-    final image = await _prefs.getAvatarImage();
-    final name = await _prefs.getAvatarName();
-    final selectedLanguage = await _prefs.getLanguage();
-
+    final values = await Future.wait([
+      _prefs.getAvatarImage(),
+      _prefs.getAvatarName(),
+      _prefs.getLanguage(),
+    ]);
     if (!mounted) return;
     setState(() {
-      avatarImageUrl = image;
-      avatarName = name;
-      language = selectedLanguage;
+      avatarImageUrl = values[0];
+      avatarName = values[1];
+      language = values[2];
     });
   }
 
   Future<void> _updateLanguage(String value) async {
     await _prefs.saveLanguage(value);
     if (!mounted) return;
-    setState(() {
-      language = value;
-    });
-    final label =
-        languages.firstWhere(
-          (lang) => lang['id'] == value,
-          orElse: () => {'name': value},
-        )['name'] ??
-        value;
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(SnackBar(content: Text('Language set to $label')));
+    setState(() => language = value);
+    final label = languages.firstWhere((item) => item['id'] == value)['name'];
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(
+        SnackBar(
+          behavior: SnackBarBehavior.floating,
+          content: Row(
+            children: [
+              const Icon(Icons.celebration_rounded, color: Colors.white),
+              const SizedBox(width: 10),
+              Text('$label selected. Let’s learn!'),
+            ],
+          ),
+        ),
+      );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color(0xFFF8FBFF),
       appBar: AppBar(
-        title: const Text(
-          'Yene Teacher',
-          style: TextStyle(fontWeight: FontWeight.bold),
+        backgroundColor: const Color(0xFFF8FBFF),
+        centerTitle: false,
+        title: const Row(
+          children: [_BrandMark(), SizedBox(width: 10), Text('Yene Teacher')],
         ),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.person_pin_rounded, size: 32),
-            onPressed: () {
-              Navigator.pushNamed(context, '/parent');
-            },
+          Padding(
+            padding: const EdgeInsets.only(right: 14),
+            child: FilledButton.tonalIcon(
+              onPressed: () => Navigator.pushNamed(context, '/parent'),
+              icon: const Icon(Icons.family_restroom_rounded, size: 19),
+              label: const Text('Parents'),
+            ),
           ),
-          const SizedBox(width: 10),
         ],
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(24.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                gradient: const LinearGradient(
-                  colors: [
-                    Color(0xFF6C63FF),
-                    Color(0xFF38BDF8),
-                    Color(0xFF7EEAD2),
-                  ],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
-                borderRadius: BorderRadius.circular(28),
-                boxShadow: [
-                  BoxShadow(
-                    color: AppColors.blue.withOpacity(0.25),
-                    blurRadius: 16,
-                    offset: const Offset(0, 8),
-                  ),
-                ],
-              ),
-              child: Row(
-                children: [
-                  CircleAvatar(
-                    radius: 30,
-                    backgroundColor: AppColors.white,
-                    child: avatarImageUrl == null
-                        ? const Icon(Icons.person, color: AppColors.blue)
-                        : ClipOval(
-                            child: kIsWeb
-                                ? Image.network(
-                                    avatarImageUrl!,
-                                    width: 60,
-                                    height: 60,
-                                    fit: BoxFit.cover,
-                                    errorBuilder:
-                                        (context, error, stackTrace) =>
-                                            const Icon(
-                                              Icons.person,
-                                              color: AppColors.blue,
-                                            ),
-                                  )
-                                : CachedNetworkImage(
-                                    imageUrl: avatarImageUrl!,
-                                    width: 60,
-                                    height: 60,
-                                    fit: BoxFit.cover,
-                                    placeholder: (context, url) =>
-                                        const SizedBox(
-                                          width: 40,
-                                          height: 40,
-                                          child: CircularProgressIndicator(
-                                            strokeWidth: 2,
-                                          ),
-                                        ),
-                                    errorWidget: (context, url, error) =>
-                                        const Icon(
-                                          Icons.person,
-                                          color: AppColors.blue,
-                                        ),
-                                  ),
-                          ),
-                  ),
-                  const SizedBox(width: 16),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Hello${avatarName != null ? ', $avatarName!' : ', Learner!'}',
-                          style: Theme.of(context).textTheme.headlineMedium
-                              ?.copyWith(color: Colors.white),
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          language == null
-                              ? 'Ready to learn today?'
-                              : 'Learning in ${language!}',
-                          style: const TextStyle(color: Colors.white70),
-                        ),
-                        const SizedBox(height: 10),
-                        Row(
-                          children: [
-                            _HeaderBadge(
-                              label: 'Streak 3',
-                              icon: Icons.local_fire_department_rounded,
-                            ),
-                            const SizedBox(width: 8),
-                            _HeaderBadge(
-                              label: 'Coins 120',
-                              icon: Icons.star_rounded,
-                            ),
-                          ],
-                        ),
-                      ],
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          final maxWidth = constraints.maxWidth > 880
+              ? 880.0
+              : constraints.maxWidth;
+          final columns = constraints.maxWidth >= 760 ? 3 : 2;
+          return SingleChildScrollView(
+            padding: const EdgeInsets.fromLTRB(18, 8, 18, 32),
+            child: Align(
+              alignment: Alignment.topCenter,
+              child: SizedBox(
+                width: maxWidth,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _WelcomeHero(
+                      avatarImageUrl: avatarImageUrl,
+                      avatarName: avatarName,
+                      onContinue: () => Navigator.pushNamed(context, '/words'),
                     ),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 24),
-            const Text(
-              'Choose a language',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 10),
-            Wrap(
-              spacing: 12,
-              runSpacing: 12,
-              children: languages.map((lang) {
-                final isSelected = language == lang['id'];
-                return _LanguageChip(
-                  title: lang['name']!,
-                  subtitle: lang['native']!,
-                  isSelected: isSelected,
-                  onTap: () => _updateLanguage(lang['id']!),
-                );
-              }).toList(),
-            ),
-            const SizedBox(height: 24),
-            Row(
-              children: [
-                const Text(
-                  'Let’s explore!',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                ),
-                const SizedBox(width: 12),
-                TextButton.icon(
-                  onPressed: () => Navigator.pushNamed(context, '/parent'),
-                  icon: const Icon(Icons.shield_rounded, size: 18),
-                  label: const Text('Parent Mode'),
-                ),
-              ],
-            ),
-            const SizedBox(height: 12),
-            GridView.builder(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                crossAxisSpacing: 16,
-                mainAxisSpacing: 16,
-                childAspectRatio: 0.85,
-              ),
-              itemCount: activities.length,
-              itemBuilder: (context, index) {
-                final activity = activities[index];
-                return GestureDetector(
-                  behavior: HitTestBehavior.opaque,
-                  onTap: () {
-                    Navigator.pushNamed(context, activity['route'] as String);
-                  },
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: activity['bgColor'],
-                      borderRadius: BorderRadius.circular(32),
-                      boxShadow: [
-                        BoxShadow(
-                          color: activity['color'].withOpacity(0.1),
-                          blurRadius: 10,
-                          offset: const Offset(0, 4),
-                        ),
-                      ],
+                    const SizedBox(height: 18),
+                    const _DailyMission(),
+                    const SizedBox(height: 26),
+                    _SectionHeader(
+                      title: 'Pick your language',
+                      subtitle: 'You can switch any time',
+                      icon: Icons.translate_rounded,
                     ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(16),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            activity['icon'],
-                            size: 44,
-                            color: activity['color'],
-                          ),
-                          const SizedBox(height: 12),
-                          Text(
-                            activity['title'],
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              color: activity['color'],
-                            ),
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            activity['subtitle'],
-                            textAlign: TextAlign.center,
-                            style: const TextStyle(
-                              fontSize: 13,
-                              color: AppColors.gray500,
-                            ),
-                          ),
-                        ],
+                    const SizedBox(height: 12),
+                    SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        children: languages
+                            .map(
+                              (item) => Padding(
+                                padding: const EdgeInsets.only(right: 10),
+                                child: _LanguageChip(
+                                  title: item['name']!,
+                                  subtitle: item['native']!,
+                                  selected: language == item['id'],
+                                  onTap: () => _updateLanguage(item['id']!),
+                                ),
+                              ),
+                            )
+                            .toList(),
                       ),
                     ),
-                  ),
-                );
-              },
+                    const SizedBox(height: 28),
+                    _SectionHeader(
+                      title: 'Choose an adventure',
+                      subtitle: 'Every activity earns stars',
+                      icon: Icons.explore_rounded,
+                    ),
+                    const SizedBox(height: 14),
+                    GridView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: activities.length,
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: columns,
+                        crossAxisSpacing: 14,
+                        mainAxisSpacing: 14,
+                        childAspectRatio: columns == 3 ? 1.04 : .86,
+                      ),
+                      itemBuilder: (context, index) => _ActivityCard(
+                        activity: activities[index],
+                        onTap: () => Navigator.pushNamed(
+                          context,
+                          activities[index].route,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ),
-          ],
-        ),
+          );
+        },
       ),
     );
   }
 }
 
-class _HeaderBadge extends StatelessWidget {
-  final String label;
-  final IconData icon;
+class _BrandMark extends StatelessWidget {
+  const _BrandMark();
+  @override
+  Widget build(BuildContext context) => Container(
+    width: 38,
+    height: 38,
+    decoration: BoxDecoration(
+      gradient: const LinearGradient(
+        colors: [AppColors.purple, AppColors.blue],
+      ),
+      borderRadius: BorderRadius.circular(13),
+    ),
+    child: const Icon(
+      Icons.auto_awesome_rounded,
+      color: Colors.white,
+      size: 21,
+    ),
+  );
+}
 
-  const _HeaderBadge({required this.label, required this.icon});
+class _WelcomeHero extends StatelessWidget {
+  final String? avatarImageUrl;
+  final String? avatarName;
+  final VoidCallback onContinue;
+  const _WelcomeHero({
+    this.avatarImageUrl,
+    this.avatarName,
+    required this.onContinue,
+  });
 
   @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-      decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.25),
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.white.withOpacity(0.35)),
+  Widget build(BuildContext context) => Container(
+    width: double.infinity,
+    padding: const EdgeInsets.all(22),
+    decoration: BoxDecoration(
+      gradient: const LinearGradient(
+        colors: [Color(0xFF6758E8), Color(0xFF4A90E2), Color(0xFF3DDC97)],
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
       ),
-      child: Row(
-        children: [
-          Icon(icon, size: 14, color: Colors.white),
-          const SizedBox(width: 6),
-          Text(
-            label,
-            style: const TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.w600,
-              fontSize: 12,
+      borderRadius: BorderRadius.circular(30),
+      boxShadow: [
+        BoxShadow(
+          color: AppColors.blue.withValues(alpha: .22),
+          blurRadius: 24,
+          offset: const Offset(0, 12),
+        ),
+      ],
+    ),
+    child: Stack(
+      children: [
+        const Positioned(right: -18, top: -28, child: _Bubble(size: 96)),
+        const Positioned(left: 130, bottom: -34, child: _Bubble(size: 68)),
+        Row(
+          children: [
+            Hero(
+              tag: 'tutor-avatar',
+              child: _Avatar(imageUrl: avatarImageUrl),
             ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Hi, ${avatarName ?? 'Superstar'}! 👋',
+                    style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w800,
+                    ),
+                  ),
+                  const SizedBox(height: 5),
+                  const Text(
+                    'Your tutor saved a fun lesson for you.',
+                    style: TextStyle(color: Colors.white, fontSize: 14),
+                  ),
+                  const SizedBox(height: 14),
+                  Wrap(
+                    spacing: 8,
+                    runSpacing: 8,
+                    children: [
+                      const _RewardPill(
+                        icon: Icons.local_fire_department_rounded,
+                        label: '3 day streak',
+                      ),
+                      const _RewardPill(
+                        icon: Icons.star_rounded,
+                        label: '120 stars',
+                      ),
+                      FilledButton.icon(
+                        style: FilledButton.styleFrom(
+                          backgroundColor: Colors.white,
+                          foregroundColor: AppColors.navy,
+                          visualDensity: VisualDensity.compact,
+                        ),
+                        onPressed: onContinue,
+                        icon: const Icon(Icons.play_arrow_rounded),
+                        label: const Text('Continue'),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ],
+    ),
+  );
+}
+
+class _Avatar extends StatelessWidget {
+  final String? imageUrl;
+  const _Avatar({this.imageUrl});
+  @override
+  Widget build(BuildContext context) => Container(
+    width: 82,
+    height: 82,
+    padding: const EdgeInsets.all(5),
+    decoration: const BoxDecoration(
+      color: Colors.white,
+      shape: BoxShape.circle,
+    ),
+    child: ClipOval(
+      child: imageUrl == null
+          ? const ColoredBox(
+              color: AppColors.softYellow,
+              child: Icon(
+                Icons.face_rounded,
+                color: AppColors.orange,
+                size: 48,
+              ),
+            )
+          : kIsWeb
+          ? Image.network(
+              imageUrl!,
+              fit: BoxFit.cover,
+              errorBuilder: (context, error, stackTrace) => const Icon(
+                Icons.face_rounded,
+                color: AppColors.blue,
+                size: 48,
+              ),
+            )
+          : CachedNetworkImage(
+              imageUrl: imageUrl!,
+              fit: BoxFit.cover,
+              errorWidget: (context, url, error) => const Icon(
+                Icons.face_rounded,
+                color: AppColors.blue,
+                size: 48,
+              ),
+            ),
+    ),
+  );
+}
+
+class _Bubble extends StatelessWidget {
+  final double size;
+  const _Bubble({required this.size});
+  @override
+  Widget build(BuildContext context) => Container(
+    width: size,
+    height: size,
+    decoration: BoxDecoration(
+      color: Colors.white.withValues(alpha: .11),
+      shape: BoxShape.circle,
+    ),
+  );
+}
+
+class _RewardPill extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  const _RewardPill({required this.icon, required this.label});
+  @override
+  Widget build(BuildContext context) => Container(
+    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
+    decoration: BoxDecoration(
+      color: Colors.white.withValues(alpha: .18),
+      borderRadius: BorderRadius.circular(20),
+      border: Border.all(color: Colors.white24),
+    ),
+    child: Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Icon(icon, color: AppColors.softYellow, size: 16),
+        const SizedBox(width: 5),
+        Text(
+          label,
+          style: const TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.w700,
+            fontSize: 12,
           ),
-        ],
+        ),
+      ],
+    ),
+  );
+}
+
+class _DailyMission extends StatelessWidget {
+  const _DailyMission();
+  @override
+  Widget build(BuildContext context) => Container(
+    padding: const EdgeInsets.all(16),
+    decoration: BoxDecoration(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(24),
+      border: Border.all(color: const Color(0xFFE8EDF5)),
+    ),
+    child: Row(
+      children: [
+        Container(
+          width: 54,
+          height: 54,
+          decoration: BoxDecoration(
+            color: AppColors.softYellow,
+            borderRadius: BorderRadius.circular(18),
+          ),
+          child: const Icon(
+            Icons.emoji_events_rounded,
+            color: AppColors.yellow,
+            size: 31,
+          ),
+        ),
+        const SizedBox(width: 14),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Today’s mission',
+                    style: TextStyle(fontWeight: FontWeight.w800),
+                  ),
+                  Text(
+                    '2 of 3',
+                    style: TextStyle(
+                      color: AppColors.purple,
+                      fontWeight: FontWeight.w800,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 7),
+              ClipRRect(
+                borderRadius: BorderRadius.circular(8),
+                child: const LinearProgressIndicator(
+                  value: .67,
+                  minHeight: 9,
+                  color: AppColors.purple,
+                  backgroundColor: AppColors.softPurple,
+                ),
+              ),
+              const SizedBox(height: 6),
+              const Text(
+                'One more activity unlocks a surprise badge!',
+                style: TextStyle(fontSize: 12, color: AppColors.gray500),
+              ),
+            ],
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
+class _SectionHeader extends StatelessWidget {
+  final String title;
+  final String subtitle;
+  final IconData icon;
+  const _SectionHeader({
+    required this.title,
+    required this.subtitle,
+    required this.icon,
+  });
+  @override
+  Widget build(BuildContext context) => Row(
+    children: [
+      Container(
+        padding: const EdgeInsets.all(8),
+        decoration: BoxDecoration(
+          color: AppColors.softPurple,
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Icon(icon, color: AppColors.purple, size: 20),
       ),
-    );
-  }
+      const SizedBox(width: 10),
+      Expanded(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              title,
+              style: const TextStyle(fontSize: 19, fontWeight: FontWeight.w800),
+            ),
+            Text(
+              subtitle,
+              style: const TextStyle(color: AppColors.gray500, fontSize: 12),
+            ),
+          ],
+        ),
+      ),
+    ],
+  );
 }
 
 class _LanguageChip extends StatelessWidget {
   final String title;
   final String subtitle;
-  final bool isSelected;
+  final bool selected;
   final VoidCallback onTap;
-
   const _LanguageChip({
     required this.title,
     required this.subtitle,
-    required this.isSelected,
+    required this.selected,
     required this.onTap,
   });
+  @override
+  Widget build(BuildContext context) => ChoiceChip(
+    selected: selected,
+    onSelected: (_) => onTap(),
+    avatar: CircleAvatar(
+      backgroundColor: selected ? Colors.white : AppColors.softBlue,
+      child: Text(
+        title.characters.first,
+        style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 12),
+      ),
+    ),
+    label: Padding(
+      padding: const EdgeInsets.symmetric(vertical: 5),
+      child: Text('$title  ·  $subtitle'),
+    ),
+    selectedColor: AppColors.mint,
+    side: BorderSide(color: selected ? AppColors.teal : AppColors.gray200),
+  );
+}
 
+class _ActivityCard extends StatefulWidget {
+  final _Activity activity;
+  final VoidCallback onTap;
+  const _ActivityCard({required this.activity, required this.onTap});
+  @override
+  State<_ActivityCard> createState() => _ActivityCardState();
+}
+
+class _ActivityCardState extends State<_ActivityCard> {
+  bool pressed = false;
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-        decoration: BoxDecoration(
-          color: isSelected ? AppColors.softMint : AppColors.white,
-          borderRadius: BorderRadius.circular(18),
-          border: Border.all(
-            color: isSelected ? AppColors.mint : AppColors.gray200,
-            width: 2,
+    final item = widget.activity;
+    return AnimatedScale(
+      scale: pressed ? .96 : 1,
+      duration: const Duration(milliseconds: 120),
+      child: Material(
+        color: item.background,
+        borderRadius: BorderRadius.circular(26),
+        child: InkWell(
+          borderRadius: BorderRadius.circular(26),
+          onHighlightChanged: (value) => setState(() => pressed = value),
+          onTap: widget.onTap,
+          child: Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(26),
+              border: Border.all(
+                color: item.color.withValues(alpha: .18),
+                width: 1.5,
+              ),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Container(
+                      width: 54,
+                      height: 54,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(18),
+                        boxShadow: [
+                          BoxShadow(
+                            color: item.color.withValues(alpha: .15),
+                            blurRadius: 12,
+                          ),
+                        ],
+                      ),
+                      child: Icon(item.icon, color: item.color, size: 30),
+                    ),
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 9,
+                        vertical: 5,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.white.withValues(alpha: .8),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Text(
+                        item.badge,
+                        style: TextStyle(
+                          color: item.color,
+                          fontSize: 11,
+                          fontWeight: FontWeight.w800,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const Spacer(),
+                Text(
+                  item.title,
+                  style: const TextStyle(
+                    fontSize: 17,
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  item.subtitle,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                    color: AppColors.gray500,
+                    fontSize: 12,
+                  ),
+                ),
+                const SizedBox(height: 10),
+                Row(
+                  children: [
+                    Text(
+                      'Let’s go',
+                      style: TextStyle(
+                        color: item.color,
+                        fontWeight: FontWeight.w800,
+                        fontSize: 12,
+                      ),
+                    ),
+                    const SizedBox(width: 4),
+                    Icon(
+                      Icons.arrow_forward_rounded,
+                      color: item.color,
+                      size: 16,
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
-          boxShadow: [
-            BoxShadow(
-              color: AppColors.navy.withOpacity(0.08),
-              blurRadius: 12,
-              offset: const Offset(0, 6),
-            ),
-          ],
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
-            const SizedBox(height: 2),
-            Text(
-              subtitle,
-              style: const TextStyle(fontSize: 12, color: AppColors.gray500),
-            ),
-          ],
         ),
       ),
     );
   }
+}
+
+class _Activity {
+  final String title, subtitle, route, badge;
+  final IconData icon;
+  final Color color, background;
+  const _Activity(
+    this.title,
+    this.subtitle,
+    this.icon,
+    this.color,
+    this.background,
+    this.route,
+    this.badge,
+  );
 }

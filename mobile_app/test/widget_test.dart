@@ -1,30 +1,31 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-import 'package:mobile_app/main.dart';
+import 'package:mobile_app/presentation/screens/dashboard_screen.dart';
+import 'package:mobile_app/presentation/screens/parent_dashboard_screen.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const YeneTeacherApp());
+  testWidgets('kid dashboard opens the parent space', (tester) async {
+    SharedPreferences.setMockInitialValues({'selected_language': 'amharic'});
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+    await tester.pumpWidget(
+      MaterialApp(
+        routes: {'/parent': (_) => const ParentDashboardScreen()},
+        home: const DashboardScreen(),
+      ),
+    );
+    await tester.pumpAndSettle();
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
+    expect(find.text('Today’s mission'), findsOneWidget);
+    expect(find.text('Choose an adventure'), findsOneWidget);
+    expect(find.text('Play Games'), findsOneWidget);
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    await tester.tap(find.text('Parents'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Parent space'), findsOneWidget);
+    expect(find.text('Healthy learning'), findsOneWidget);
+    expect(find.text('Weekly progress'), findsOneWidget);
   });
 }

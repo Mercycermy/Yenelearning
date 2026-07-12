@@ -7,7 +7,12 @@ class AppTheme {
     final baseTextTheme = GoogleFonts.poppinsTextTheme();
     return ThemeData(
       useMaterial3: true,
-      colorSchemeSeed: AppColors.mint,
+      colorScheme: ColorScheme.fromSeed(
+        seedColor: AppColors.purple,
+        primary: AppColors.purple,
+        secondary: AppColors.teal,
+        surface: AppColors.white,
+      ),
       scaffoldBackgroundColor: AppColors.white,
       appBarTheme: const AppBarTheme(
         backgroundColor: AppColors.white,
@@ -60,6 +65,26 @@ class AppTheme {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
       ),
 
+      snackBarTheme: SnackBarThemeData(
+        backgroundColor: AppColors.navy,
+        contentTextStyle: baseTextTheme.bodyMedium?.copyWith(
+          color: Colors.white,
+          fontWeight: FontWeight.w600,
+        ),
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      ),
+
+      dialogTheme: DialogThemeData(
+        backgroundColor: Colors.white,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(26)),
+      ),
+
+      bottomSheetTheme: const BottomSheetThemeData(
+        backgroundColor: Colors.white,
+        showDragHandle: true,
+      ),
+
       // Button Theme
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
@@ -71,7 +96,7 @@ class AppTheme {
           ),
           textStyle: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           elevation: 4,
-          shadowColor: AppColors.blue.withOpacity(0.3),
+          shadowColor: AppColors.blue.withValues(alpha: 0.3),
         ),
       ),
 
