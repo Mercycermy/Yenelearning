@@ -19,8 +19,9 @@ export class AiService {
             }
             messages.push({ role: 'user', content: prompt });
 
-            // Use a highly available model
-            const model = 'mistralai/Mistral-7B-Instruct-v0.3';
+            // Keep the model configurable because provider availability changes.
+            const model = this.configService.get<string>('HF_CHAT_MODEL')
+                ?? 'Qwen/Qwen2.5-7B-Instruct';
 
             const response = await this.hf.chatCompletion({
                 model,
