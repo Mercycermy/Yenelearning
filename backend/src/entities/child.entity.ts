@@ -15,6 +15,7 @@ export enum SupportedLanguage {
     GEEZ = 'geez',
     AMHARIC = 'amharic',
     ENGLISH = 'english',
+    OROMO = 'oromo',
 }
 
 @Entity('children')

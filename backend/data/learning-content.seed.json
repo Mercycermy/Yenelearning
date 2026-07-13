@@ -1,0 +1,3094 @@
+{
+  "version": 1,
+  "description": "Multilingual YeneLearning catalog: Learn Words, Talk with Tutor, Story Time, Play Games, and Wonder Lab.",
+  "languages": [
+    {
+      "code": "english",
+      "name": "English",
+      "nativeName": "English",
+      "isActive": true
+    },
+    {
+      "code": "amharic",
+      "name": "Amharic",
+      "nativeName": "አማርኛ",
+      "isActive": true
+    },
+    {
+      "code": "geez",
+      "name": "Ge'ez",
+      "nativeName": "ግዕዝ",
+      "isActive": true
+    },
+    {
+      "code": "oromo",
+      "name": "Oromo",
+      "nativeName": "Afaan Oromoo",
+      "isActive": true
+    }
+  ],
+  "content": [
+    {
+      "type": "word",
+      "title": "Hello",
+      "description": "A friendly greeting",
+      "language": "english",
+      "difficulty": "beginner",
+      "minAge": 4,
+      "maxAge": 12,
+      "imageUrl": null,
+      "audioUrl": null,
+      "metadata": {
+        "pronunciation": "hello",
+        "meaning": "A friendly greeting",
+        "examplePrompt": "Use “Hello” in a short sentence."
+      },
+      "tags": [
+        "learn-words",
+        "vocabulary"
+      ],
+      "isActive": true,
+      "orderIndex": 1
+    },
+    {
+      "type": "word",
+      "title": "Family",
+      "description": "People who care for one another",
+      "language": "english",
+      "difficulty": "beginner",
+      "minAge": 4,
+      "maxAge": 12,
+      "imageUrl": null,
+      "audioUrl": null,
+      "metadata": {
+        "pronunciation": "family",
+        "meaning": "People who care for one another",
+        "examplePrompt": "Use “Family” in a short sentence."
+      },
+      "tags": [
+        "learn-words",
+        "vocabulary"
+      ],
+      "isActive": true,
+      "orderIndex": 2
+    },
+    {
+      "type": "word",
+      "title": "Water",
+      "description": "A drink our bodies need",
+      "language": "english",
+      "difficulty": "beginner",
+      "minAge": 4,
+      "maxAge": 12,
+      "imageUrl": null,
+      "audioUrl": null,
+      "metadata": {
+        "pronunciation": "water",
+        "meaning": "A drink our bodies need",
+        "examplePrompt": "Use “Water” in a short sentence."
+      },
+      "tags": [
+        "learn-words",
+        "vocabulary"
+      ],
+      "isActive": true,
+      "orderIndex": 3
+    },
+    {
+      "type": "word",
+      "title": "House",
+      "description": "A place where people live",
+      "language": "english",
+      "difficulty": "beginner",
+      "minAge": 4,
+      "maxAge": 12,
+      "imageUrl": null,
+      "audioUrl": null,
+      "metadata": {
+        "pronunciation": "house",
+        "meaning": "A place where people live",
+        "examplePrompt": "Use “House” in a short sentence."
+      },
+      "tags": [
+        "learn-words",
+        "vocabulary"
+      ],
+      "isActive": true,
+      "orderIndex": 4
+    },
+    {
+      "type": "word",
+      "title": "School",
+      "description": "A place for learning",
+      "language": "english",
+      "difficulty": "beginner",
+      "minAge": 4,
+      "maxAge": 12,
+      "imageUrl": null,
+      "audioUrl": null,
+      "metadata": {
+        "pronunciation": "school",
+        "meaning": "A place for learning",
+        "examplePrompt": "Use “School” in a short sentence."
+      },
+      "tags": [
+        "learn-words",
+        "vocabulary"
+      ],
+      "isActive": true,
+      "orderIndex": 5
+    },
+    {
+      "type": "word",
+      "title": "Book",
+      "description": "Pages with words and pictures",
+      "language": "english",
+      "difficulty": "beginner",
+      "minAge": 4,
+      "maxAge": 12,
+      "imageUrl": null,
+      "audioUrl": null,
+      "metadata": {
+        "pronunciation": "book",
+        "meaning": "Pages with words and pictures",
+        "examplePrompt": "Use “Book” in a short sentence."
+      },
+      "tags": [
+        "learn-words",
+        "vocabulary"
+      ],
+      "isActive": true,
+      "orderIndex": 6
+    },
+    {
+      "type": "word",
+      "title": "Sun",
+      "description": "The star that lights our day",
+      "language": "english",
+      "difficulty": "beginner",
+      "minAge": 4,
+      "maxAge": 12,
+      "imageUrl": null,
+      "audioUrl": null,
+      "metadata": {
+        "pronunciation": "sun",
+        "meaning": "The star that lights our day",
+        "examplePrompt": "Use “Sun” in a short sentence."
+      },
+      "tags": [
+        "learn-words",
+        "vocabulary"
+      ],
+      "isActive": true,
+      "orderIndex": 7
+    },
+    {
+      "type": "word",
+      "title": "Moon",
+      "description": "The bright object seen at night",
+      "language": "english",
+      "difficulty": "beginner",
+      "minAge": 4,
+      "maxAge": 12,
+      "imageUrl": null,
+      "audioUrl": null,
+      "metadata": {
+        "pronunciation": "moon",
+        "meaning": "The bright object seen at night",
+        "examplePrompt": "Use “Moon” in a short sentence."
+      },
+      "tags": [
+        "learn-words",
+        "vocabulary"
+      ],
+      "isActive": true,
+      "orderIndex": 8
+    },
+    {
+      "type": "word",
+      "title": "Friend",
+      "description": "Someone we like and trust",
+      "language": "english",
+      "difficulty": "intermediate",
+      "minAge": 4,
+      "maxAge": 12,
+      "imageUrl": null,
+      "audioUrl": null,
+      "metadata": {
+        "pronunciation": "friend",
+        "meaning": "Someone we like and trust",
+        "examplePrompt": "Use “Friend” in a short sentence."
+      },
+      "tags": [
+        "learn-words",
+        "vocabulary"
+      ],
+      "isActive": true,
+      "orderIndex": 9
+    },
+    {
+      "type": "word",
+      "title": "Food",
+      "description": "What we eat for energy",
+      "language": "english",
+      "difficulty": "intermediate",
+      "minAge": 4,
+      "maxAge": 12,
+      "imageUrl": null,
+      "audioUrl": null,
+      "metadata": {
+        "pronunciation": "food",
+        "meaning": "What we eat for energy",
+        "examplePrompt": "Use “Food” in a short sentence."
+      },
+      "tags": [
+        "learn-words",
+        "vocabulary"
+      ],
+      "isActive": true,
+      "orderIndex": 10
+    },
+    {
+      "type": "word",
+      "title": "Tree",
+      "description": "A tall plant with a trunk",
+      "language": "english",
+      "difficulty": "intermediate",
+      "minAge": 4,
+      "maxAge": 12,
+      "imageUrl": null,
+      "audioUrl": null,
+      "metadata": {
+        "pronunciation": "tree",
+        "meaning": "A tall plant with a trunk",
+        "examplePrompt": "Use “Tree” in a short sentence."
+      },
+      "tags": [
+        "learn-words",
+        "vocabulary"
+      ],
+      "isActive": true,
+      "orderIndex": 11
+    },
+    {
+      "type": "word",
+      "title": "Bird",
+      "description": "An animal with feathers",
+      "language": "english",
+      "difficulty": "intermediate",
+      "minAge": 4,
+      "maxAge": 12,
+      "imageUrl": null,
+      "audioUrl": null,
+      "metadata": {
+        "pronunciation": "bird",
+        "meaning": "An animal with feathers",
+        "examplePrompt": "Use “Bird” in a short sentence."
+      },
+      "tags": [
+        "learn-words",
+        "vocabulary"
+      ],
+      "isActive": true,
+      "orderIndex": 12
+    },
+    {
+      "type": "word",
+      "title": "Mother",
+      "description": "A female parent",
+      "language": "english",
+      "difficulty": "intermediate",
+      "minAge": 4,
+      "maxAge": 12,
+      "imageUrl": null,
+      "audioUrl": null,
+      "metadata": {
+        "pronunciation": "mother",
+        "meaning": "A female parent",
+        "examplePrompt": "Use “Mother” in a short sentence."
+      },
+      "tags": [
+        "learn-words",
+        "vocabulary"
+      ],
+      "isActive": true,
+      "orderIndex": 13
+    },
+    {
+      "type": "word",
+      "title": "Father",
+      "description": "A male parent",
+      "language": "english",
+      "difficulty": "intermediate",
+      "minAge": 4,
+      "maxAge": 12,
+      "imageUrl": null,
+      "audioUrl": null,
+      "metadata": {
+        "pronunciation": "father",
+        "meaning": "A male parent",
+        "examplePrompt": "Use “Father” in a short sentence."
+      },
+      "tags": [
+        "learn-words",
+        "vocabulary"
+      ],
+      "isActive": true,
+      "orderIndex": 14
+    },
+    {
+      "type": "word",
+      "title": "Thank you",
+      "description": "Words that show gratitude",
+      "language": "english",
+      "difficulty": "intermediate",
+      "minAge": 4,
+      "maxAge": 12,
+      "imageUrl": null,
+      "audioUrl": null,
+      "metadata": {
+        "pronunciation": "thank you",
+        "meaning": "Words that show gratitude",
+        "examplePrompt": "Use “Thank you” in a short sentence."
+      },
+      "tags": [
+        "learn-words",
+        "vocabulary"
+      ],
+      "isActive": true,
+      "orderIndex": 15
+    },
+    {
+      "type": "tutor",
+      "title": "Meet and Greet",
+      "description": "Practice saying hello and introducing yourself.",
+      "language": "english",
+      "difficulty": "beginner",
+      "minAge": 5,
+      "maxAge": 12,
+      "imageUrl": null,
+      "audioUrl": null,
+      "metadata": {
+        "scenario": "greeting",
+        "turns": 6,
+        "starterPrompt": "Practice saying hello and introducing yourself."
+      },
+      "tags": [
+        "talk-with-tutor",
+        "conversation"
+      ],
+      "isActive": true,
+      "orderIndex": 1
+    },
+    {
+      "type": "tutor",
+      "title": "My Family",
+      "description": "Tell the tutor about people in your family.",
+      "language": "english",
+      "difficulty": "beginner",
+      "minAge": 5,
+      "maxAge": 12,
+      "imageUrl": null,
+      "audioUrl": null,
+      "metadata": {
+        "scenario": "family",
+        "turns": 6,
+        "starterPrompt": "Tell the tutor about people in your family."
+      },
+      "tags": [
+        "talk-with-tutor",
+        "conversation"
+      ],
+      "isActive": true,
+      "orderIndex": 2
+    },
+    {
+      "type": "tutor",
+      "title": "At School",
+      "description": "Practice asking for a book and pencil.",
+      "language": "english",
+      "difficulty": "intermediate",
+      "minAge": 5,
+      "maxAge": 12,
+      "imageUrl": null,
+      "audioUrl": null,
+      "metadata": {
+        "scenario": "school",
+        "turns": 6,
+        "starterPrompt": "Practice asking for a book and pencil."
+      },
+      "tags": [
+        "talk-with-tutor",
+        "conversation"
+      ],
+      "isActive": true,
+      "orderIndex": 3
+    },
+    {
+      "type": "tutor",
+      "title": "My Day",
+      "description": "Describe what you do from morning to night.",
+      "language": "english",
+      "difficulty": "intermediate",
+      "minAge": 5,
+      "maxAge": 12,
+      "imageUrl": null,
+      "audioUrl": null,
+      "metadata": {
+        "scenario": "daily-routine",
+        "turns": 6,
+        "starterPrompt": "Describe what you do from morning to night."
+      },
+      "tags": [
+        "talk-with-tutor",
+        "conversation"
+      ],
+      "isActive": true,
+      "orderIndex": 4
+    },
+    {
+      "type": "tutor",
+      "title": "Feelings",
+      "description": "Practice saying happy, sad, tired, and excited.",
+      "language": "english",
+      "difficulty": "intermediate",
+      "minAge": 5,
+      "maxAge": 12,
+      "imageUrl": null,
+      "audioUrl": null,
+      "metadata": {
+        "scenario": "feelings",
+        "turns": 6,
+        "starterPrompt": "Practice saying happy, sad, tired, and excited."
+      },
+      "tags": [
+        "talk-with-tutor",
+        "conversation"
+      ],
+      "isActive": true,
+      "orderIndex": 5
+    },
+    {
+      "type": "game",
+      "title": "Picture Match",
+      "description": "Match each word to the correct picture.",
+      "language": "english",
+      "difficulty": "beginner",
+      "minAge": 4,
+      "maxAge": 12,
+      "imageUrl": null,
+      "audioUrl": null,
+      "metadata": {
+        "gameType": "matching",
+        "rounds": 8,
+        "starReward": 3
+      },
+      "tags": [
+        "play-games",
+        "interactive"
+      ],
+      "isActive": true,
+      "orderIndex": 1
+    },
+    {
+      "type": "game",
+      "title": "Sound Hunt",
+      "description": "Listen and choose the word you hear.",
+      "language": "english",
+      "difficulty": "beginner",
+      "minAge": 4,
+      "maxAge": 12,
+      "imageUrl": null,
+      "audioUrl": null,
+      "metadata": {
+        "gameType": "listening",
+        "rounds": 8,
+        "starReward": 3
+      },
+      "tags": [
+        "play-games",
+        "interactive"
+      ],
+      "isActive": true,
+      "orderIndex": 2
+    },
+    {
+      "type": "game",
+      "title": "Word Builder",
+      "description": "Put letters in order to build the word.",
+      "language": "english",
+      "difficulty": "intermediate",
+      "minAge": 4,
+      "maxAge": 12,
+      "imageUrl": null,
+      "audioUrl": null,
+      "metadata": {
+        "gameType": "word-builder",
+        "rounds": 8,
+        "starReward": 3
+      },
+      "tags": [
+        "play-games",
+        "interactive"
+      ],
+      "isActive": true,
+      "orderIndex": 3
+    },
+    {
+      "type": "game",
+      "title": "Memory Pairs",
+      "description": "Turn over cards and find matching word pairs.",
+      "language": "english",
+      "difficulty": "intermediate",
+      "minAge": 4,
+      "maxAge": 12,
+      "imageUrl": null,
+      "audioUrl": null,
+      "metadata": {
+        "gameType": "memory",
+        "rounds": 8,
+        "starReward": 3
+      },
+      "tags": [
+        "play-games",
+        "interactive"
+      ],
+      "isActive": true,
+      "orderIndex": 4
+    },
+    {
+      "type": "game",
+      "title": "Quick Choice",
+      "description": "Choose the right answer before time runs out.",
+      "language": "english",
+      "difficulty": "intermediate",
+      "minAge": 4,
+      "maxAge": 12,
+      "imageUrl": null,
+      "audioUrl": null,
+      "metadata": {
+        "gameType": "quiz",
+        "rounds": 8,
+        "starReward": 3
+      },
+      "tags": [
+        "play-games",
+        "interactive"
+      ],
+      "isActive": true,
+      "orderIndex": 5
+    },
+    {
+      "type": "knowledge",
+      "title": "Why Rain Falls",
+      "description": "Water in clouds joins into heavy drops that fall as rain.",
+      "language": "english",
+      "difficulty": "beginner",
+      "minAge": 6,
+      "maxAge": 12,
+      "imageUrl": null,
+      "audioUrl": null,
+      "metadata": {
+        "category": "weather",
+        "fact": "Water in clouds joins into heavy drops that fall as rain.",
+        "question": "Why Rain Falls"
+      },
+      "tags": [
+        "wonder-lab",
+        "science"
+      ],
+      "isActive": true,
+      "orderIndex": 1
+    },
+    {
+      "type": "knowledge",
+      "title": "How Plants Drink",
+      "description": "Roots absorb water and carry it up through the stem.",
+      "language": "english",
+      "difficulty": "beginner",
+      "minAge": 6,
+      "maxAge": 12,
+      "imageUrl": null,
+      "audioUrl": null,
+      "metadata": {
+        "category": "plants",
+        "fact": "Roots absorb water and carry it up through the stem.",
+        "question": "How Plants Drink"
+      },
+      "tags": [
+        "wonder-lab",
+        "science"
+      ],
+      "isActive": true,
+      "orderIndex": 2
+    },
+    {
+      "type": "knowledge",
+      "title": "Day and Night",
+      "description": "Earth spins, bringing each place toward and away from the Sun.",
+      "language": "english",
+      "difficulty": "beginner",
+      "minAge": 6,
+      "maxAge": 12,
+      "imageUrl": null,
+      "audioUrl": null,
+      "metadata": {
+        "category": "space",
+        "fact": "Earth spins, bringing each place toward and away from the Sun.",
+        "question": "Day and Night"
+      },
+      "tags": [
+        "wonder-lab",
+        "science"
+      ],
+      "isActive": true,
+      "orderIndex": 3
+    },
+    {
+      "type": "knowledge",
+      "title": "Floating and Sinking",
+      "description": "Shape and material help decide whether an object floats.",
+      "language": "english",
+      "difficulty": "intermediate",
+      "minAge": 6,
+      "maxAge": 12,
+      "imageUrl": null,
+      "audioUrl": null,
+      "metadata": {
+        "category": "physics",
+        "fact": "Shape and material help decide whether an object floats.",
+        "question": "Floating and Sinking"
+      },
+      "tags": [
+        "wonder-lab",
+        "science"
+      ],
+      "isActive": true,
+      "orderIndex": 4
+    },
+    {
+      "type": "knowledge",
+      "title": "Our Five Senses",
+      "description": "Eyes, ears, nose, tongue, and skin help us learn about the world.",
+      "language": "english",
+      "difficulty": "intermediate",
+      "minAge": 6,
+      "maxAge": 12,
+      "imageUrl": null,
+      "audioUrl": null,
+      "metadata": {
+        "category": "human-body",
+        "fact": "Eyes, ears, nose, tongue, and skin help us learn about the world.",
+        "question": "Our Five Senses"
+      },
+      "tags": [
+        "wonder-lab",
+        "science"
+      ],
+      "isActive": true,
+      "orderIndex": 5
+    },
+    {
+      "type": "word",
+      "title": "ሰላም",
+      "description": "የወዳጅነት ሰላምታ",
+      "language": "amharic",
+      "difficulty": "beginner",
+      "minAge": 4,
+      "maxAge": 12,
+      "imageUrl": null,
+      "audioUrl": null,
+      "metadata": {
+        "pronunciation": "selam",
+        "meaning": "የወዳጅነት ሰላምታ",
+        "examplePrompt": "Use “ሰላም” in a short sentence."
+      },
+      "tags": [
+        "learn-words",
+        "vocabulary"
+      ],
+      "isActive": true,
+      "orderIndex": 1
+    },
+    {
+      "type": "word",
+      "title": "ቤተሰብ",
+      "description": "እርስ በርስ የሚንከባከቡ ሰዎች",
+      "language": "amharic",
+      "difficulty": "beginner",
+      "minAge": 4,
+      "maxAge": 12,
+      "imageUrl": null,
+      "audioUrl": null,
+      "metadata": {
+        "pronunciation": "beteseb",
+        "meaning": "እርስ በርስ የሚንከባከቡ ሰዎች",
+        "examplePrompt": "Use “ቤተሰብ” in a short sentence."
+      },
+      "tags": [
+        "learn-words",
+        "vocabulary"
+      ],
+      "isActive": true,
+      "orderIndex": 2
+    },
+    {
+      "type": "word",
+      "title": "ውሃ",
+      "description": "ሰውነታችን የሚፈልገው መጠጥ",
+      "language": "amharic",
+      "difficulty": "beginner",
+      "minAge": 4,
+      "maxAge": 12,
+      "imageUrl": null,
+      "audioUrl": null,
+      "metadata": {
+        "pronunciation": "wuha",
+        "meaning": "ሰውነታችን የሚፈልገው መጠጥ",
+        "examplePrompt": "Use “ውሃ” in a short sentence."
+      },
+      "tags": [
+        "learn-words",
+        "vocabulary"
+      ],
+      "isActive": true,
+      "orderIndex": 3
+    },
+    {
+      "type": "word",
+      "title": "ቤት",
+      "description": "ሰዎች የሚኖሩበት ቦታ",
+      "language": "amharic",
+      "difficulty": "beginner",
+      "minAge": 4,
+      "maxAge": 12,
+      "imageUrl": null,
+      "audioUrl": null,
+      "metadata": {
+        "pronunciation": "bet",
+        "meaning": "ሰዎች የሚኖሩበት ቦታ",
+        "examplePrompt": "Use “ቤት” in a short sentence."
+      },
+      "tags": [
+        "learn-words",
+        "vocabulary"
+      ],
+      "isActive": true,
+      "orderIndex": 4
+    },
+    {
+      "type": "word",
+      "title": "ትምህርት ቤት",
+      "description": "የመማሪያ ቦታ",
+      "language": "amharic",
+      "difficulty": "beginner",
+      "minAge": 4,
+      "maxAge": 12,
+      "imageUrl": null,
+      "audioUrl": null,
+      "metadata": {
+        "pronunciation": "timhirt bet",
+        "meaning": "የመማሪያ ቦታ",
+        "examplePrompt": "Use “ትምህርት ቤት” in a short sentence."
+      },
+      "tags": [
+        "learn-words",
+        "vocabulary"
+      ],
+      "isActive": true,
+      "orderIndex": 5
+    },
+    {
+      "type": "word",
+      "title": "መጽሐፍ",
+      "description": "ቃላትና ሥዕሎች ያሉት",
+      "language": "amharic",
+      "difficulty": "beginner",
+      "minAge": 4,
+      "maxAge": 12,
+      "imageUrl": null,
+      "audioUrl": null,
+      "metadata": {
+        "pronunciation": "metsihaf",
+        "meaning": "ቃላትና ሥዕሎች ያሉት",
+        "examplePrompt": "Use “መጽሐፍ” in a short sentence."
+      },
+      "tags": [
+        "learn-words",
+        "vocabulary"
+      ],
+      "isActive": true,
+      "orderIndex": 6
+    },
+    {
+      "type": "word",
+      "title": "ፀሐይ",
+      "description": "ቀናችንን የምታበራ ኮከብ",
+      "language": "amharic",
+      "difficulty": "beginner",
+      "minAge": 4,
+      "maxAge": 12,
+      "imageUrl": null,
+      "audioUrl": null,
+      "metadata": {
+        "pronunciation": "tsehay",
+        "meaning": "ቀናችንን የምታበራ ኮከብ",
+        "examplePrompt": "Use “ፀሐይ” in a short sentence."
+      },
+      "tags": [
+        "learn-words",
+        "vocabulary"
+      ],
+      "isActive": true,
+      "orderIndex": 7
+    },
+    {
+      "type": "word",
+      "title": "ጨረቃ",
+      "description": "በሌሊት የምናየው ብሩህ ነገር",
+      "language": "amharic",
+      "difficulty": "beginner",
+      "minAge": 4,
+      "maxAge": 12,
+      "imageUrl": null,
+      "audioUrl": null,
+      "metadata": {
+        "pronunciation": "chereka",
+        "meaning": "በሌሊት የምናየው ብሩህ ነገር",
+        "examplePrompt": "Use “ጨረቃ” in a short sentence."
+      },
+      "tags": [
+        "learn-words",
+        "vocabulary"
+      ],
+      "isActive": true,
+      "orderIndex": 8
+    },
+    {
+      "type": "word",
+      "title": "ጓደኛ",
+      "description": "የምንወደውና የምናምነው ሰው",
+      "language": "amharic",
+      "difficulty": "intermediate",
+      "minAge": 4,
+      "maxAge": 12,
+      "imageUrl": null,
+      "audioUrl": null,
+      "metadata": {
+        "pronunciation": "gwadenya",
+        "meaning": "የምንወደውና የምናምነው ሰው",
+        "examplePrompt": "Use “ጓደኛ” in a short sentence."
+      },
+      "tags": [
+        "learn-words",
+        "vocabulary"
+      ],
+      "isActive": true,
+      "orderIndex": 9
+    },
+    {
+      "type": "word",
+      "title": "ምግብ",
+      "description": "ኃይል ለማግኘት የምንበላው",
+      "language": "amharic",
+      "difficulty": "intermediate",
+      "minAge": 4,
+      "maxAge": 12,
+      "imageUrl": null,
+      "audioUrl": null,
+      "metadata": {
+        "pronunciation": "migib",
+        "meaning": "ኃይል ለማግኘት የምንበላው",
+        "examplePrompt": "Use “ምግብ” in a short sentence."
+      },
+      "tags": [
+        "learn-words",
+        "vocabulary"
+      ],
+      "isActive": true,
+      "orderIndex": 10
+    },
+    {
+      "type": "word",
+      "title": "ዛፍ",
+      "description": "ግንድ ያለው ረጅም ተክል",
+      "language": "amharic",
+      "difficulty": "intermediate",
+      "minAge": 4,
+      "maxAge": 12,
+      "imageUrl": null,
+      "audioUrl": null,
+      "metadata": {
+        "pronunciation": "zaf",
+        "meaning": "ግንድ ያለው ረጅም ተክል",
+        "examplePrompt": "Use “ዛፍ” in a short sentence."
+      },
+      "tags": [
+        "learn-words",
+        "vocabulary"
+      ],
+      "isActive": true,
+      "orderIndex": 11
+    },
+    {
+      "type": "word",
+      "title": "ወፍ",
+      "description": "ላባ ያለው እንስሳ",
+      "language": "amharic",
+      "difficulty": "intermediate",
+      "minAge": 4,
+      "maxAge": 12,
+      "imageUrl": null,
+      "audioUrl": null,
+      "metadata": {
+        "pronunciation": "wof",
+        "meaning": "ላባ ያለው እንስሳ",
+        "examplePrompt": "Use “ወፍ” in a short sentence."
+      },
+      "tags": [
+        "learn-words",
+        "vocabulary"
+      ],
+      "isActive": true,
+      "orderIndex": 12
+    },
+    {
+      "type": "word",
+      "title": "እናት",
+      "description": "ሴት ወላጅ",
+      "language": "amharic",
+      "difficulty": "intermediate",
+      "minAge": 4,
+      "maxAge": 12,
+      "imageUrl": null,
+      "audioUrl": null,
+      "metadata": {
+        "pronunciation": "enat",
+        "meaning": "ሴት ወላጅ",
+        "examplePrompt": "Use “እናት” in a short sentence."
+      },
+      "tags": [
+        "learn-words",
+        "vocabulary"
+      ],
+      "isActive": true,
+      "orderIndex": 13
+    },
+    {
+      "type": "word",
+      "title": "አባት",
+      "description": "ወንድ ወላጅ",
+      "language": "amharic",
+      "difficulty": "intermediate",
+      "minAge": 4,
+      "maxAge": 12,
+      "imageUrl": null,
+      "audioUrl": null,
+      "metadata": {
+        "pronunciation": "abat",
+        "meaning": "ወንድ ወላጅ",
+        "examplePrompt": "Use “አባት” in a short sentence."
+      },
+      "tags": [
+        "learn-words",
+        "vocabulary"
+      ],
+      "isActive": true,
+      "orderIndex": 14
+    },
+    {
+      "type": "word",
+      "title": "አመሰግናለሁ",
+      "description": "ምስጋናን የሚገልጽ ቃል",
+      "language": "amharic",
+      "difficulty": "intermediate",
+      "minAge": 4,
+      "maxAge": 12,
+      "imageUrl": null,
+      "audioUrl": null,
+      "metadata": {
+        "pronunciation": "ameseginalehu",
+        "meaning": "ምስጋናን የሚገልጽ ቃል",
+        "examplePrompt": "Use “አመሰግናለሁ” in a short sentence."
+      },
+      "tags": [
+        "learn-words",
+        "vocabulary"
+      ],
+      "isActive": true,
+      "orderIndex": 15
+    },
+    {
+      "type": "tutor",
+      "title": "ሰላምታና ትውውቅ",
+      "description": "ሰላም ማለትንና ራስን ማስተዋወቅን ተለማመድ።",
+      "language": "amharic",
+      "difficulty": "beginner",
+      "minAge": 5,
+      "maxAge": 12,
+      "imageUrl": null,
+      "audioUrl": null,
+      "metadata": {
+        "scenario": "greeting",
+        "turns": 6,
+        "starterPrompt": "ሰላም ማለትንና ራስን ማስተዋወቅን ተለማመድ።"
+      },
+      "tags": [
+        "talk-with-tutor",
+        "conversation"
+      ],
+      "isActive": true,
+      "orderIndex": 1
+    },
+    {
+      "type": "tutor",
+      "title": "ቤተሰቤ",
+      "description": "ስለ ቤተሰብህ ለአስተማሪው ንገር።",
+      "language": "amharic",
+      "difficulty": "beginner",
+      "minAge": 5,
+      "maxAge": 12,
+      "imageUrl": null,
+      "audioUrl": null,
+      "metadata": {
+        "scenario": "family",
+        "turns": 6,
+        "starterPrompt": "ስለ ቤተሰብህ ለአስተማሪው ንገር።"
+      },
+      "tags": [
+        "talk-with-tutor",
+        "conversation"
+      ],
+      "isActive": true,
+      "orderIndex": 2
+    },
+    {
+      "type": "tutor",
+      "title": "በትምህርት ቤት",
+      "description": "መጽሐፍና እርሳስ መጠየቅን ተለማመድ።",
+      "language": "amharic",
+      "difficulty": "intermediate",
+      "minAge": 5,
+      "maxAge": 12,
+      "imageUrl": null,
+      "audioUrl": null,
+      "metadata": {
+        "scenario": "school",
+        "turns": 6,
+        "starterPrompt": "መጽሐፍና እርሳስ መጠየቅን ተለማመድ።"
+      },
+      "tags": [
+        "talk-with-tutor",
+        "conversation"
+      ],
+      "isActive": true,
+      "orderIndex": 3
+    },
+    {
+      "type": "tutor",
+      "title": "የእኔ ቀን",
+      "description": "ከጠዋት እስከ ማታ የምታደርገውን ግለጽ።",
+      "language": "amharic",
+      "difficulty": "intermediate",
+      "minAge": 5,
+      "maxAge": 12,
+      "imageUrl": null,
+      "audioUrl": null,
+      "metadata": {
+        "scenario": "daily-routine",
+        "turns": 6,
+        "starterPrompt": "ከጠዋት እስከ ማታ የምታደርገውን ግለጽ።"
+      },
+      "tags": [
+        "talk-with-tutor",
+        "conversation"
+      ],
+      "isActive": true,
+      "orderIndex": 4
+    },
+    {
+      "type": "tutor",
+      "title": "ስሜቶች",
+      "description": "ደስተኛ፣ አዝኛለሁ፣ ደክሞኛል ማለትን ተለማመድ።",
+      "language": "amharic",
+      "difficulty": "intermediate",
+      "minAge": 5,
+      "maxAge": 12,
+      "imageUrl": null,
+      "audioUrl": null,
+      "metadata": {
+        "scenario": "feelings",
+        "turns": 6,
+        "starterPrompt": "ደስተኛ፣ አዝኛለሁ፣ ደክሞኛል ማለትን ተለማመድ።"
+      },
+      "tags": [
+        "talk-with-tutor",
+        "conversation"
+      ],
+      "isActive": true,
+      "orderIndex": 5
+    },
+    {
+      "type": "game",
+      "title": "ሥዕል አዛምድ",
+      "description": "እያንዳንዱን ቃል ከትክክለኛው ሥዕል ጋር አዛምድ።",
+      "language": "amharic",
+      "difficulty": "beginner",
+      "minAge": 4,
+      "maxAge": 12,
+      "imageUrl": null,
+      "audioUrl": null,
+      "metadata": {
+        "gameType": "matching",
+        "rounds": 8,
+        "starReward": 3
+      },
+      "tags": [
+        "play-games",
+        "interactive"
+      ],
+      "isActive": true,
+      "orderIndex": 1
+    },
+    {
+      "type": "game",
+      "title": "ድምፅ ፈልግ",
+      "description": "አዳምጥና የሰማኸውን ቃል ምረጥ።",
+      "language": "amharic",
+      "difficulty": "beginner",
+      "minAge": 4,
+      "maxAge": 12,
+      "imageUrl": null,
+      "audioUrl": null,
+      "metadata": {
+        "gameType": "listening",
+        "rounds": 8,
+        "starReward": 3
+      },
+      "tags": [
+        "play-games",
+        "interactive"
+      ],
+      "isActive": true,
+      "orderIndex": 2
+    },
+    {
+      "type": "game",
+      "title": "ቃል ገንባ",
+      "description": "ፊደላትን በቅደም ተከተል አስቀምጥ።",
+      "language": "amharic",
+      "difficulty": "intermediate",
+      "minAge": 4,
+      "maxAge": 12,
+      "imageUrl": null,
+      "audioUrl": null,
+      "metadata": {
+        "gameType": "word-builder",
+        "rounds": 8,
+        "starReward": 3
+      },
+      "tags": [
+        "play-games",
+        "interactive"
+      ],
+      "isActive": true,
+      "orderIndex": 3
+    },
+    {
+      "type": "game",
+      "title": "የማስታወስ ጥንዶች",
+      "description": "ካርዶችን ገልብጥና ተመሳሳይ ጥንዶችን ፈልግ።",
+      "language": "amharic",
+      "difficulty": "intermediate",
+      "minAge": 4,
+      "maxAge": 12,
+      "imageUrl": null,
+      "audioUrl": null,
+      "metadata": {
+        "gameType": "memory",
+        "rounds": 8,
+        "starReward": 3
+      },
+      "tags": [
+        "play-games",
+        "interactive"
+      ],
+      "isActive": true,
+      "orderIndex": 4
+    },
+    {
+      "type": "game",
+      "title": "ፈጣን ምርጫ",
+      "description": "ጊዜው ሳያልቅ ትክክለኛውን መልስ ምረጥ።",
+      "language": "amharic",
+      "difficulty": "intermediate",
+      "minAge": 4,
+      "maxAge": 12,
+      "imageUrl": null,
+      "audioUrl": null,
+      "metadata": {
+        "gameType": "quiz",
+        "rounds": 8,
+        "starReward": 3
+      },
+      "tags": [
+        "play-games",
+        "interactive"
+      ],
+      "isActive": true,
+      "orderIndex": 5
+    },
+    {
+      "type": "knowledge",
+      "title": "ዝናብ ለምን ይዘንባል?",
+      "description": "በደመና ውስጥ ያለው ውሃ ከባድ ጠብታ ሆኖ ይወርዳል።",
+      "language": "amharic",
+      "difficulty": "beginner",
+      "minAge": 6,
+      "maxAge": 12,
+      "imageUrl": null,
+      "audioUrl": null,
+      "metadata": {
+        "category": "weather",
+        "fact": "በደመና ውስጥ ያለው ውሃ ከባድ ጠብታ ሆኖ ይወርዳል።",
+        "question": "ዝናብ ለምን ይዘንባል?"
+      },
+      "tags": [
+        "wonder-lab",
+        "science"
+      ],
+      "isActive": true,
+      "orderIndex": 1
+    },
+    {
+      "type": "knowledge",
+      "title": "ተክሎች እንዴት ይጠጣሉ?",
+      "description": "ሥሮች ውሃን ወስደው በግንዱ ወደ ላይ ያደርሱታል።",
+      "language": "amharic",
+      "difficulty": "beginner",
+      "minAge": 6,
+      "maxAge": 12,
+      "imageUrl": null,
+      "audioUrl": null,
+      "metadata": {
+        "category": "plants",
+        "fact": "ሥሮች ውሃን ወስደው በግንዱ ወደ ላይ ያደርሱታል።",
+        "question": "ተክሎች እንዴት ይጠጣሉ?"
+      },
+      "tags": [
+        "wonder-lab",
+        "science"
+      ],
+      "isActive": true,
+      "orderIndex": 2
+    },
+    {
+      "type": "knowledge",
+      "title": "ቀንና ሌሊት",
+      "description": "ምድር ስትዞር ቦታዎች ወደ ፀሐይ ይቀርባሉ ወይም ይርቃሉ።",
+      "language": "amharic",
+      "difficulty": "beginner",
+      "minAge": 6,
+      "maxAge": 12,
+      "imageUrl": null,
+      "audioUrl": null,
+      "metadata": {
+        "category": "space",
+        "fact": "ምድር ስትዞር ቦታዎች ወደ ፀሐይ ይቀርባሉ ወይም ይርቃሉ።",
+        "question": "ቀንና ሌሊት"
+      },
+      "tags": [
+        "wonder-lab",
+        "science"
+      ],
+      "isActive": true,
+      "orderIndex": 3
+    },
+    {
+      "type": "knowledge",
+      "title": "መንሳፈፍና መስመጥ",
+      "description": "ቅርጽና ቁሳቁስ አንድ ነገር መንሳፈፉን ይወስናሉ።",
+      "language": "amharic",
+      "difficulty": "intermediate",
+      "minAge": 6,
+      "maxAge": 12,
+      "imageUrl": null,
+      "audioUrl": null,
+      "metadata": {
+        "category": "physics",
+        "fact": "ቅርጽና ቁሳቁስ አንድ ነገር መንሳፈፉን ይወስናሉ።",
+        "question": "መንሳፈፍና መስመጥ"
+      },
+      "tags": [
+        "wonder-lab",
+        "science"
+      ],
+      "isActive": true,
+      "orderIndex": 4
+    },
+    {
+      "type": "knowledge",
+      "title": "አምስቱ ሕዋሳት",
+      "description": "ዓይን፣ ጆሮ፣ አፍንጫ፣ ምላስና ቆዳ ዓለምን እንድናውቅ ያግዙናል።",
+      "language": "amharic",
+      "difficulty": "intermediate",
+      "minAge": 6,
+      "maxAge": 12,
+      "imageUrl": null,
+      "audioUrl": null,
+      "metadata": {
+        "category": "human-body",
+        "fact": "ዓይን፣ ጆሮ፣ አፍንጫ፣ ምላስና ቆዳ ዓለምን እንድናውቅ ያግዙናል።",
+        "question": "አምስቱ ሕዋሳት"
+      },
+      "tags": [
+        "wonder-lab",
+        "science"
+      ],
+      "isActive": true,
+      "orderIndex": 5
+    },
+    {
+      "type": "word",
+      "title": "ሰላም",
+      "description": "ሰላምታ",
+      "language": "geez",
+      "difficulty": "beginner",
+      "minAge": 4,
+      "maxAge": 12,
+      "imageUrl": null,
+      "audioUrl": null,
+      "metadata": {
+        "pronunciation": "selam",
+        "meaning": "ሰላምታ",
+        "examplePrompt": "Use “ሰላም” in a short sentence."
+      },
+      "tags": [
+        "learn-words",
+        "vocabulary"
+      ],
+      "isActive": true,
+      "orderIndex": 1
+    },
+    {
+      "type": "word",
+      "title": "ቤተ ሰብእ",
+      "description": "ቤተሰብ",
+      "language": "geez",
+      "difficulty": "beginner",
+      "minAge": 4,
+      "maxAge": 12,
+      "imageUrl": null,
+      "audioUrl": null,
+      "metadata": {
+        "pronunciation": "beta sebu",
+        "meaning": "ቤተሰብ",
+        "examplePrompt": "Use “ቤተ ሰብእ” in a short sentence."
+      },
+      "tags": [
+        "learn-words",
+        "vocabulary"
+      ],
+      "isActive": true,
+      "orderIndex": 2
+    },
+    {
+      "type": "word",
+      "title": "ማይ",
+      "description": "ውሃ",
+      "language": "geez",
+      "difficulty": "beginner",
+      "minAge": 4,
+      "maxAge": 12,
+      "imageUrl": null,
+      "audioUrl": null,
+      "metadata": {
+        "pronunciation": "may",
+        "meaning": "ውሃ",
+        "examplePrompt": "Use “ማይ” in a short sentence."
+      },
+      "tags": [
+        "learn-words",
+        "vocabulary"
+      ],
+      "isActive": true,
+      "orderIndex": 3
+    },
+    {
+      "type": "word",
+      "title": "ቤት",
+      "description": "መኖሪያ",
+      "language": "geez",
+      "difficulty": "beginner",
+      "minAge": 4,
+      "maxAge": 12,
+      "imageUrl": null,
+      "audioUrl": null,
+      "metadata": {
+        "pronunciation": "bet",
+        "meaning": "መኖሪያ",
+        "examplePrompt": "Use “ቤት” in a short sentence."
+      },
+      "tags": [
+        "learn-words",
+        "vocabulary"
+      ],
+      "isActive": true,
+      "orderIndex": 4
+    },
+    {
+      "type": "word",
+      "title": "ቤተ ትምህርት",
+      "description": "መማሪያ",
+      "language": "geez",
+      "difficulty": "beginner",
+      "minAge": 4,
+      "maxAge": 12,
+      "imageUrl": null,
+      "audioUrl": null,
+      "metadata": {
+        "pronunciation": "beta timhirt",
+        "meaning": "መማሪያ",
+        "examplePrompt": "Use “ቤተ ትምህርት” in a short sentence."
+      },
+      "tags": [
+        "learn-words",
+        "vocabulary"
+      ],
+      "isActive": true,
+      "orderIndex": 5
+    },
+    {
+      "type": "word",
+      "title": "መጽሐፍ",
+      "description": "የማንበቢያ መጽሐፍ",
+      "language": "geez",
+      "difficulty": "beginner",
+      "minAge": 4,
+      "maxAge": 12,
+      "imageUrl": null,
+      "audioUrl": null,
+      "metadata": {
+        "pronunciation": "matsahaf",
+        "meaning": "የማንበቢያ መጽሐፍ",
+        "examplePrompt": "Use “መጽሐፍ” in a short sentence."
+      },
+      "tags": [
+        "learn-words",
+        "vocabulary"
+      ],
+      "isActive": true,
+      "orderIndex": 6
+    },
+    {
+      "type": "word",
+      "title": "ፀሐይ",
+      "description": "የቀን ብርሃን",
+      "language": "geez",
+      "difficulty": "beginner",
+      "minAge": 4,
+      "maxAge": 12,
+      "imageUrl": null,
+      "audioUrl": null,
+      "metadata": {
+        "pronunciation": "tsehay",
+        "meaning": "የቀን ብርሃን",
+        "examplePrompt": "Use “ፀሐይ” in a short sentence."
+      },
+      "tags": [
+        "learn-words",
+        "vocabulary"
+      ],
+      "isActive": true,
+      "orderIndex": 7
+    },
+    {
+      "type": "word",
+      "title": "ወርኅ",
+      "description": "ጨረቃ",
+      "language": "geez",
+      "difficulty": "beginner",
+      "minAge": 4,
+      "maxAge": 12,
+      "imageUrl": null,
+      "audioUrl": null,
+      "metadata": {
+        "pronunciation": "werh",
+        "meaning": "ጨረቃ",
+        "examplePrompt": "Use “ወርኅ” in a short sentence."
+      },
+      "tags": [
+        "learn-words",
+        "vocabulary"
+      ],
+      "isActive": true,
+      "orderIndex": 8
+    },
+    {
+      "type": "word",
+      "title": "ፍቁር",
+      "description": "ወዳጅ",
+      "language": "geez",
+      "difficulty": "intermediate",
+      "minAge": 4,
+      "maxAge": 12,
+      "imageUrl": null,
+      "audioUrl": null,
+      "metadata": {
+        "pronunciation": "fiqur",
+        "meaning": "ወዳጅ",
+        "examplePrompt": "Use “ፍቁር” in a short sentence."
+      },
+      "tags": [
+        "learn-words",
+        "vocabulary"
+      ],
+      "isActive": true,
+      "orderIndex": 9
+    },
+    {
+      "type": "word",
+      "title": "ሲሳይ",
+      "description": "ምግብ",
+      "language": "geez",
+      "difficulty": "intermediate",
+      "minAge": 4,
+      "maxAge": 12,
+      "imageUrl": null,
+      "audioUrl": null,
+      "metadata": {
+        "pronunciation": "sisay",
+        "meaning": "ምግብ",
+        "examplePrompt": "Use “ሲሳይ” in a short sentence."
+      },
+      "tags": [
+        "learn-words",
+        "vocabulary"
+      ],
+      "isActive": true,
+      "orderIndex": 10
+    },
+    {
+      "type": "word",
+      "title": "ዕፅ",
+      "description": "ዛፍ",
+      "language": "geez",
+      "difficulty": "intermediate",
+      "minAge": 4,
+      "maxAge": 12,
+      "imageUrl": null,
+      "audioUrl": null,
+      "metadata": {
+        "pronunciation": "ets",
+        "meaning": "ዛፍ",
+        "examplePrompt": "Use “ዕፅ” in a short sentence."
+      },
+      "tags": [
+        "learn-words",
+        "vocabulary"
+      ],
+      "isActive": true,
+      "orderIndex": 11
+    },
+    {
+      "type": "word",
+      "title": "ዑፍ",
+      "description": "ወፍ",
+      "language": "geez",
+      "difficulty": "intermediate",
+      "minAge": 4,
+      "maxAge": 12,
+      "imageUrl": null,
+      "audioUrl": null,
+      "metadata": {
+        "pronunciation": "uf",
+        "meaning": "ወፍ",
+        "examplePrompt": "Use “ዑፍ” in a short sentence."
+      },
+      "tags": [
+        "learn-words",
+        "vocabulary"
+      ],
+      "isActive": true,
+      "orderIndex": 12
+    },
+    {
+      "type": "word",
+      "title": "እም",
+      "description": "እናት",
+      "language": "geez",
+      "difficulty": "intermediate",
+      "minAge": 4,
+      "maxAge": 12,
+      "imageUrl": null,
+      "audioUrl": null,
+      "metadata": {
+        "pronunciation": "em",
+        "meaning": "እናት",
+        "examplePrompt": "Use “እም” in a short sentence."
+      },
+      "tags": [
+        "learn-words",
+        "vocabulary"
+      ],
+      "isActive": true,
+      "orderIndex": 13
+    },
+    {
+      "type": "word",
+      "title": "አብ",
+      "description": "አባት",
+      "language": "geez",
+      "difficulty": "intermediate",
+      "minAge": 4,
+      "maxAge": 12,
+      "imageUrl": null,
+      "audioUrl": null,
+      "metadata": {
+        "pronunciation": "ab",
+        "meaning": "አባት",
+        "examplePrompt": "Use “አብ” in a short sentence."
+      },
+      "tags": [
+        "learn-words",
+        "vocabulary"
+      ],
+      "isActive": true,
+      "orderIndex": 14
+    },
+    {
+      "type": "word",
+      "title": "የአኵት",
+      "description": "ምስጋና",
+      "language": "geez",
+      "difficulty": "intermediate",
+      "minAge": 4,
+      "maxAge": 12,
+      "imageUrl": null,
+      "audioUrl": null,
+      "metadata": {
+        "pronunciation": "yeakut",
+        "meaning": "ምስጋና",
+        "examplePrompt": "Use “የአኵት” in a short sentence."
+      },
+      "tags": [
+        "learn-words",
+        "vocabulary"
+      ],
+      "isActive": true,
+      "orderIndex": 15
+    },
+    {
+      "type": "tutor",
+      "title": "ሰላም ወተአምር",
+      "description": "ሰላምታን እና ስምን ተለማመድ።",
+      "language": "geez",
+      "difficulty": "beginner",
+      "minAge": 5,
+      "maxAge": 12,
+      "imageUrl": null,
+      "audioUrl": null,
+      "metadata": {
+        "scenario": "greeting",
+        "turns": 6,
+        "starterPrompt": "ሰላምታን እና ስምን ተለማመድ።"
+      },
+      "tags": [
+        "talk-with-tutor",
+        "conversation"
+      ],
+      "isActive": true,
+      "orderIndex": 1
+    },
+    {
+      "type": "tutor",
+      "title": "ቤተ ሰብእየ",
+      "description": "ስለ ቤተሰብ ተናገር።",
+      "language": "geez",
+      "difficulty": "beginner",
+      "minAge": 5,
+      "maxAge": 12,
+      "imageUrl": null,
+      "audioUrl": null,
+      "metadata": {
+        "scenario": "family",
+        "turns": 6,
+        "starterPrompt": "ስለ ቤተሰብ ተናገር።"
+      },
+      "tags": [
+        "talk-with-tutor",
+        "conversation"
+      ],
+      "isActive": true,
+      "orderIndex": 2
+    },
+    {
+      "type": "tutor",
+      "title": "ቤተ ትምህርት",
+      "description": "መጽሐፍ መጠየቅን ተለማመድ።",
+      "language": "geez",
+      "difficulty": "intermediate",
+      "minAge": 5,
+      "maxAge": 12,
+      "imageUrl": null,
+      "audioUrl": null,
+      "metadata": {
+        "scenario": "school",
+        "turns": 6,
+        "starterPrompt": "መጽሐፍ መጠየቅን ተለማመድ።"
+      },
+      "tags": [
+        "talk-with-tutor",
+        "conversation"
+      ],
+      "isActive": true,
+      "orderIndex": 3
+    },
+    {
+      "type": "tutor",
+      "title": "ዕለትየ",
+      "description": "የቀን ተግባርህን ግለጽ።",
+      "language": "geez",
+      "difficulty": "intermediate",
+      "minAge": 5,
+      "maxAge": 12,
+      "imageUrl": null,
+      "audioUrl": null,
+      "metadata": {
+        "scenario": "daily-routine",
+        "turns": 6,
+        "starterPrompt": "የቀን ተግባርህን ግለጽ።"
+      },
+      "tags": [
+        "talk-with-tutor",
+        "conversation"
+      ],
+      "isActive": true,
+      "orderIndex": 4
+    },
+    {
+      "type": "tutor",
+      "title": "ስሜት",
+      "description": "ደስታና ኀዘንን በቃል ግለጽ።",
+      "language": "geez",
+      "difficulty": "intermediate",
+      "minAge": 5,
+      "maxAge": 12,
+      "imageUrl": null,
+      "audioUrl": null,
+      "metadata": {
+        "scenario": "feelings",
+        "turns": 6,
+        "starterPrompt": "ደስታና ኀዘንን በቃል ግለጽ።"
+      },
+      "tags": [
+        "talk-with-tutor",
+        "conversation"
+      ],
+      "isActive": true,
+      "orderIndex": 5
+    },
+    {
+      "type": "game",
+      "title": "ምስል አዛምድ",
+      "description": "ቃሉን ከምስሉ ጋር አዛምድ።",
+      "language": "geez",
+      "difficulty": "beginner",
+      "minAge": 4,
+      "maxAge": 12,
+      "imageUrl": null,
+      "audioUrl": null,
+      "metadata": {
+        "gameType": "matching",
+        "rounds": 8,
+        "starReward": 3
+      },
+      "tags": [
+        "play-games",
+        "interactive"
+      ],
+      "isActive": true,
+      "orderIndex": 1
+    },
+    {
+      "type": "game",
+      "title": "ድምፅ ስማ",
+      "description": "ሰምተህ ትክክለኛውን ቃል ምረጥ።",
+      "language": "geez",
+      "difficulty": "beginner",
+      "minAge": 4,
+      "maxAge": 12,
+      "imageUrl": null,
+      "audioUrl": null,
+      "metadata": {
+        "gameType": "listening",
+        "rounds": 8,
+        "starReward": 3
+      },
+      "tags": [
+        "play-games",
+        "interactive"
+      ],
+      "isActive": true,
+      "orderIndex": 2
+    },
+    {
+      "type": "game",
+      "title": "ቃል ሥራ",
+      "description": "ፊደላትን በቅደም ተከተል አድርግ።",
+      "language": "geez",
+      "difficulty": "intermediate",
+      "minAge": 4,
+      "maxAge": 12,
+      "imageUrl": null,
+      "audioUrl": null,
+      "metadata": {
+        "gameType": "word-builder",
+        "rounds": 8,
+        "starReward": 3
+      },
+      "tags": [
+        "play-games",
+        "interactive"
+      ],
+      "isActive": true,
+      "orderIndex": 3
+    },
+    {
+      "type": "game",
+      "title": "ጥንድ ፈልግ",
+      "description": "ተመሳሳይ ካርዶችን ፈልግ።",
+      "language": "geez",
+      "difficulty": "intermediate",
+      "minAge": 4,
+      "maxAge": 12,
+      "imageUrl": null,
+      "audioUrl": null,
+      "metadata": {
+        "gameType": "memory",
+        "rounds": 8,
+        "starReward": 3
+      },
+      "tags": [
+        "play-games",
+        "interactive"
+      ],
+      "isActive": true,
+      "orderIndex": 4
+    },
+    {
+      "type": "game",
+      "title": "ፈጣን መልስ",
+      "description": "ትክክለኛውን በፍጥነት ምረጥ።",
+      "language": "geez",
+      "difficulty": "intermediate",
+      "minAge": 4,
+      "maxAge": 12,
+      "imageUrl": null,
+      "audioUrl": null,
+      "metadata": {
+        "gameType": "quiz",
+        "rounds": 8,
+        "starReward": 3
+      },
+      "tags": [
+        "play-games",
+        "interactive"
+      ],
+      "isActive": true,
+      "orderIndex": 5
+    },
+    {
+      "type": "knowledge",
+      "title": "ዝናም",
+      "description": "የደመና ማይ ከብዶ እንደ ዝናብ ይወርዳል።",
+      "language": "geez",
+      "difficulty": "beginner",
+      "minAge": 6,
+      "maxAge": 12,
+      "imageUrl": null,
+      "audioUrl": null,
+      "metadata": {
+        "category": "weather",
+        "fact": "የደመና ማይ ከብዶ እንደ ዝናብ ይወርዳል።",
+        "question": "ዝናም"
+      },
+      "tags": [
+        "wonder-lab",
+        "science"
+      ],
+      "isActive": true,
+      "orderIndex": 1
+    },
+    {
+      "type": "knowledge",
+      "title": "ዕፅ ወማይ",
+      "description": "ሥር ማይን ወደ ግንድ ያስገባል።",
+      "language": "geez",
+      "difficulty": "beginner",
+      "minAge": 6,
+      "maxAge": 12,
+      "imageUrl": null,
+      "audioUrl": null,
+      "metadata": {
+        "category": "plants",
+        "fact": "ሥር ማይን ወደ ግንድ ያስገባል።",
+        "question": "ዕፅ ወማይ"
+      },
+      "tags": [
+        "wonder-lab",
+        "science"
+      ],
+      "isActive": true,
+      "orderIndex": 2
+    },
+    {
+      "type": "knowledge",
+      "title": "መዓልት ወሌሊት",
+      "description": "ምድር በመዞር ቀንና ሌሊት ታመጣለች።",
+      "language": "geez",
+      "difficulty": "beginner",
+      "minAge": 6,
+      "maxAge": 12,
+      "imageUrl": null,
+      "audioUrl": null,
+      "metadata": {
+        "category": "space",
+        "fact": "ምድር በመዞር ቀንና ሌሊት ታመጣለች።",
+        "question": "መዓልት ወሌሊት"
+      },
+      "tags": [
+        "wonder-lab",
+        "science"
+      ],
+      "isActive": true,
+      "orderIndex": 3
+    },
+    {
+      "type": "knowledge",
+      "title": "መንሳፈፍ",
+      "description": "ቅርጽና ቁስ መንሳፈፍን ይወስናሉ።",
+      "language": "geez",
+      "difficulty": "intermediate",
+      "minAge": 6,
+      "maxAge": 12,
+      "imageUrl": null,
+      "audioUrl": null,
+      "metadata": {
+        "category": "physics",
+        "fact": "ቅርጽና ቁስ መንሳፈፍን ይወስናሉ።",
+        "question": "መንሳፈፍ"
+      },
+      "tags": [
+        "wonder-lab",
+        "science"
+      ],
+      "isActive": true,
+      "orderIndex": 4
+    },
+    {
+      "type": "knowledge",
+      "title": "አምስቱ ሕዋሳት",
+      "description": "ዓይን፣ ዕዝን፣ አፍንጫ፣ ምላስና ቆዳ ያስተምሩናል።",
+      "language": "geez",
+      "difficulty": "intermediate",
+      "minAge": 6,
+      "maxAge": 12,
+      "imageUrl": null,
+      "audioUrl": null,
+      "metadata": {
+        "category": "human-body",
+        "fact": "ዓይን፣ ዕዝን፣ አፍንጫ፣ ምላስና ቆዳ ያስተምሩናል።",
+        "question": "አምስቱ ሕዋሳት"
+      },
+      "tags": [
+        "wonder-lab",
+        "science"
+      ],
+      "isActive": true,
+      "orderIndex": 5
+    },
+    {
+      "type": "word",
+      "title": "Akkam",
+      "description": "Nagaa gaafachuuf jecha",
+      "language": "oromo",
+      "difficulty": "beginner",
+      "minAge": 4,
+      "maxAge": 12,
+      "imageUrl": null,
+      "audioUrl": null,
+      "metadata": {
+        "pronunciation": "akkam",
+        "meaning": "Nagaa gaafachuuf jecha",
+        "examplePrompt": "Use “Akkam” in a short sentence."
+      },
+      "tags": [
+        "learn-words",
+        "vocabulary"
+      ],
+      "isActive": true,
+      "orderIndex": 1
+    },
+    {
+      "type": "word",
+      "title": "Maatii",
+      "description": "Namoota wal kunuunsan",
+      "language": "oromo",
+      "difficulty": "beginner",
+      "minAge": 4,
+      "maxAge": 12,
+      "imageUrl": null,
+      "audioUrl": null,
+      "metadata": {
+        "pronunciation": "maatii",
+        "meaning": "Namoota wal kunuunsan",
+        "examplePrompt": "Use “Maatii” in a short sentence."
+      },
+      "tags": [
+        "learn-words",
+        "vocabulary"
+      ],
+      "isActive": true,
+      "orderIndex": 2
+    },
+    {
+      "type": "word",
+      "title": "Bishaan",
+      "description": "Dhugaatii qaamni keenya barbaadu",
+      "language": "oromo",
+      "difficulty": "beginner",
+      "minAge": 4,
+      "maxAge": 12,
+      "imageUrl": null,
+      "audioUrl": null,
+      "metadata": {
+        "pronunciation": "bishaan",
+        "meaning": "Dhugaatii qaamni keenya barbaadu",
+        "examplePrompt": "Use “Bishaan” in a short sentence."
+      },
+      "tags": [
+        "learn-words",
+        "vocabulary"
+      ],
+      "isActive": true,
+      "orderIndex": 3
+    },
+    {
+      "type": "word",
+      "title": "Mana",
+      "description": "Bakka namoonni jiraatan",
+      "language": "oromo",
+      "difficulty": "beginner",
+      "minAge": 4,
+      "maxAge": 12,
+      "imageUrl": null,
+      "audioUrl": null,
+      "metadata": {
+        "pronunciation": "mana",
+        "meaning": "Bakka namoonni jiraatan",
+        "examplePrompt": "Use “Mana” in a short sentence."
+      },
+      "tags": [
+        "learn-words",
+        "vocabulary"
+      ],
+      "isActive": true,
+      "orderIndex": 4
+    },
+    {
+      "type": "word",
+      "title": "Mana barumsaa",
+      "description": "Bakka itti baratan",
+      "language": "oromo",
+      "difficulty": "beginner",
+      "minAge": 4,
+      "maxAge": 12,
+      "imageUrl": null,
+      "audioUrl": null,
+      "metadata": {
+        "pronunciation": "mana barumsaa",
+        "meaning": "Bakka itti baratan",
+        "examplePrompt": "Use “Mana barumsaa” in a short sentence."
+      },
+      "tags": [
+        "learn-words",
+        "vocabulary"
+      ],
+      "isActive": true,
+      "orderIndex": 5
+    },
+    {
+      "type": "word",
+      "title": "Kitaaba",
+      "description": "Fuula, jechootaa fi fakkii qabu",
+      "language": "oromo",
+      "difficulty": "beginner",
+      "minAge": 4,
+      "maxAge": 12,
+      "imageUrl": null,
+      "audioUrl": null,
+      "metadata": {
+        "pronunciation": "kitaaba",
+        "meaning": "Fuula, jechootaa fi fakkii qabu",
+        "examplePrompt": "Use “Kitaaba” in a short sentence."
+      },
+      "tags": [
+        "learn-words",
+        "vocabulary"
+      ],
+      "isActive": true,
+      "orderIndex": 6
+    },
+    {
+      "type": "word",
+      "title": "Aduu",
+      "description": "Urjii guyyaa keenya ibsitu",
+      "language": "oromo",
+      "difficulty": "beginner",
+      "minAge": 4,
+      "maxAge": 12,
+      "imageUrl": null,
+      "audioUrl": null,
+      "metadata": {
+        "pronunciation": "aduu",
+        "meaning": "Urjii guyyaa keenya ibsitu",
+        "examplePrompt": "Use “Aduu” in a short sentence."
+      },
+      "tags": [
+        "learn-words",
+        "vocabulary"
+      ],
+      "isActive": true,
+      "orderIndex": 7
+    },
+    {
+      "type": "word",
+      "title": "Ji’a",
+      "description": "Wanta halkanii samii keessatti mul’atu",
+      "language": "oromo",
+      "difficulty": "beginner",
+      "minAge": 4,
+      "maxAge": 12,
+      "imageUrl": null,
+      "audioUrl": null,
+      "metadata": {
+        "pronunciation": "ji’a",
+        "meaning": "Wanta halkanii samii keessatti mul’atu",
+        "examplePrompt": "Use “Ji’a” in a short sentence."
+      },
+      "tags": [
+        "learn-words",
+        "vocabulary"
+      ],
+      "isActive": true,
+      "orderIndex": 8
+    },
+    {
+      "type": "word",
+      "title": "Hiriyyaa",
+      "description": "Nama jaallannuu fi amannu",
+      "language": "oromo",
+      "difficulty": "intermediate",
+      "minAge": 4,
+      "maxAge": 12,
+      "imageUrl": null,
+      "audioUrl": null,
+      "metadata": {
+        "pronunciation": "hiriyyaa",
+        "meaning": "Nama jaallannuu fi amannu",
+        "examplePrompt": "Use “Hiriyyaa” in a short sentence."
+      },
+      "tags": [
+        "learn-words",
+        "vocabulary"
+      ],
+      "isActive": true,
+      "orderIndex": 9
+    },
+    {
+      "type": "word",
+      "title": "Nyaata",
+      "description": "Humnaaf waan nyaannu",
+      "language": "oromo",
+      "difficulty": "intermediate",
+      "minAge": 4,
+      "maxAge": 12,
+      "imageUrl": null,
+      "audioUrl": null,
+      "metadata": {
+        "pronunciation": "nyaata",
+        "meaning": "Humnaaf waan nyaannu",
+        "examplePrompt": "Use “Nyaata” in a short sentence."
+      },
+      "tags": [
+        "learn-words",
+        "vocabulary"
+      ],
+      "isActive": true,
+      "orderIndex": 10
+    },
+    {
+      "type": "word",
+      "title": "Muka",
+      "description": "Biqiltuu dheeraa jirma qabu",
+      "language": "oromo",
+      "difficulty": "intermediate",
+      "minAge": 4,
+      "maxAge": 12,
+      "imageUrl": null,
+      "audioUrl": null,
+      "metadata": {
+        "pronunciation": "muka",
+        "meaning": "Biqiltuu dheeraa jirma qabu",
+        "examplePrompt": "Use “Muka” in a short sentence."
+      },
+      "tags": [
+        "learn-words",
+        "vocabulary"
+      ],
+      "isActive": true,
+      "orderIndex": 11
+    },
+    {
+      "type": "word",
+      "title": "Simbira",
+      "description": "Bineensa baallee qabu",
+      "language": "oromo",
+      "difficulty": "intermediate",
+      "minAge": 4,
+      "maxAge": 12,
+      "imageUrl": null,
+      "audioUrl": null,
+      "metadata": {
+        "pronunciation": "simbira",
+        "meaning": "Bineensa baallee qabu",
+        "examplePrompt": "Use “Simbira” in a short sentence."
+      },
+      "tags": [
+        "learn-words",
+        "vocabulary"
+      ],
+      "isActive": true,
+      "orderIndex": 12
+    },
+    {
+      "type": "word",
+      "title": "Haadha",
+      "description": "Warra dubartii",
+      "language": "oromo",
+      "difficulty": "intermediate",
+      "minAge": 4,
+      "maxAge": 12,
+      "imageUrl": null,
+      "audioUrl": null,
+      "metadata": {
+        "pronunciation": "haadha",
+        "meaning": "Warra dubartii",
+        "examplePrompt": "Use “Haadha” in a short sentence."
+      },
+      "tags": [
+        "learn-words",
+        "vocabulary"
+      ],
+      "isActive": true,
+      "orderIndex": 13
+    },
+    {
+      "type": "word",
+      "title": "Abbaa",
+      "description": "Warra dhiiraa",
+      "language": "oromo",
+      "difficulty": "intermediate",
+      "minAge": 4,
+      "maxAge": 12,
+      "imageUrl": null,
+      "audioUrl": null,
+      "metadata": {
+        "pronunciation": "abbaa",
+        "meaning": "Warra dhiiraa",
+        "examplePrompt": "Use “Abbaa” in a short sentence."
+      },
+      "tags": [
+        "learn-words",
+        "vocabulary"
+      ],
+      "isActive": true,
+      "orderIndex": 14
+    },
+    {
+      "type": "word",
+      "title": "Galatoomi",
+      "description": "Jecha galata ibsu",
+      "language": "oromo",
+      "difficulty": "intermediate",
+      "minAge": 4,
+      "maxAge": 12,
+      "imageUrl": null,
+      "audioUrl": null,
+      "metadata": {
+        "pronunciation": "galatoomi",
+        "meaning": "Jecha galata ibsu",
+        "examplePrompt": "Use “Galatoomi” in a short sentence."
+      },
+      "tags": [
+        "learn-words",
+        "vocabulary"
+      ],
+      "isActive": true,
+      "orderIndex": 15
+    },
+    {
+      "type": "tutor",
+      "title": "Wal Baruu",
+      "description": "Nagaa gaafachuu fi of beeksisuu shaakali.",
+      "language": "oromo",
+      "difficulty": "beginner",
+      "minAge": 5,
+      "maxAge": 12,
+      "imageUrl": null,
+      "audioUrl": null,
+      "metadata": {
+        "scenario": "greeting",
+        "turns": 6,
+        "starterPrompt": "Nagaa gaafachuu fi of beeksisuu shaakali."
+      },
+      "tags": [
+        "talk-with-tutor",
+        "conversation"
+      ],
+      "isActive": true,
+      "orderIndex": 1
+    },
+    {
+      "type": "tutor",
+      "title": "Maatii Koo",
+      "description": "Waa’ee namoota maatii keetii barsiisaa keetti himi.",
+      "language": "oromo",
+      "difficulty": "beginner",
+      "minAge": 5,
+      "maxAge": 12,
+      "imageUrl": null,
+      "audioUrl": null,
+      "metadata": {
+        "scenario": "family",
+        "turns": 6,
+        "starterPrompt": "Waa’ee namoota maatii keetii barsiisaa keetti himi."
+      },
+      "tags": [
+        "talk-with-tutor",
+        "conversation"
+      ],
+      "isActive": true,
+      "orderIndex": 2
+    },
+    {
+      "type": "tutor",
+      "title": "Mana Barumsaa Keessatti",
+      "description": "Kitaabaa fi irsaasa gaafachuu shaakali.",
+      "language": "oromo",
+      "difficulty": "intermediate",
+      "minAge": 5,
+      "maxAge": 12,
+      "imageUrl": null,
+      "audioUrl": null,
+      "metadata": {
+        "scenario": "school",
+        "turns": 6,
+        "starterPrompt": "Kitaabaa fi irsaasa gaafachuu shaakali."
+      },
+      "tags": [
+        "talk-with-tutor",
+        "conversation"
+      ],
+      "isActive": true,
+      "orderIndex": 3
+    },
+    {
+      "type": "tutor",
+      "title": "Guyyaa Koo",
+      "description": "Ganamaa hanga galgalaatti waan gootu ibsi.",
+      "language": "oromo",
+      "difficulty": "intermediate",
+      "minAge": 5,
+      "maxAge": 12,
+      "imageUrl": null,
+      "audioUrl": null,
+      "metadata": {
+        "scenario": "daily-routine",
+        "turns": 6,
+        "starterPrompt": "Ganamaa hanga galgalaatti waan gootu ibsi."
+      },
+      "tags": [
+        "talk-with-tutor",
+        "conversation"
+      ],
+      "isActive": true,
+      "orderIndex": 4
+    },
+    {
+      "type": "tutor",
+      "title": "Miira",
+      "description": "Gammachuu, gadda, dadhabbii fi kaka’umsa ibsuu shaakali.",
+      "language": "oromo",
+      "difficulty": "intermediate",
+      "minAge": 5,
+      "maxAge": 12,
+      "imageUrl": null,
+      "audioUrl": null,
+      "metadata": {
+        "scenario": "feelings",
+        "turns": 6,
+        "starterPrompt": "Gammachuu, gadda, dadhabbii fi kaka’umsa ibsuu shaakali."
+      },
+      "tags": [
+        "talk-with-tutor",
+        "conversation"
+      ],
+      "isActive": true,
+      "orderIndex": 5
+    },
+    {
+      "type": "game",
+      "title": "Fakkii Walitti Qabi",
+      "description": "Jecha hunda fakkii sirrii wajjin walitti qabi.",
+      "language": "oromo",
+      "difficulty": "beginner",
+      "minAge": 4,
+      "maxAge": 12,
+      "imageUrl": null,
+      "audioUrl": null,
+      "metadata": {
+        "gameType": "matching",
+        "rounds": 8,
+        "starReward": 3
+      },
+      "tags": [
+        "play-games",
+        "interactive"
+      ],
+      "isActive": true,
+      "orderIndex": 1
+    },
+    {
+      "type": "game",
+      "title": "Sagalee Barbaadi",
+      "description": "Dhaggeeffadhuutii jecha dhageesse filadhu.",
+      "language": "oromo",
+      "difficulty": "beginner",
+      "minAge": 4,
+      "maxAge": 12,
+      "imageUrl": null,
+      "audioUrl": null,
+      "metadata": {
+        "gameType": "listening",
+        "rounds": 8,
+        "starReward": 3
+      },
+      "tags": [
+        "play-games",
+        "interactive"
+      ],
+      "isActive": true,
+      "orderIndex": 2
+    },
+    {
+      "type": "game",
+      "title": "Jecha Ijaari",
+      "description": "Qubee tartiibaan kaa’ii jecha ijaari.",
+      "language": "oromo",
+      "difficulty": "intermediate",
+      "minAge": 4,
+      "maxAge": 12,
+      "imageUrl": null,
+      "audioUrl": null,
+      "metadata": {
+        "gameType": "word-builder",
+        "rounds": 8,
+        "starReward": 3
+      },
+      "tags": [
+        "play-games",
+        "interactive"
+      ],
+      "isActive": true,
+      "orderIndex": 3
+    },
+    {
+      "type": "game",
+      "title": "Kaartelee Yaadannoo",
+      "description": "Kaartelee garagalchiitii cimdii wal fakkaatu barbaadi.",
+      "language": "oromo",
+      "difficulty": "intermediate",
+      "minAge": 4,
+      "maxAge": 12,
+      "imageUrl": null,
+      "audioUrl": null,
+      "metadata": {
+        "gameType": "memory",
+        "rounds": 8,
+        "starReward": 3
+      },
+      "tags": [
+        "play-games",
+        "interactive"
+      ],
+      "isActive": true,
+      "orderIndex": 4
+    },
+    {
+      "type": "game",
+      "title": "Filannoo Saffisaa",
+      "description": "Yeroon osoo hin xumuramin deebii sirrii filadhu.",
+      "language": "oromo",
+      "difficulty": "intermediate",
+      "minAge": 4,
+      "maxAge": 12,
+      "imageUrl": null,
+      "audioUrl": null,
+      "metadata": {
+        "gameType": "quiz",
+        "rounds": 8,
+        "starReward": 3
+      },
+      "tags": [
+        "play-games",
+        "interactive"
+      ],
+      "isActive": true,
+      "orderIndex": 5
+    },
+    {
+      "type": "knowledge",
+      "title": "Roobni Maaliif Rooba?",
+      "description": "Bishaan duumessa keessaa walitti qabamee cophawwan ulfaatoo ta’ee rooba.",
+      "language": "oromo",
+      "difficulty": "beginner",
+      "minAge": 6,
+      "maxAge": 12,
+      "imageUrl": null,
+      "audioUrl": null,
+      "metadata": {
+        "category": "weather",
+        "fact": "Bishaan duumessa keessaa walitti qabamee cophawwan ulfaatoo ta’ee rooba.",
+        "question": "Roobni Maaliif Rooba?"
+      },
+      "tags": [
+        "wonder-lab",
+        "science"
+      ],
+      "isActive": true,
+      "orderIndex": 1
+    },
+    {
+      "type": "knowledge",
+      "title": "Biqiltuun Akkamitti Dhuga?",
+      "description": "Hiddi bishaan xuuxee jirma keessa ol geessa.",
+      "language": "oromo",
+      "difficulty": "beginner",
+      "minAge": 6,
+      "maxAge": 12,
+      "imageUrl": null,
+      "audioUrl": null,
+      "metadata": {
+        "category": "plants",
+        "fact": "Hiddi bishaan xuuxee jirma keessa ol geessa.",
+        "question": "Biqiltuun Akkamitti Dhuga?"
+      },
+      "tags": [
+        "wonder-lab",
+        "science"
+      ],
+      "isActive": true,
+      "orderIndex": 2
+    },
+    {
+      "type": "knowledge",
+      "title": "Guyyaa fi Halkan",
+      "description": "Lafti naanna’uun bakka tokko gara Aduutti, achii irraa fageessa.",
+      "language": "oromo",
+      "difficulty": "beginner",
+      "minAge": 6,
+      "maxAge": 12,
+      "imageUrl": null,
+      "audioUrl": null,
+      "metadata": {
+        "category": "space",
+        "fact": "Lafti naanna’uun bakka tokko gara Aduutti, achii irraa fageessa.",
+        "question": "Guyyaa fi Halkan"
+      },
+      "tags": [
+        "wonder-lab",
+        "science"
+      ],
+      "isActive": true,
+      "orderIndex": 3
+    },
+    {
+      "type": "knowledge",
+      "title": "Bololi’uu fi Liqimfamuu",
+      "description": "Bocaa fi wanti ittiin hojjetame bololi’uu murteessu.",
+      "language": "oromo",
+      "difficulty": "intermediate",
+      "minAge": 6,
+      "maxAge": 12,
+      "imageUrl": null,
+      "audioUrl": null,
+      "metadata": {
+        "category": "physics",
+        "fact": "Bocaa fi wanti ittiin hojjetame bololi’uu murteessu.",
+        "question": "Bololi’uu fi Liqimfamuu"
+      },
+      "tags": [
+        "wonder-lab",
+        "science"
+      ],
+      "isActive": true,
+      "orderIndex": 4
+    },
+    {
+      "type": "knowledge",
+      "title": "Miirawwan Shan",
+      "description": "Ija, gurra, funyaan, arrabaa fi gogaan addunyaa baruuf nu gargaaru.",
+      "language": "oromo",
+      "difficulty": "intermediate",
+      "minAge": 6,
+      "maxAge": 12,
+      "imageUrl": null,
+      "audioUrl": null,
+      "metadata": {
+        "category": "human-body",
+        "fact": "Ija, gurra, funyaan, arrabaa fi gogaan addunyaa baruuf nu gargaaru.",
+        "question": "Miirawwan Shan"
+      },
+      "tags": [
+        "wonder-lab",
+        "science"
+      ],
+      "isActive": true,
+      "orderIndex": 5
+    }
+  ],
+  "stories": [
+    {
+      "title": "Lina and the Little Bird",
+      "description": "Lina found a little bird under a tree.",
+      "language": "english",
+      "difficulty": "beginner",
+      "minAge": 5,
+      "maxAge": 12,
+      "coverImageUrl": null,
+      "pages": [
+        {
+          "pageNumber": 1,
+          "text": "Lina found a little bird under a tree."
+        },
+        {
+          "pageNumber": 2,
+          "text": "She gave it water and waited quietly."
+        },
+        {
+          "pageNumber": 3,
+          "text": "The bird’s family returned, and Lina smiled.",
+          "interactionQuestion": "What did the character learn?",
+          "interactionOptions": [
+            "Kindness and patience",
+            "To give up"
+          ]
+        }
+      ],
+      "vocabularyHighlights": [
+        "Hello",
+        "Family",
+        "Water"
+      ],
+      "estimatedMinutes": 3,
+      "isActive": true
+    },
+    {
+      "title": "The Helpful Hare",
+      "description": "A hare saw a tortoise carrying a heavy basket.",
+      "language": "english",
+      "difficulty": "beginner",
+      "minAge": 5,
+      "maxAge": 12,
+      "coverImageUrl": null,
+      "pages": [
+        {
+          "pageNumber": 1,
+          "text": "A hare saw a tortoise carrying a heavy basket."
+        },
+        {
+          "pageNumber": 2,
+          "text": "They carried it together to the village."
+        },
+        {
+          "pageNumber": 3,
+          "text": "Helping made the long road feel short.",
+          "interactionQuestion": "What did the character learn?",
+          "interactionOptions": [
+            "Kindness and patience",
+            "To give up"
+          ]
+        }
+      ],
+      "vocabularyHighlights": [
+        "House",
+        "School",
+        "Book"
+      ],
+      "estimatedMinutes": 3,
+      "isActive": true
+    },
+    {
+      "title": "The Seed of Patience",
+      "description": "Miki planted a seed and watered it each day.",
+      "language": "english",
+      "difficulty": "intermediate",
+      "minAge": 5,
+      "maxAge": 12,
+      "coverImageUrl": null,
+      "pages": [
+        {
+          "pageNumber": 1,
+          "text": "Miki planted a seed and watered it each day."
+        },
+        {
+          "pageNumber": 2,
+          "text": "He waited while roots grew beneath the soil."
+        },
+        {
+          "pageNumber": 3,
+          "text": "At last, a green leaf reached toward the sun.",
+          "interactionQuestion": "What did the character learn?",
+          "interactionOptions": [
+            "Kindness and patience",
+            "To give up"
+          ]
+        }
+      ],
+      "vocabularyHighlights": [
+        "Sun",
+        "Moon",
+        "Friend"
+      ],
+      "estimatedMinutes": 3,
+      "isActive": true
+    },
+    {
+      "title": "ሊና እና ትንሿ ወፍ",
+      "description": "ሊና ከዛፍ ሥር ትንሽ ወፍ አገኘች።",
+      "language": "amharic",
+      "difficulty": "beginner",
+      "minAge": 5,
+      "maxAge": 12,
+      "coverImageUrl": null,
+      "pages": [
+        {
+          "pageNumber": 1,
+          "text": "ሊና ከዛፍ ሥር ትንሽ ወፍ አገኘች።"
+        },
+        {
+          "pageNumber": 2,
+          "text": "ውሃ ሰጠቻትና በጸጥታ ጠበቀች።"
+        },
+        {
+          "pageNumber": 3,
+          "text": "የወፏ ቤተሰብ ተመለሰና ሊና ፈገግ አለች።",
+          "interactionQuestion": "What did the character learn?",
+          "interactionOptions": [
+            "Kindness and patience",
+            "To give up"
+          ]
+        }
+      ],
+      "vocabularyHighlights": [
+        "ሰላም",
+        "ቤተሰብ",
+        "ውሃ"
+      ],
+      "estimatedMinutes": 3,
+      "isActive": true
+    },
+    {
+      "title": "አጋዡ ጥንቸል",
+      "description": "ጥንቸል ከባድ ቅርጫት የተሸከመ ኤሊ አየ።",
+      "language": "amharic",
+      "difficulty": "beginner",
+      "minAge": 5,
+      "maxAge": 12,
+      "coverImageUrl": null,
+      "pages": [
+        {
+          "pageNumber": 1,
+          "text": "ጥንቸል ከባድ ቅርጫት የተሸከመ ኤሊ አየ።"
+        },
+        {
+          "pageNumber": 2,
+          "text": "ቅርጫቱን አብረው ወደ መንደር ወሰዱ።"
+        },
+        {
+          "pageNumber": 3,
+          "text": "መረዳዳት ረጅሙን መንገድ አጠረው።",
+          "interactionQuestion": "What did the character learn?",
+          "interactionOptions": [
+            "Kindness and patience",
+            "To give up"
+          ]
+        }
+      ],
+      "vocabularyHighlights": [
+        "ቤት",
+        "ትምህርት ቤት",
+        "መጽሐፍ"
+      ],
+      "estimatedMinutes": 3,
+      "isActive": true
+    },
+    {
+      "title": "የትዕግሥት ዘር",
+      "description": "ሚኪ ዘር ተከለና በየቀኑ ውሃ አጠጣው።",
+      "language": "amharic",
+      "difficulty": "intermediate",
+      "minAge": 5,
+      "maxAge": 12,
+      "coverImageUrl": null,
+      "pages": [
+        {
+          "pageNumber": 1,
+          "text": "ሚኪ ዘር ተከለና በየቀኑ ውሃ አጠጣው።"
+        },
+        {
+          "pageNumber": 2,
+          "text": "ሥሩ በአፈር ውስጥ ሲያድግ በትዕግሥት ጠበቀ።"
+        },
+        {
+          "pageNumber": 3,
+          "text": "በመጨረሻ አረንጓዴ ቅጠል ወደ ፀሐይ ወጣ።",
+          "interactionQuestion": "What did the character learn?",
+          "interactionOptions": [
+            "Kindness and patience",
+            "To give up"
+          ]
+        }
+      ],
+      "vocabularyHighlights": [
+        "ፀሐይ",
+        "ጨረቃ",
+        "ጓደኛ"
+      ],
+      "estimatedMinutes": 3,
+      "isActive": true
+    },
+    {
+      "title": "ሊና ወዑፍ ንእሽት",
+      "description": "ሊና ዑፈ ንእሽተ ታሕተ ዕፅ ረከበት።",
+      "language": "geez",
+      "difficulty": "beginner",
+      "minAge": 5,
+      "maxAge": 12,
+      "coverImageUrl": null,
+      "pages": [
+        {
+          "pageNumber": 1,
+          "text": "ሊና ዑፈ ንእሽተ ታሕተ ዕፅ ረከበት።"
+        },
+        {
+          "pageNumber": 2,
+          "text": "ማይ ወሀበታ ወተዓገሠት።"
+        },
+        {
+          "pageNumber": 3,
+          "text": "ቤተ ዑፍ ተመልሰ ወሊና ተፈሥሐት።",
+          "interactionQuestion": "What did the character learn?",
+          "interactionOptions": [
+            "Kindness and patience",
+            "To give up"
+          ]
+        }
+      ],
+      "vocabularyHighlights": [
+        "ሰላም",
+        "ቤተ ሰብእ",
+        "ማይ"
+      ],
+      "estimatedMinutes": 3,
+      "isActive": true
+    },
+    {
+      "title": "ረዳኢ ጥንቸል",
+      "description": "ጥንቸል ኤሊን ከባድ ሸክም ሲሸከም አየ።",
+      "language": "geez",
+      "difficulty": "beginner",
+      "minAge": 5,
+      "maxAge": 12,
+      "coverImageUrl": null,
+      "pages": [
+        {
+          "pageNumber": 1,
+          "text": "ጥንቸል ኤሊን ከባድ ሸክም ሲሸከም አየ።"
+        },
+        {
+          "pageNumber": 2,
+          "text": "እኩ ወሰዱት እስከ ሀገር።"
+        },
+        {
+          "pageNumber": 3,
+          "text": "ርድኤት መንገድን አሳጠረ።",
+          "interactionQuestion": "What did the character learn?",
+          "interactionOptions": [
+            "Kindness and patience",
+            "To give up"
+          ]
+        }
+      ],
+      "vocabularyHighlights": [
+        "ቤት",
+        "ቤተ ትምህርት",
+        "መጽሐፍ"
+      ],
+      "estimatedMinutes": 3,
+      "isActive": true
+    },
+    {
+      "title": "ዘርአ ትዕግሥት",
+      "description": "ሚኪ ዘርአ ተከለ ወማይ አስተየ።",
+      "language": "geez",
+      "difficulty": "intermediate",
+      "minAge": 5,
+      "maxAge": 12,
+      "coverImageUrl": null,
+      "pages": [
+        {
+          "pageNumber": 1,
+          "text": "ሚኪ ዘርአ ተከለ ወማይ አስተየ።"
+        },
+        {
+          "pageNumber": 2,
+          "text": "ሥር በምድር ሲያድግ ጠበቀ።"
+        },
+        {
+          "pageNumber": 3,
+          "text": "ቅጠል አረንጓዴ ወደ ፀሐይ ወጣ።",
+          "interactionQuestion": "What did the character learn?",
+          "interactionOptions": [
+            "Kindness and patience",
+            "To give up"
+          ]
+        }
+      ],
+      "vocabularyHighlights": [
+        "ፀሐይ",
+        "ወርኅ",
+        "ፍቁር"
+      ],
+      "estimatedMinutes": 3,
+      "isActive": true
+    },
+    {
+      "title": "Liinaa fi Simbira Xiqqoo",
+      "description": "Liinaan muka jalatti simbira xiqqoo argite.",
+      "language": "oromo",
+      "difficulty": "beginner",
+      "minAge": 5,
+      "maxAge": 12,
+      "coverImageUrl": null,
+      "pages": [
+        {
+          "pageNumber": 1,
+          "text": "Liinaan muka jalatti simbira xiqqoo argite."
+        },
+        {
+          "pageNumber": 2,
+          "text": "Bishaan kenniteefii cal jettee eegde."
+        },
+        {
+          "pageNumber": 3,
+          "text": "Maatiin simbirattii deebi’e; Liinaan ni kolfite.",
+          "interactionQuestion": "What did the character learn?",
+          "interactionOptions": [
+            "Kindness and patience",
+            "To give up"
+          ]
+        }
+      ],
+      "vocabularyHighlights": [
+        "Akkam",
+        "Maatii",
+        "Bishaan"
+      ],
+      "estimatedMinutes": 3,
+      "isActive": true
+    },
+    {
+      "title": "Illeettii Gargaartuu",
+      "description": "Illeettiin qocaa guuboo ulfaataa baatu argite.",
+      "language": "oromo",
+      "difficulty": "beginner",
+      "minAge": 5,
+      "maxAge": 12,
+      "coverImageUrl": null,
+      "pages": [
+        {
+          "pageNumber": 1,
+          "text": "Illeettiin qocaa guuboo ulfaataa baatu argite."
+        },
+        {
+          "pageNumber": 2,
+          "text": "Waliin guuboo sana gara gandaatti geessan."
+        },
+        {
+          "pageNumber": 3,
+          "text": "Wal gargaaruun karaa dheeraa gabaabse.",
+          "interactionQuestion": "What did the character learn?",
+          "interactionOptions": [
+            "Kindness and patience",
+            "To give up"
+          ]
+        }
+      ],
+      "vocabularyHighlights": [
+        "Mana",
+        "Mana barumsaa",
+        "Kitaaba"
+      ],
+      "estimatedMinutes": 3,
+      "isActive": true
+    },
+    {
+      "title": "Sanyii Obsa",
+      "description": "Mikiin sanyii dhaabee guyyaa hunda bishaan obaase.",
+      "language": "oromo",
+      "difficulty": "intermediate",
+      "minAge": 5,
+      "maxAge": 12,
+      "coverImageUrl": null,
+      "pages": [
+        {
+          "pageNumber": 1,
+          "text": "Mikiin sanyii dhaabee guyyaa hunda bishaan obaase."
+        },
+        {
+          "pageNumber": 2,
+          "text": "Hiddi lafa jalatti yeroo guddatu obsaan eege."
+        },
+        {
+          "pageNumber": 3,
+          "text": "Dhumarratti baalli magariisaa gara aduutti ol ba’e.",
+          "interactionQuestion": "What did the character learn?",
+          "interactionOptions": [
+            "Kindness and patience",
+            "To give up"
+          ]
+        }
+      ],
+      "vocabularyHighlights": [
+        "Aduu",
+        "Ji’a",
+        "Hiriyyaa"
+      ],
+      "estimatedMinutes": 3,
+      "isActive": true
+    }
+  ]
+}

@@ -12,6 +12,7 @@ export enum ContentType {
     STORY = 'story',
     GAME = 'game',
     KNOWLEDGE = 'knowledge',
+    TUTOR = 'tutor',
 }
 
 export enum DifficultyLevel {

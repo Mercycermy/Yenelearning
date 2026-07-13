@@ -18,6 +18,7 @@ export class SettingsService {
                 { code: 'amharic', name: 'Amharic', nativeName: 'አማርኛ', isActive: true },
                 { code: 'geez', name: 'Ge\'ez', nativeName: 'ግዕዝ', isActive: true },
                 { code: 'english', name: 'English', nativeName: 'English', isActive: true },
+                { code: 'oromo', name: 'Oromo', nativeName: 'Afaan Oromoo', isActive: true },
             ]),
         );
     }
