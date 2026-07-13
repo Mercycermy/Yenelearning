@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import '../../core/app_colors.dart';
 import '../../data/user_prefs.dart';
+import '../../data/ai_repository.dart';
+import '../../services/speech_service.dart';
 
 class TalkWithTutorScreen extends StatefulWidget {
   const TalkWithTutorScreen({super.key});
@@ -10,9 +12,15 @@ class TalkWithTutorScreen extends StatefulWidget {
 }
 
 class _TalkWithTutorScreenState extends State<TalkWithTutorScreen> {
-  bool isTutorSpeaking = true;
+  bool isTutorSpeaking = false;
+  bool isListening = false;
+  bool isThinking = false;
   String currentQuestion = 'Hello! What is your name?';
+  String heardText = '';
+  String language = 'amharic';
   final UserPrefs _prefs = UserPrefs();
+  final SpeechService _speech = SpeechService();
+  final AiRepository _ai = AiRepository();
   String? avatarName;
   String? avatarImageUrl;
   String? personalityDescription;
@@ -42,14 +50,56 @@ class _TalkWithTutorScreenState extends State<TalkWithTutorScreen> {
     final image = await _prefs.getAvatarImage();
     final personality = await _prefs.getAvatarPersonality();
     final style = await _prefs.getAvatarTeachingStyle();
+    final selectedLanguage = await _prefs.getLanguage();
     if (!mounted) return;
     setState(() {
       avatarName = name;
       avatarImageUrl = image;
       personalityDescription = personality;
       teachingStyle = style;
+      language = selectedLanguage;
     });
+    await _speakTutor(currentQuestion);
   }
+
+  Future<void> _speakTutor(String text) async {
+    if (!mounted) return;
+    setState(() => isTutorSpeaking = true);
+    final available = await _speech.speak(text, language);
+    if (!mounted) return;
+    setState(() => isTutorSpeaking = false);
+    if (!available) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('This language voice is not installed. The tutor response is shown as text.')));
+  }
+
+  Future<void> _toggleListening() async {
+    if (isThinking || isTutorSpeaking) return;
+    if (isListening) { await _speech.stopListening(); if (mounted) setState(() => isListening = false); return; }
+    setState(() { isListening = true; heardText = 'Listening…'; });
+    final started = await _speech.listen(language: language, onResult: (words, isFinal) {
+      if (!mounted) return;
+      setState(() { heardText = words.isEmpty ? 'Listening…' : words; isListening = !isFinal; });
+      if (isFinal && words.trim().isNotEmpty) _askTutor(words.trim());
+    });
+    if (!started && mounted) {
+      setState(() { isListening = false; heardText = 'Speech recognition is unavailable. Check microphone permission.'; });
+    }
+  }
+
+  Future<void> _askTutor(String childMessage) async {
+    setState(() => isThinking = true);
+    try {
+      final reply = await _ai.chat(prompt: childMessage, language: language);
+      if (!mounted) return;
+      setState(() { currentQuestion = reply; isThinking = false; });
+      await _speakTutor(reply);
+    } catch (_) {
+      if (!mounted) return;
+      setState(() { isThinking = false; currentQuestion = 'I could not reach the AI tutor. Please check the backend and HF_ACCESS_TOKEN.'; });
+    }
+  }
+
+  @override
+  void dispose() { _speech.dispose(); super.dispose(); }
 
   @override
   Widget build(BuildContext context) {
@@ -156,37 +206,40 @@ class _TalkWithTutorScreenState extends State<TalkWithTutorScreen> {
 
               const SizedBox(height: 60),
 
+              if (heardText.isNotEmpty) ...[
+                Text(heardText, textAlign: TextAlign.center, style: const TextStyle(color: AppColors.gray900, fontSize: 18)),
+                const SizedBox(height: 20),
+              ],
+
               // Voice Indicator
-              if (isTutorSpeaking)
-                const Column(
+              if (isTutorSpeaking || isThinking)
+                Column(
                   children: [
                     Text(
-                      'Tutor is speaking...',
+                      isThinking ? 'Tutor is thinking...' : 'Tutor is speaking...',
                       style: TextStyle(
                         color: AppColors.blue,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    SizedBox(height: 20),
-                    _SoundWaveWidget(),
+                    const SizedBox(height: 20),
+                    const _SoundWaveWidget(),
                   ],
                 )
               else
                 Column(
                   children: [
-                    const Text(
-                      'Your turn! Tap to speak',
-                      style: TextStyle(color: AppColors.green),
+                    Text(
+                      isListening ? 'Listening... tap to stop' : 'Your turn! Tap to speak',
+                      style: const TextStyle(color: AppColors.green),
                     ),
                     const SizedBox(height: 16),
                     GestureDetector(
-                      onTap: () {
-                        // Start recording
-                      },
+                      onTap: _toggleListening,
                       child: Container(
                         padding: const EdgeInsets.all(24),
-                        decoration: const BoxDecoration(
-                          color: AppColors.green,
+                        decoration: BoxDecoration(
+                          color: isListening ? AppColors.error : AppColors.green,
                           shape: BoxShape.circle,
                         ),
                         child: const Icon(
@@ -200,15 +253,6 @@ class _TalkWithTutorScreenState extends State<TalkWithTutorScreen> {
                 ),
 
               const SizedBox(height: 40),
-
-              // Temporary Toggle for Demo
-              TextButton(
-                onPressed: () =>
-                    setState(() => isTutorSpeaking = !isTutorSpeaking),
-                child: Text(
-                  isTutorSpeaking ? 'Switch to Me' : 'Switch to Tutor',
-                ),
-              ),
             ],
           ),
         ),

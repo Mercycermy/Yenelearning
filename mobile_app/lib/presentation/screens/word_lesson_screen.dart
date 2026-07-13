@@ -4,6 +4,7 @@ import '../../core/app_colors.dart';
 import '../../data/content_repository.dart';
 import '../../data/models/content_models.dart';
 import '../../data/user_prefs.dart';
+import '../../services/speech_service.dart';
 
 class WordLessonScreen extends StatefulWidget {
   const WordLessonScreen({super.key});
@@ -20,6 +21,9 @@ class _WordLessonScreenState extends State<WordLessonScreen> {
   List<ContentListItem> words = [];
   bool isLoading = true;
   String? errorMessage;
+  String language = 'amharic';
+  String? speechFeedback;
+  final SpeechService _speech = SpeechService();
 
   @override
   void initState() {
@@ -39,6 +43,7 @@ class _WordLessonScreenState extends State<WordLessonScreen> {
 
       if (!mounted) return;
       setState(() {
+        this.language = language;
         words = response.items;
         isLoading = false;
         currentIndex = 0;
@@ -51,6 +56,31 @@ class _WordLessonScreenState extends State<WordLessonScreen> {
       });
     }
   }
+
+  Future<void> _sayWord() async {
+    final available = await _speech.speak(words[currentIndex].title, language);
+    if (!available && mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('This voice is not installed on the device.')));
+    }
+  }
+
+  Future<void> _practiceWord() async {
+    if (isListening) { await _speech.stopListening(); if (mounted) setState(() => isListening = false); return; }
+    setState(() { isListening = true; speechFeedback = 'Listening…'; });
+    final started = await _speech.listen(language: language, onResult: (text, isFinal) {
+      if (!mounted) return;
+      setState(() { speechFeedback = text.isEmpty ? 'Listening…' : 'I heard: $text'; isListening = !isFinal; });
+      if (isFinal) {
+        final expected = words[currentIndex].title.toLowerCase().trim();
+        final heard = text.toLowerCase().trim();
+        setState(() => speechFeedback = heard.contains(expected) ? 'Great pronunciation!' : 'Good try! Listen and say it again.');
+      }
+    });
+    if (!started && mounted) setState(() { isListening = false; speechFeedback = 'Microphone or speech recognition is unavailable.'; });
+  }
+
+  @override
+  void dispose() { _speech.dispose(); super.dispose(); }
 
   void _nextWord() {
     if (currentIndex < words.length - 1) {
@@ -244,9 +274,7 @@ class _WordLessonScreenState extends State<WordLessonScreen> {
                         size: 72,
                         color: AppColors.accent,
                       ),
-                      onPressed: () {
-                        // Play audio pronunciation
-                      },
+                      onPressed: _sayWord,
                     ),
                   ],
                 ),
@@ -254,6 +282,10 @@ class _WordLessonScreenState extends State<WordLessonScreen> {
             ),
 
             const SizedBox(height: 40),
+            if (speechFeedback != null) ...[
+              Text(speechFeedback!, textAlign: TextAlign.center, style: const TextStyle(fontWeight: FontWeight.bold, color: AppColors.blue)),
+              const SizedBox(height: 16),
+            ],
 
             // Interaction Row
             Row(
@@ -265,10 +297,7 @@ class _WordLessonScreenState extends State<WordLessonScreen> {
                       : Icons.mic_none_rounded,
                   label: 'Speak',
                   color: isListening ? AppColors.error : AppColors.blue,
-                  onTap: () {
-                    setState(() => isListening = !isListening);
-                    // Start STT
-                  },
+                  onTap: _practiceWord,
                 ),
                 _InteractionButton(
                   icon: Icons.arrow_forward_rounded,
