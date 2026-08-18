@@ -7,11 +7,18 @@ import { Language } from './entities/language.entity';
 import { Story } from './entities/story.entity';
 import { User } from './entities/user.entity';
 import { Progress } from './entities/progress.entity';
+import { Chapter } from './entities/chapter.entity';
+import { ChapterProgress } from './entities/chapter-progress.entity';
+import { AvatarItem } from './entities/avatar-item.entity';
 
 const dataSource = new DataSource({
-  type: 'better-sqlite3',
-  database: 'yene_teacher.db',
-  entities: [User, Child, Content, Progress, Avatar, Story, Language],
+  type: 'postgres',
+  host: process.env.DATABASE_HOST || 'localhost',
+  port: parseInt(process.env.DATABASE_PORT || '5432', 10),
+  username: process.env.DATABASE_USERNAME || 'postgres',
+  password: process.env.DATABASE_PASSWORD || '045422',
+  database: process.env.DATABASE_NAME || 'yene_teacher',
+  entities: [User, Child, Content, Progress, Avatar, Story, Language, Chapter, ChapterProgress, AvatarItem],
   synchronize: true,
 });
 
@@ -85,7 +92,68 @@ async function seed() {
     await storyRepository.save(existing ? { ...existing, ...story } : storyRepository.create(story));
   }
 
-  console.log(`Demo content ready: ${languages.length} languages, ${avatars.length} tutors, ${words.length} words, ${stories.length} stories, 3 games, 3 knowledge items.`);
+  const chapterRepository = dataSource.getRepository(Chapter);
+  const chapters = [
+    {
+      monthNumber: 1,
+      titleAmharic: 'ምዕራፍ 1: የመጀመሪያ ሰላምታ',
+      titleEnglish: 'Chapter 1: First Greetings',
+      targetGrade: 'GRADE_1',
+      themeColor: '#10B981',
+      isLockedByDefault: false,
+      nodes: [
+        { id: 'node-1', title: 'Welcome & Greetings', titleAmharic: 'ሰላምታ', type: 'WORD_GAME' as const, icon: 'hand-left', starReward: 10, description: 'Learn Amharic greetings: Selam, Tenayistilign' },
+        { id: 'node-2', title: 'Lili & The Little Bird', titleAmharic: 'ሊሊ እና ወፏ', type: 'STORY' as const, icon: 'book', starReward: 15, description: 'Read a short story about kindness' },
+        { id: 'node-3', title: 'Fidel Matching Game', titleAmharic: 'የፊደል ጨዋታ', type: 'MATH_SHAPES' as const, icon: 'extension-puzzle', starReward: 20, description: 'Match Fidel letters to pictures' },
+        { id: 'node-4', title: 'Talk with Tutor Abebe', titleAmharic: 'ከአበበ ጋር መነጋገር', type: 'AI_TALK' as const, icon: 'chatbubbles', starReward: 25, description: 'Practice speaking out loud' },
+      ],
+    },
+    {
+      monthNumber: 2,
+      titleAmharic: 'ምዕራፍ 2: ቤተሰብ እና ቤት',
+      titleEnglish: 'Chapter 2: Family & Home',
+      targetGrade: 'GRADE_1',
+      themeColor: '#3B82F6',
+      isLockedByDefault: false,
+      nodes: [
+        { id: 'node-5', title: 'Family Words', titleAmharic: 'ቤተሰብ', type: 'WORD_GAME' as const, icon: 'people', starReward: 10, description: 'Learn Enat, Abat, Wondim, Ehit' },
+        { id: 'node-6', title: 'The Kind Lion Story', titleAmharic: 'ደግ አነበሳ', type: 'STORY' as const, icon: 'book', starReward: 15, description: 'Story about helping others' },
+        { id: 'node-7', title: 'Counting House Items', titleAmharic: 'የቤት ዕቃዎች', type: 'LOGIC_PUZZLE' as const, icon: 'calculator', starReward: 20, description: 'Basic counting in Amharic' },
+      ],
+    },
+    {
+      monthNumber: 3,
+      titleAmharic: 'ምዕራፍ 3: ተፈጥሮ እና እንስሳት',
+      titleEnglish: 'Chapter 3: Nature & Animals',
+      targetGrade: 'GRADE_1',
+      themeColor: '#F59E0B',
+      isLockedByDefault: true,
+      nodes: [
+        { id: 'node-8', title: 'Gelada Monkeys', titleAmharic: 'ጭላዳ ዝንጀሮ', type: 'WORD_GAME' as const, icon: 'leaf', starReward: 10, description: 'Learn about Ethiopian animals' },
+      ],
+    },
+  ];
+
+  for (const ch of chapters) {
+    const existing = await chapterRepository.findOneBy({ monthNumber: ch.monthNumber, targetGrade: ch.targetGrade });
+    await chapterRepository.save(existing ? { ...existing, ...ch } : chapterRepository.create(ch));
+  }
+
+  const avatarItemRepository = dataSource.getRepository(AvatarItem);
+  const items = [
+    { name: 'Habesha Netela Cap', nameAmharic: 'የሀበሻ ኮፍያ', category: 'HAT' as const, starCost: 15, iconName: 'headset', color: '#EF4444' },
+    { name: 'Gold Crown', nameAmharic: 'የወርቅ ዘውድ', category: 'HAT' as const, starCost: 30, iconName: 'ribbon', color: '#F59E0B' },
+    { name: 'Traditional Vest', nameAmharic: 'ባህላዊ ቀሚስ / ጃኬት', category: 'OUTFIT' as const, starCost: 20, iconName: 'shirt', color: '#10B981' },
+    { name: 'Superhero Cape', nameAmharic: 'የጀግና ሸሚዝ', category: 'OUTFIT' as const, starCost: 25, iconName: 'shield', color: '#8B5CF6' },
+    { name: 'Cool Glasses', nameAmharic: 'ዘመናዊ መነፅር', category: 'ACCESSORY' as const, starCost: 10, iconName: 'glasses', color: '#3B82F6' },
+  ];
+
+  for (const item of items) {
+    const existing = await avatarItemRepository.findOneBy({ name: item.name });
+    await avatarItemRepository.save(existing ? { ...existing, ...item } : avatarItemRepository.create(item));
+  }
+
+  console.log(`Demo content ready: ${languages.length} languages, ${avatars.length} tutors, ${words.length} words, ${stories.length} stories, ${chapters.length} chapters, ${items.length} avatar items.`);
   await dataSource.destroy();
 }
 

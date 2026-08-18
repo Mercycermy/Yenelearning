@@ -19,6 +19,9 @@ import { Progress } from './entities/progress.entity';
 import { Avatar } from './entities/avatar.entity';
 import { Story } from './entities/story.entity';
 import { Language } from './entities/language.entity';
+import { Chapter } from './entities/chapter.entity';
+import { ChapterProgress } from './entities/chapter-progress.entity';
+import { AvatarItem } from './entities/avatar-item.entity';
 import { SettingsModule } from './settings/settings.module';
 
 @Module({
@@ -31,24 +34,28 @@ import { SettingsModule } from './settings/settings.module';
       imports: [ConfigModule],
       useFactory: (configService: ConfigService) => {
         const dbType = configService.get<string>('DATABASE_TYPE', 'sqlite');
+        const dbHost = configService.get<string>('DATABASE_HOST', 'localhost');
+        const useSsl = !['localhost', '127.0.0.1'].includes(dbHost);
 
         if (dbType === 'postgres') {
           return {
             type: 'postgres' as const,
-            host: configService.get<string>('DATABASE_HOST', 'localhost'),
+            host: dbHost,
             port: configService.get<number>('DATABASE_PORT', 5432),
             username: configService.get<string>('DATABASE_USERNAME', 'postgres'),
             password: configService.get<string>('DATABASE_PASSWORD', 'postgres'),
             database: configService.get<string>('DATABASE_NAME', 'yene_teacher'),
-            entities: [User, Child, Content, Progress, Avatar, Story, Language],
+            entities: [User, Child, Content, Progress, Avatar, Story, Language, Chapter, ChapterProgress, AvatarItem],
             synchronize: true, // Auto-create tables in Neon Postgres
             logging: configService.get<string>('NODE_ENV') === 'development',
-            ssl: true,
-            extra: {
-              ssl: {
-                rejectUnauthorized: false,
-              },
-            },
+            ssl: useSsl ? true : false,
+            extra: useSsl
+              ? {
+                  ssl: {
+                    rejectUnauthorized: false,
+                  },
+                }
+              : undefined,
           };
         }
 

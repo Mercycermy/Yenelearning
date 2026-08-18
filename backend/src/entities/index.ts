@@ -4,3 +4,7 @@ export * from './content.entity';
 export * from './progress.entity';
 export * from './avatar.entity';
 export * from './story.entity';
+export * from './language.entity';
+export * from './chapter.entity';
+export * from './chapter-progress.entity';
+export * from './avatar-item.entity';

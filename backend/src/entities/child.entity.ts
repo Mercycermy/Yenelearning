@@ -54,6 +54,18 @@ export class Child {
     @Column({ type: 'int', default: 0 })
     totalStars: number;
 
+    @Column({ type: 'varchar', default: 'GRADE_1' })
+    gradeLevel: string; // 'KG' | 'GRADE_1' | 'GRADE_2' | 'GRADE_3' | 'GRADE_4'
+
+    @Column({ type: 'int', default: 1 })
+    streakDays: number;
+
+    @Column({ type: 'int', default: 5 })
+    heartsCount: number;
+
+    @Column({ type: 'simple-json', nullable: true })
+    avatarConfig: { equippedHat?: string; equippedOutfit?: string; skinColor?: string };
+
     @Column({ type: 'simple-array', default: '' })
     badges: string[];
 

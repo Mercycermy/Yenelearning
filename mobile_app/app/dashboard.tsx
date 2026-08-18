@@ -13,68 +13,90 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import { AppColors } from '../src/constants/colors';
 import { userPrefs } from '../src/data/userPrefs';
+import {
+  DuolingoRoadmapPath,
+  ChapterData,
+  LessonNodeData,
+} from '../src/components/DuolingoRoadmapPath';
+import { AvatarCustomizerModal, AvatarItemData } from '../src/components/AvatarCustomizerModal';
+import { AgeAdaptiveWrapper } from '../src/components/AgeAdaptiveWrapper';
 
-const LANGUAGES = [
-  { id: 'amharic', name: 'Amharic', native: 'አማርኛ' },
-  { id: 'geez', name: "Ge'ez", native: 'ግዕዝ' },
-  { id: 'english', name: 'English', native: 'English' },
+const MOCK_CHAPTERS: ChapterData[] = [
+  {
+    id: 'ch-1',
+    monthNumber: 1,
+    titleAmharic: 'ምዕራፍ 1: የመጀመሪያ ሰላምታ',
+    titleEnglish: 'Chapter 1: First Greetings',
+    themeColor: '#10B981',
+    status: 'UNLOCKED',
+    completedNodeIds: ['node-1'],
+    nodes: [
+      { id: 'node-1', title: 'Welcome & Greetings', titleAmharic: 'ሰላምታ', type: 'WORD_GAME', icon: 'hand-left', starReward: 10, description: 'Learn Amharic greetings: Selam, Tenayistilign' },
+      { id: 'node-2', title: 'Lili & The Little Bird', titleAmharic: 'ሊሊ እና ወፏ', type: 'STORY', icon: 'book', starReward: 15, description: 'Read a short story about kindness' },
+      { id: 'node-3', title: 'Fidel Matching Game', titleAmharic: 'የፊደል ጨዋታ', type: 'MATH_SHAPES', icon: 'extension-puzzle', starReward: 20, description: 'Match Fidel letters to pictures' },
+      { id: 'node-4', title: 'Talk with Tutor Abebe', titleAmharic: 'ከአበበ ጋር መነጋገር', type: 'AI_TALK', icon: 'chatbubbles', starReward: 25, description: 'Practice speaking out loud' },
+    ],
+  },
+  {
+    id: 'ch-2',
+    monthNumber: 2,
+    titleAmharic: 'ምዕራፍ 2: ቤተሰብ እና ቤት',
+    titleEnglish: 'Chapter 2: Family & Home',
+    themeColor: '#3B82F6',
+    status: 'UNLOCKED',
+    completedNodeIds: [],
+    nodes: [
+      { id: 'node-5', title: 'Family Words', titleAmharic: 'ቤተሰብ', type: 'WORD_GAME', icon: 'people', starReward: 10, description: 'Learn Enat, Abat, Wondim, Ehit' },
+      { id: 'node-6', title: 'The Kind Lion Story', titleAmharic: 'ደግ አነበሳ', type: 'STORY', icon: 'book', starReward: 15, description: 'Story about helping others' },
+      { id: 'node-7', title: 'Counting House Items', titleAmharic: 'የቤት ዕቃዎች', type: 'LOGIC_PUZZLE', icon: 'calculator', starReward: 20, description: 'Basic counting in Amharic' },
+    ],
+  },
+  {
+    id: 'ch-3',
+    monthNumber: 3,
+    titleAmharic: 'ምዕራፍ 3: ተፈጥሮ እና እንስሳት',
+    titleEnglish: 'Chapter 3: Nature & Animals',
+    themeColor: '#F59E0B',
+    isLocked: true,
+    status: 'LOCKED',
+    completedNodeIds: [],
+    nodes: [
+      { id: 'node-8', title: 'Gelada Monkeys', titleAmharic: 'ጭላዳ ዝንጀሮ', type: 'WORD_GAME', icon: 'leaf', starReward: 10, description: 'Learn about Ethiopian animals' },
+    ],
+  },
 ];
 
-const ACTIVITIES = [
-  { title: 'Learn Words', subtitle: 'Build your word power', icon: 'text' as const, color: AppColors.blue, bg: AppColors.softBlue, route: '/words', badge: '5 min' },
-  { title: 'Talk with Tutor', subtitle: 'Say it out loud', icon: 'mic' as const, color: AppColors.purple, bg: AppColors.softPurple, route: '/tutor', badge: 'Live' },
-  { title: 'Story Time', subtitle: 'Read a little adventure', icon: 'book' as const, color: AppColors.green, bg: AppColors.softGreen, route: '/stories', badge: '3 new' },
-  { title: 'Play Games', subtitle: 'Win stars while learning', icon: 'game-controller' as const, color: AppColors.yellow, bg: AppColors.softYellow, route: '/games', badge: '+20 ★' },
-  { title: 'Wonder Lab', subtitle: 'Discover amazing facts', icon: 'bulb' as const, color: AppColors.orange, bg: AppColors.softOrange, route: '/knowledge', badge: 'Explore' },
-];
-
-const QUIZ = [
-  {
-    question: 'Which animal is the tallest in the world?',
-    options: ['Elephant', 'Giraffe', 'Lion'],
-    answer: 'Giraffe',
-    explanation: 'A giraffe can grow taller than 5 meters.',
-  },
-  {
-    question: 'What do plants need to make their food?',
-    options: ['Sunlight', 'Moonlight', 'Sand'],
-    answer: 'Sunlight',
-    explanation: 'Plants use sunlight, water, and air in photosynthesis.',
-  },
-  {
-    question: 'Which word means the opposite of “fast”?',
-    options: ['Quick', 'Slow', 'Bright'],
-    answer: 'Slow',
-    explanation: 'Slow is an antonym, or opposite word, for fast.',
-  },
+const MOCK_AVATAR_ITEMS: AvatarItemData[] = [
+  { id: 'item-1', name: 'Habesha Netela Cap', nameAmharic: 'የሀበሻ ኮፍያ', category: 'HAT', starCost: 15, iconName: 'headset', color: '#EF4444' },
+  { id: 'item-2', name: 'Gold Crown', nameAmharic: 'የወርቅ ዘውድ', category: 'HAT', starCost: 30, iconName: 'ribbon', color: '#F59E0B' },
+  { id: 'item-3', name: 'Traditional Vest', nameAmharic: 'ባህላዊ ቀሚስ / ጃኬት', category: 'OUTFIT', starCost: 20, iconName: 'shirt', color: '#10B981' },
+  { id: 'item-4', name: 'Superhero Cape', nameAmharic: 'የጀግና ሸሚዝ', category: 'OUTFIT', starCost: 25, iconName: 'shield', color: '#8B5CF6' },
+  { id: 'item-5', name: 'Cool Glasses', nameAmharic: 'ዘመናዊ መነፅር', category: 'ACCESSORY', starCost: 10, iconName: 'glasses', color: '#3B82F6' },
 ];
 
 export default function DashboardScreen() {
   const router = useRouter();
-  const { width } = useWindowDimensions();
-  const columns = width >= 760 ? 3 : 2;
-  const cardWidth = (Math.min(width, 880) - 36 - (columns - 1) * 14) / columns;
 
   const [avatarImageUrl, setAvatarImageUrl] = useState<string | null>(null);
   const [avatarName, setAvatarName] = useState<string | null>(null);
-  const [language, setLanguage] = useState('amharic');
-  const [learningFocus, setLearningFocus] = useState('Reading');
-  const [completed, setCompleted] = useState<Set<number>>(new Set([0]));
-  const [questionIndex, setQuestionIndex] = useState(0);
-  const [score, setScore] = useState(0);
-  const [answer, setAnswer] = useState<string | null>(null);
+  const [gradeLevel, setGradeLevel] = useState<'KG' | 'GRADE_1'>('GRADE_1');
+  const [streakDays, setStreakDays] = useState(3);
+  const [stars, setStars] = useState(120);
+  const [hearts, setHearts] = useState(5);
+
+  const [customizerVisible, setCustomizerVisible] = useState(false);
+  const [equippedConfig, setEquippedConfig] = useState<{
+    equippedHat?: string;
+    equippedOutfit?: string;
+  }>({ equippedHat: 'headset' });
 
   const loadProfile = useCallback(async () => {
-    const [image, name, lang, focus] = await Promise.all([
+    const [image, name] = await Promise.all([
       userPrefs.getAvatarImage(),
       userPrefs.getAvatarName(),
-      userPrefs.getLanguage(),
-      userPrefs.getLearningFocus(),
     ]);
     setAvatarImageUrl(image);
     setAvatarName(name);
-    setLanguage(lang);
-    setLearningFocus(focus);
   }, []);
 
   useFocusEffect(
@@ -83,370 +105,255 @@ export default function DashboardScreen() {
     }, [loadProfile]),
   );
 
-  async function updateLanguage(value: string) {
-    await userPrefs.saveLanguage(value);
-    setLanguage(value);
-    const label = LANGUAGES.find((item) => item.id === value)?.name ?? value;
-    Alert.alert('Language', `${label} selected. Let’s learn!`);
+  function handleSelectNode(node: LessonNodeData, chapter: ChapterData) {
+    if (node.type === 'STORY') {
+      router.push('/stories');
+    } else if (node.type === 'WORD_GAME') {
+      router.push('/words');
+    } else if (node.type === 'AI_TALK') {
+      router.push('/tutor');
+    } else {
+      router.push('/games');
+    }
   }
 
-  const focusRoute =
-    learningFocus === 'Speaking' ? '/tutor' : learningFocus === 'Vocabulary' ? '/words' : '/stories';
-
-  const missions = [
-    { label: 'Learn 5 new words', route: '/words', icon: 'text' as const },
-    { label: 'Read one short story', route: '/stories', icon: 'book' as const },
-    { label: 'Discover a fun fact', route: '/knowledge', icon: 'bulb' as const },
-  ];
-
-  const finished = questionIndex === QUIZ.length;
-  const question = finished ? null : QUIZ[questionIndex];
+  function handleEquipItem(item: AvatarItemData) {
+    if (stars < item.starCost) {
+      Alert.alert('Stars Needed', `You need ${item.starCost} stars to unlock this item! Keep learning!`);
+      return;
+    }
+    const newConfig = { ...equippedConfig };
+    if (item.category === 'HAT') newConfig.equippedHat = item.iconName;
+    if (item.category === 'OUTFIT') newConfig.equippedOutfit = item.iconName;
+    setEquippedConfig(newConfig);
+    Alert.alert('Equipped! 🎉', `${item.nameAmharic} is now equipped on your avatar!`);
+  }
 
   return (
-    <ScrollView style={styles.container} contentContainerStyle={styles.content}>
-      <View style={styles.appBar}>
-        <View style={styles.brandRow}>
-          <View style={styles.brandMark}>
-            <Ionicons name="sparkles" size={18} color="#fff" />
-          </View>
-          <Text style={styles.brand}>Yene Teacher</Text>
+    <View style={styles.container}>
+      {/* Top Duolingo Status Bar */}
+      <View style={styles.topStatusBar}>
+        <View style={styles.statChip}>
+          <Ionicons name="flame" size={20} color="#EF4444" />
+          <Text style={styles.statValue}>{streakDays}</Text>
         </View>
-        <Pressable style={styles.parentsBtn} onPress={() => router.push('/parent')}>
-          <Ionicons name="people" size={16} color={AppColors.navy} />
-          <Text style={styles.parentsText}>Parents</Text>
+
+        <View style={styles.statChip}>
+          <Ionicons name="star" size={20} color="#F59E0B" />
+          <Text style={styles.statValue}>{stars}</Text>
+        </View>
+
+        <View style={styles.statChip}>
+          <Ionicons name="heart" size={20} color="#EC4899" />
+          <Text style={styles.statValue}>{hearts}</Text>
+        </View>
+
+        {/* Grade Mode Switcher Toggle */}
+        <Pressable
+          onPress={() => setGradeLevel((prev) => (prev === 'KG' ? 'GRADE_1' : 'KG'))}
+          style={styles.gradeToggleBtn}
+        >
+          <Text style={styles.gradeToggleText}>
+            {gradeLevel === 'KG' ? 'KG Mode 🎨' : 'Grades 1-4 🚀'}
+          </Text>
+        </Pressable>
+
+        {/* Parents Screen Link */}
+        <Pressable style={styles.parentsIconBtn} onPress={() => router.push('/parent')}>
+          <Ionicons name="people" size={18} color="#4B5563" />
         </Pressable>
       </View>
 
-      <View style={styles.hero}>
-        <View style={styles.avatarRing}>
+      {/* Hero Welcome Card */}
+      <View style={styles.heroCard}>
+        <View style={styles.avatarWrap}>
           {avatarImageUrl ? (
-            <Image source={{ uri: avatarImageUrl }} style={styles.avatar} />
+            <Image source={{ uri: avatarImageUrl }} style={styles.avatarImage} />
           ) : (
-            <Ionicons name="happy" size={42} color={AppColors.orange} />
+            <Ionicons name="happy" size={44} color="#F59E0B" />
+          )}
+          {equippedConfig.equippedHat && (
+            <View style={styles.hatBadge}>
+              <Ionicons name={equippedConfig.equippedHat as any} size={16} color="#FFF" />
+            </View>
           )}
         </View>
-        <View style={{ flex: 1 }}>
-          <Text style={styles.heroTitle}>Hi, {avatarName ?? 'Superstar'}! 👋</Text>
-          <Text style={styles.heroSub}>Your tutor saved a fun lesson for you.</Text>
-          <View style={styles.pillRow}>
-            <View style={styles.pill}>
-              <Ionicons name="flame" size={14} color={AppColors.softYellow} />
-              <Text style={styles.pillText}>3 day streak</Text>
-            </View>
-            <View style={styles.pill}>
-              <Ionicons name="star" size={14} color={AppColors.softYellow} />
-              <Text style={styles.pillText}>120 stars</Text>
-            </View>
-            <Pressable style={styles.continueBtn} onPress={() => router.push('/words')}>
-              <Ionicons name="play" size={14} color={AppColors.navy} />
-              <Text style={styles.continueText}>Continue</Text>
+
+        <View style={styles.heroTextCol}>
+          <Text style={styles.welcomeTitle}>Selam, {avatarName ?? 'Superstar'}! 👋</Text>
+          <Text style={styles.welcomeSub}>Ready to explore today’s learning path?</Text>
+
+          <View style={styles.heroActionsRow}>
+            <Pressable
+              style={styles.dressingRoomBtn}
+              onPress={() => setCustomizerVisible(true)}
+            >
+              <Ionicons name="shirt" size={14} color="#FFFFFF" />
+              <Text style={styles.dressingRoomText}>Dressing Room</Text>
+            </Pressable>
+
+            <Pressable style={styles.aiTalkBtn} onPress={() => router.push('/tutor')}>
+              <Ionicons name="chatbubbles" size={14} color="#FFFFFF" />
+              <Text style={styles.aiTalkText}>AI Tutor</Text>
             </Pressable>
           </View>
         </View>
       </View>
 
-      <Pressable
-        style={[
-          styles.focusCard,
-          {
-            backgroundColor:
-              learningFocus === 'Speaking'
-                ? AppColors.softPurple
-                : learningFocus === 'Vocabulary'
-                  ? AppColors.softBlue
-                  : AppColors.softGreen,
-          },
-        ]}
-        onPress={() => router.push(focusRoute as never)}
-      >
-        <Text style={styles.focusTitle}>Family focus · {learningFocus}</Text>
-        <Text style={styles.focusSub}>
-          {learningFocus === 'Speaking'
-            ? 'Practice speaking with your tutor'
-            : learningFocus === 'Vocabulary'
-              ? 'Grow your word power today'
-              : 'Read a story and tell someone about it'}
-        </Text>
-      </Pressable>
-
-      <View style={styles.missionCard}>
-        <Text style={styles.sectionTitle}>Today’s learning path</Text>
-        <Text style={styles.missionProgress}>
-          {completed.size} of {missions.length}
-        </Text>
-        {missions.map((mission, index) => {
-          const done = completed.has(index);
-          return (
-            <Pressable
-              key={mission.label}
-              style={styles.missionRow}
-              onPress={() => {
-                setCompleted((prev) => new Set(prev).add(index));
-                router.push(mission.route as never);
-              }}
-            >
-              <Ionicons
-                name={done ? 'checkmark-circle' : mission.icon}
-                size={22}
-                color={done ? AppColors.green : AppColors.blue}
-              />
-              <Text style={[styles.missionLabel, done && styles.missionDone]}>
-                {mission.label}
-              </Text>
-              <Ionicons name="play-circle" size={22} color={AppColors.purple} />
-            </Pressable>
-          );
-        })}
+      {/* Main Content Area (Age Adaptive) */}
+      <View style={styles.mainContent}>
+        <AgeAdaptiveWrapper
+          gradeLevel={gradeLevel}
+          onSelectAction={(route) => router.push(route as never)}
+        >
+          <DuolingoRoadmapPath
+            chapters={MOCK_CHAPTERS}
+            activeNodeId="node-2"
+            onSelectNode={handleSelectNode}
+          />
+        </AgeAdaptiveWrapper>
       </View>
 
-      <Text style={styles.sectionTitle}>Pick your language</Text>
-      <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ marginBottom: 18 }}>
-        {LANGUAGES.map((item) => {
-          const selected = language === item.id;
-          return (
-            <Pressable
-              key={item.id}
-              onPress={() => updateLanguage(item.id)}
-              style={[
-                styles.langChip,
-                {
-                  backgroundColor: selected ? AppColors.mint : AppColors.white,
-                  borderColor: selected ? AppColors.teal : AppColors.gray200,
-                },
-              ]}
-            >
-              <Text style={styles.langText}>
-                {item.name} · {item.native}
-              </Text>
-            </Pressable>
-          );
-        })}
-      </ScrollView>
-
-      <View style={styles.quizCard}>
-        <View style={styles.quizHeader}>
-          <Text style={styles.sectionTitle}>Brain boost challenge</Text>
-          <Text style={styles.score}>★ {score}</Text>
-        </View>
-        {finished ? (
-          <View style={{ alignItems: 'center' }}>
-            <Text style={styles.quizResult}>
-              You scored {score} of {QUIZ.length}!
-            </Text>
-            <Pressable
-              onPress={() => {
-                setQuestionIndex(0);
-                setScore(0);
-                setAnswer(null);
-              }}
-            >
-              <Text style={styles.link}>Play again</Text>
-            </Pressable>
-          </View>
-        ) : (
-          <>
-            <Text style={styles.quizQ}>{question!.question}</Text>
-            <View style={styles.optionWrap}>
-              {question!.options.map((option) => {
-                const selected = answer === option;
-                const correct = answer != null && option === question!.answer;
-                return (
-                  <Pressable
-                    key={option}
-                    disabled={answer != null}
-                    onPress={() => {
-                      setAnswer(option);
-                      if (option === question!.answer) setScore((s) => s + 1);
-                    }}
-                    style={[
-                      styles.option,
-                      {
-                        backgroundColor: correct
-                          ? AppColors.green
-                          : selected
-                            ? AppColors.error
-                            : AppColors.white,
-                      },
-                    ]}
-                  >
-                    <Text
-                      style={{
-                        color: selected || correct ? '#fff' : AppColors.navy,
-                        fontFamily: 'Poppins_600SemiBold',
-                      }}
-                    >
-                      {option}
-                    </Text>
-                  </Pressable>
-                );
-              })}
-            </View>
-            {answer ? (
-              <View style={styles.explainRow}>
-                <Text style={styles.explain}>
-                  {answer === question!.answer ? 'Correct! ' : 'Nice try! '}
-                  {question!.explanation}
-                </Text>
-                <Pressable onPress={() => { setQuestionIndex((i) => i + 1); setAnswer(null); }}>
-                  <Ionicons name="arrow-forward-circle" size={28} color={AppColors.orange} />
-                </Pressable>
-              </View>
-            ) : null}
-          </>
-        )}
-      </View>
-
-      <Text style={[styles.sectionTitle, { marginTop: 8 }]}>Choose an adventure</Text>
-      <View style={styles.grid}>
-        {ACTIVITIES.map((activity) => (
-          <Pressable
-            key={activity.title}
-            onPress={() => router.push(activity.route as never)}
-            style={[styles.activity, { backgroundColor: activity.bg, width: cardWidth }]}
-          >
-            <View style={styles.activityTop}>
-              <View style={styles.activityIcon}>
-                <Ionicons name={activity.icon} size={26} color={activity.color} />
-              </View>
-              <Text style={[styles.badge, { color: activity.color }]}>{activity.badge}</Text>
-            </View>
-            <Text style={styles.activityTitle}>{activity.title}</Text>
-            <Text style={styles.activitySub}>{activity.subtitle}</Text>
-            <Text style={[styles.letsGo, { color: activity.color }]}>Let’s go →</Text>
-          </Pressable>
-        ))}
-      </View>
-    </ScrollView>
+      {/* Avatar Customization Modal */}
+      <AvatarCustomizerModal
+        visible={customizerVisible}
+        onClose={() => setCustomizerVisible(false)}
+        stars={stars}
+        items={MOCK_AVATAR_ITEMS}
+        equippedConfig={equippedConfig}
+        onEquipItem={handleEquipItem}
+      />
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: AppColors.dashboardBg },
-  content: { padding: 18, paddingBottom: 40 },
-  appBar: {
+  container: {
+    flex: 1,
+    backgroundColor: '#F9FAFB',
+  },
+  topStatusBar: {
     flexDirection: 'row',
+    alignItems: 'center',
     justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 12,
+    backgroundColor: '#FFFFFF',
+    paddingHorizontal: 16,
+    paddingTop: 48,
+    paddingBottom: 12,
+    borderBottomWidth: 2,
+    borderBottomColor: '#E5E7EB',
+    elevation: 3,
   },
-  brandRow: { flexDirection: 'row', alignItems: 'center', gap: 10 },
-  brandMark: {
-    width: 38,
-    height: 38,
-    borderRadius: 13,
-    backgroundColor: AppColors.purple,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  brand: { fontFamily: 'Poppins_700Bold', fontSize: 18 },
-  parentsBtn: {
+  statChip: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 6,
+    backgroundColor: '#F3F4F6',
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+    borderRadius: 14,
+  },
+  statValue: {
+    fontFamily: 'Poppins_700Bold',
+    fontSize: 14,
+    color: '#1F2937',
+  },
+  gradeToggleBtn: {
     backgroundColor: AppColors.softPurple,
     paddingHorizontal: 12,
-    paddingVertical: 8,
-    borderRadius: 16,
-  },
-  parentsText: { fontFamily: 'Poppins_600SemiBold' },
-  hero: {
-    backgroundColor: '#6758E8',
-    borderRadius: 30,
-    padding: 22,
-    flexDirection: 'row',
-    gap: 14,
-    marginBottom: 16,
-  },
-  avatarRing: {
-    width: 82,
-    height: 82,
-    borderRadius: 41,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-    overflow: 'hidden',
-  },
-  avatar: { width: 72, height: 72, borderRadius: 36 },
-  heroTitle: { color: '#fff', fontFamily: 'Poppins_800ExtraBold', fontSize: 22 },
-  heroSub: { color: '#fff', marginTop: 4, fontFamily: 'Poppins_400Regular' },
-  pillRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginTop: 12 },
-  pill: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 4,
-    backgroundColor: 'rgba(255,255,255,0.18)',
-    borderRadius: 20,
-    paddingHorizontal: 10,
     paddingVertical: 6,
-  },
-  pillText: { color: '#fff', fontFamily: 'Poppins_700Bold', fontSize: 12 },
-  continueBtn: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 4,
-    backgroundColor: '#fff',
-    borderRadius: 16,
-    paddingHorizontal: 10,
-    paddingVertical: 6,
-  },
-  continueText: { fontFamily: 'Poppins_700Bold', color: AppColors.navy, fontSize: 12 },
-  focusCard: { borderRadius: 24, padding: 16, marginBottom: 16 },
-  focusTitle: { fontFamily: 'Poppins_800ExtraBold', color: AppColors.navy },
-  focusSub: { fontFamily: 'Poppins_600SemiBold', marginTop: 4 },
-  missionCard: {
-    backgroundColor: '#fff',
-    borderRadius: 24,
-    padding: 16,
-    marginBottom: 22,
+    borderRadius: 14,
     borderWidth: 1,
-    borderColor: '#E8EDF5',
+    borderColor: AppColors.purple,
   },
-  sectionTitle: { fontFamily: 'Poppins_800ExtraBold', fontSize: 18 },
-  missionProgress: { color: AppColors.purple, fontFamily: 'Poppins_800ExtraBold', marginBottom: 8 },
-  missionRow: {
+  gradeToggleText: {
+    fontFamily: 'Poppins_600SemiBold',
+    fontSize: 12,
+    color: AppColors.purple,
+  },
+  parentsIconBtn: {
+    padding: 8,
+    backgroundColor: '#F3F4F6',
+    borderRadius: 14,
+  },
+  heroCard: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 10,
-    paddingVertical: 10,
+    backgroundColor: '#FFFFFF',
+    marginHorizontal: 16,
+    marginTop: 12,
+    marginBottom: 8,
+    borderRadius: 20,
+    padding: 16,
+    borderWidth: 2,
+    borderColor: '#E5E7EB',
+    elevation: 2,
   },
-  missionLabel: { flex: 1, fontFamily: 'Poppins_700Bold' },
-  missionDone: { textDecorationLine: 'line-through', color: AppColors.gray500 },
-  langChip: {
-    borderWidth: 1.5,
-    borderRadius: 18,
-    paddingHorizontal: 14,
-    paddingVertical: 10,
-    marginRight: 10,
+  avatarWrap: {
+    position: 'relative',
+    marginRight: 14,
   },
-  langText: { fontFamily: 'Poppins_600SemiBold' },
-  quizCard: {
-    backgroundColor: AppColors.softOrange,
-    borderRadius: 24,
-    padding: 18,
-    marginBottom: 22,
+  avatarImage: {
+    width: 60,
+    height: 60,
+    borderRadius: 30,
   },
-  quizHeader: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 10 },
-  score: { fontFamily: 'Poppins_800ExtraBold' },
-  quizQ: { fontFamily: 'Poppins_700Bold', marginBottom: 12 },
-  optionWrap: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
-  option: { borderRadius: 16, paddingHorizontal: 14, paddingVertical: 10 },
-  explainRow: { flexDirection: 'row', alignItems: 'center', gap: 8, marginTop: 12 },
-  explain: { flex: 1, fontFamily: 'Poppins_700Bold', color: AppColors.navy },
-  quizResult: { fontFamily: 'Poppins_800ExtraBold', fontSize: 20, marginVertical: 8 },
-  link: { color: AppColors.blue, fontFamily: 'Poppins_700Bold' },
-  grid: { flexDirection: 'row', flexWrap: 'wrap', gap: 14, marginTop: 12 },
-  activity: { borderRadius: 26, padding: 16, minHeight: 160 },
-  activityTop: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 18 },
-  activityIcon: {
-    width: 54,
-    height: 54,
-    borderRadius: 18,
-    backgroundColor: '#fff',
+  hatBadge: {
+    position: 'absolute',
+    top: -4,
+    right: -4,
+    backgroundColor: '#EF4444',
+    borderRadius: 12,
+    padding: 3,
+  },
+  heroTextCol: {
+    flex: 1,
+  },
+  welcomeTitle: {
+    fontFamily: 'Poppins_700Bold',
+    fontSize: 16,
+    color: '#1F2937',
+  },
+  welcomeSub: {
+    fontFamily: 'Poppins_400Regular',
+    fontSize: 12,
+    color: '#6B7280',
+    marginTop: 2,
+  },
+  heroActionsRow: {
+    flexDirection: 'row',
+    gap: 8,
+    marginTop: 10,
+  },
+  dressingRoomBtn: {
+    flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: AppColors.purple,
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 12,
+    gap: 6,
   },
-  badge: { fontFamily: 'Poppins_800ExtraBold', fontSize: 11 },
-  activityTitle: { fontFamily: 'Poppins_800ExtraBold', fontSize: 16 },
-  activitySub: { fontFamily: 'Poppins_400Regular', color: AppColors.gray500, fontSize: 12, marginTop: 4 },
-  letsGo: { marginTop: 10, fontFamily: 'Poppins_800ExtraBold', fontSize: 12 },
+  dressingRoomText: {
+    fontFamily: 'Poppins_600SemiBold',
+    fontSize: 11,
+    color: '#FFFFFF',
+  },
+  aiTalkBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: AppColors.green,
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 12,
+    gap: 6,
+  },
+  aiTalkText: {
+    fontFamily: 'Poppins_600SemiBold',
+    fontSize: 11,
+    color: '#FFFFFF',
+  },
+  mainContent: {
+    flex: 1,
+  },
 });

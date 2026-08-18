@@ -1,3 +1,3 @@
 export const ApiConfig = {
-  baseUrl: 'https://yene-backend.onrender.com/api',
+  baseUrl: process.env.EXPO_PUBLIC_API_URL || 'http://localhost:3001/api',
 };
