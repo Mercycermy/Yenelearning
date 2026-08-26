@@ -10,6 +10,9 @@ import { ContentModule } from './content/content.module';
 import { ProgressModule } from './progress/progress.module';
 import { AiModule } from './ai/ai.module';
 import { UploadsModule } from './uploads/uploads.module';
+import { SchoolsModule } from './schools/schools.module';
+import { MessagingModule } from './messaging/messaging.module';
+import { PaymentsModule } from './payments/payments.module';
 
 // Entities
 import { User } from './entities/user.entity';
@@ -19,6 +22,10 @@ import { Progress } from './entities/progress.entity';
 import { Avatar } from './entities/avatar.entity';
 import { Story } from './entities/story.entity';
 import { Language } from './entities/language.entity';
+import { School } from './entities/school.entity';
+import { Message } from './entities/message.entity';
+import { GameResult } from './entities/game-result.entity';
+import { Payment } from './entities/payment.entity';
 import { SettingsModule } from './settings/settings.module';
 
 @Module({
@@ -40,7 +47,7 @@ import { SettingsModule } from './settings/settings.module';
             username: configService.get<string>('DATABASE_USERNAME', 'postgres'),
             password: configService.get<string>('DATABASE_PASSWORD', 'postgres'),
             database: configService.get<string>('DATABASE_NAME', 'yene_teacher'),
-            entities: [User, Child, Content, Progress, Avatar, Story, Language],
+            entities: [User, Child, Content, Progress, Avatar, Story, Language, School, Message, GameResult, Payment],
             synchronize: true, // Auto-create tables in Neon Postgres
             logging: configService.get<string>('NODE_ENV') === 'development',
             ssl: true,
@@ -56,7 +63,7 @@ import { SettingsModule } from './settings/settings.module';
         return {
           type: 'better-sqlite3' as const,
           database: 'yene_teacher.db',
-          entities: [User, Child, Content, Progress, Avatar, Story, Language],
+          entities: [User, Child, Content, Progress, Avatar, Story, Language, School, Message, GameResult, Payment],
           synchronize: true,
           logging: configService.get<string>('NODE_ENV') === 'development',
         };
@@ -71,6 +78,9 @@ import { SettingsModule } from './settings/settings.module';
     AiModule,
     SettingsModule,
     UploadsModule,
+    SchoolsModule,
+    MessagingModule,
+    PaymentsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

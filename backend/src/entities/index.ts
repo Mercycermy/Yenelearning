@@ -4,3 +4,8 @@ export * from './content.entity';
 export * from './progress.entity';
 export * from './avatar.entity';
 export * from './story.entity';
+export * from './language.entity';
+export * from './school.entity';
+export * from './message.entity';
+export * from './game-result.entity';
+export * from './payment.entity';

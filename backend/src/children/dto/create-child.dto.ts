@@ -1,5 +1,5 @@
 import { IsString, IsInt, IsOptional, IsEnum, Min, Max, IsArray } from 'class-validator';
-import { SupportedLanguage } from '../../entities/child.entity';
+import { SupportedLanguage, GradeLevel } from '../../entities/child.entity';
 
 export class CreateChildDto {
     @IsString()
@@ -9,6 +9,14 @@ export class CreateChildDto {
     @Min(4)
     @Max(12)
     age: number;
+
+    @IsOptional()
+    @IsEnum(GradeLevel)
+    grade?: GradeLevel;
+
+    @IsOptional()
+    @IsString()
+    schoolId?: string;
 
     @IsOptional()
     @IsString()

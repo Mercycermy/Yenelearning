@@ -5,9 +5,10 @@ import { ProgressController } from './progress.controller';
 import { Progress } from '../entities/progress.entity';
 import { Child } from '../entities/child.entity';
 import { Content } from '../entities/content.entity';
+import { GameResult } from '../entities/game-result.entity';
 
 @Module({
-    imports: [TypeOrmModule.forFeature([Progress, Child, Content])],
+    imports: [TypeOrmModule.forFeature([Progress, Child, Content, GameResult])],
     controllers: [ProgressController],
     providers: [ProgressService],
     exports: [ProgressService],

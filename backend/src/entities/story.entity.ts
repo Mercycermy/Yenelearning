@@ -5,7 +5,7 @@ import {
     CreateDateColumn,
     UpdateDateColumn,
 } from 'typeorm';
-import { SupportedLanguage } from './child.entity';
+import { SupportedLanguage, GradeLevel } from './child.entity';
 import { DifficultyLevel } from './content.entity';
 
 @Entity('stories')
@@ -49,6 +49,19 @@ export class Story {
 
     @Column({ type: 'int', default: 0 })
     estimatedMinutes: number;
+
+    @Column({
+        type: 'varchar',
+        enum: GradeLevel,
+        nullable: true,
+    })
+    gradeLevel: GradeLevel;
+
+    @Column({ type: 'int', default: 0 })
+    chapterNumber: number;
+
+    @Column({ nullable: true })
+    unlockDate: Date;
 
     @Column({ default: true })
     isActive: boolean;

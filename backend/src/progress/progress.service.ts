@@ -3,8 +3,10 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, Between, MoreThanOrEqual } from 'typeorm';
 import { Progress, ProgressStatus } from '../entities/progress.entity';
 import { Child } from '../entities/child.entity';
+import { GameResult } from '../entities/game-result.entity';
 import { RecordProgressDto } from './dto/record-progress.dto';
 import { ContentType } from '../entities/content.entity';
+
 
 @Injectable()
 export class ProgressService {
@@ -13,6 +15,8 @@ export class ProgressService {
         private readonly progressRepository: Repository<Progress>,
         @InjectRepository(Child)
         private readonly childRepository: Repository<Child>,
+        @InjectRepository(GameResult)
+        private readonly gameResultRepository: Repository<GameResult>,
     ) { }
 
     async recordProgress(childId: string, dto: RecordProgressDto): Promise<Progress> {
@@ -313,5 +317,142 @@ export class ProgressService {
                 occurredAt: p.lastAttemptAt || p.completedAt || null,
             })),
         };
+    }
+
+    async getWeeklySummary(childId: string): Promise<{
+        wordsLearned: number;
+        wordsLearnedLastWeek: number;
+        accuracy: number;
+        accuracyLastWeek: number;
+        timeSpentMinutes: number;
+        timeSpentMinutesLastWeek: number;
+        totalStars: number;
+        streakDays: number;
+    }> {
+        const now = new Date();
+        const weekStart = new Date(now);
+        weekStart.setDate(now.getDate() - 7);
+        const prevWeekStart = new Date(now);
+        prevWeekStart.setDate(now.getDate() - 14);
+
+        const child = await this.childRepository.findOne({ where: { id: childId } });
+        if (!child) throw new NotFoundException('Child not found');
+
+        const completedStatuses = [ProgressStatus.COMPLETED, ProgressStatus.MASTERED];
+
+        // Words learned this week
+        const wordsLearned = await this.progressRepository
+            .createQueryBuilder('p')
+            .innerJoin('p.content', 'c')
+            .where('p.childId = :childId', { childId })
+            .andWhere('c.type = :type', { type: ContentType.WORD })
+            .andWhere('p.status IN (:...statuses)', { statuses: completedStatuses })
+            .andWhere('p.completedAt >= :weekStart', { weekStart })
+            .getCount();
+
+        const wordsLearnedLastWeek = await this.progressRepository
+            .createQueryBuilder('p')
+            .innerJoin('p.content', 'c')
+            .where('p.childId = :childId', { childId })
+            .andWhere('c.type = :type', { type: ContentType.WORD })
+            .andWhere('p.status IN (:...statuses)', { statuses: completedStatuses })
+            .andWhere('p.completedAt BETWEEN :prevWeekStart AND :weekStart', { prevWeekStart, weekStart })
+            .getCount();
+
+        // Accuracy
+        const allAttempts = await this.progressRepository.find({
+            where: { childId },
+        });
+        const withScores = allAttempts.filter((p) => p.pronunciationScore > 0);
+        const accuracy = withScores.length > 0
+            ? Math.round(withScores.reduce((sum, p) => sum + Number(p.pronunciationScore), 0) / withScores.length)
+            : 0;
+
+        const prevWeekAttempts = allAttempts.filter(
+            (p) => p.lastAttemptAt && p.lastAttemptAt >= prevWeekStart && p.lastAttemptAt < weekStart,
+        );
+        const prevWithScores = prevWeekAttempts.filter((p) => p.pronunciationScore > 0);
+        const accuracyLastWeek = prevWithScores.length > 0
+            ? Math.round(prevWithScores.reduce((sum, p) => sum + Number(p.pronunciationScore), 0) / prevWithScores.length)
+            : 0;
+
+        // Time spent
+        const thisWeekProgress = allAttempts.filter(
+            (p) => p.lastAttemptAt && p.lastAttemptAt >= weekStart,
+        );
+        const timeSpentMinutes = Math.round(
+            thisWeekProgress.reduce((sum, p) => sum + p.timeSpentSeconds, 0) / 60,
+        );
+        const timeSpentMinutesLastWeek = Math.round(
+            prevWeekAttempts.reduce((sum, p) => sum + p.timeSpentSeconds, 0) / 60,
+        );
+
+        // Streak: count consecutive days with activity
+        let streakDays = 0;
+        const today = new Date();
+        for (let d = 0; d < 30; d++) {
+            const dayStart = new Date(today);
+            dayStart.setDate(today.getDate() - d);
+            dayStart.setHours(0, 0, 0, 0);
+            const dayEnd = new Date(dayStart);
+            dayEnd.setDate(dayStart.getDate() + 1);
+            const hasActivity = allAttempts.some(
+                (p) => p.lastAttemptAt && p.lastAttemptAt >= dayStart && p.lastAttemptAt < dayEnd,
+            );
+            if (hasActivity) {
+                streakDays++;
+            } else if (d > 0) {
+                break;
+            }
+        }
+
+        return {
+            wordsLearned,
+            wordsLearnedLastWeek,
+            accuracy,
+            accuracyLastWeek,
+            timeSpentMinutes,
+            timeSpentMinutesLastWeek,
+            totalStars: child.totalStars,
+            streakDays,
+        };
+    }
+
+    async recordGameResult(childId: string, data: {
+        gameType: string;
+        score: number;
+        maxScore: number;
+        timeSpentSeconds: number;
+        starsEarned: number;
+    }): Promise<GameResult> {
+        const child = await this.childRepository.findOne({ where: { id: childId } });
+        if (!child) throw new NotFoundException('Child not found');
+
+        const result = this.gameResultRepository.create({
+            childId,
+            gameType: data.gameType as any,
+            score: data.score,
+            maxScore: data.maxScore,
+            timeSpentSeconds: data.timeSpentSeconds,
+            starsEarned: data.starsEarned,
+        });
+
+        await this.gameResultRepository.save(result);
+
+        // Update child stars
+        if (data.starsEarned > 0) {
+            child.totalStars += data.starsEarned;
+            await this.childRepository.save(child);
+        }
+
+        return result;
+    }
+
+    async getGameResults(childId: string): Promise<GameResult[]> {
+        return this.gameResultRepository.find({
+            where: { childId },
+            order: { completedAt: 'DESC' },
+            take: 50,
+        });
     }
 }

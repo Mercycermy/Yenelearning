@@ -33,6 +33,7 @@ mobile_app/test_lock.dart
 *.db
 *.sqlite
 backend/yene_teacher.db
+appimplmentation.md
 
 # Documentation Internal (Excluded by request)
 NEXT_MOVE_RUN_GUIDE.md

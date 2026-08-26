@@ -5,7 +5,7 @@ import {
     CreateDateColumn,
     UpdateDateColumn,
 } from 'typeorm';
-import { SupportedLanguage } from './child.entity';
+import { SupportedLanguage, GradeLevel } from './child.entity';
 
 export enum ContentType {
     WORD = 'word',
@@ -68,6 +68,16 @@ export class Content {
 
     @Column({ type: 'simple-array', default: '' })
     tags: string[];
+
+    @Column({
+        type: 'varchar',
+        enum: GradeLevel,
+        nullable: true,
+    })
+    gradeLevel: GradeLevel;
+
+    @Column({ nullable: true })
+    unlockDate: Date;
 
     @Column({ default: true })
     isActive: boolean;

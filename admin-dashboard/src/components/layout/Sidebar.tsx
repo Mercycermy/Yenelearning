@@ -11,7 +11,8 @@ import {
     Settings,
     LogOut,
     Library,
-    Lightbulb
+    Lightbulb,
+    Building2,
 } from "lucide-react";
 
 export function Sidebar() {
@@ -19,6 +20,7 @@ export function Sidebar() {
 
     const menuItems = [
         { name: "Dashboard", href: "/", icon: LayoutDashboard },
+        { name: "Schools & B2B", href: "/schools", icon: Building2 },
         { name: "Words", href: "/content/words", icon: Library },
         { name: "Stories", href: "/content/stories", icon: BookOpen },
         { name: "Games", href: "/content/games", icon: Gamepad2 },
