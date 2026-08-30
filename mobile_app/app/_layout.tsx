@@ -11,6 +11,7 @@ import {
 } from '@expo-google-fonts/poppins';
 import * as SplashScreen from 'expo-splash-screen';
 import { AppColors } from '../src/constants/colors';
+import { configureAppAudio } from '../src/utils/audioUrl';
 
 if (Platform.OS !== 'web') {
   SplashScreen.preventAutoHideAsync().catch(() => undefined);
@@ -25,6 +26,7 @@ export default function RootLayout() {
   });
 
   useEffect(() => {
+    configureAppAudio();
     if (loaded && Platform.OS !== 'web') {
       SplashScreen.hideAsync().catch(() => undefined);
     }

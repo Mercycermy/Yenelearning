@@ -107,13 +107,19 @@ export default function DashboardScreen() {
     equippedOutfit?: string;
   }>({ equippedHat: 'headset' });
 
+  const [selectedTutorId, setSelectedTutorId] = useState<string>('tutor-abebe');
+
   const loadProfile = useCallback(async () => {
-    const [image, name] = await Promise.all([
+    const [image, name, tutorId] = await Promise.all([
       userPrefs.getAvatarImage(),
       userPrefs.getAvatarName(),
+      userPrefs.getAvatarId(),
     ]);
     setAvatarImageUrl(image);
     setAvatarName(name);
+    if (tutorId) {
+      setSelectedTutorId(tutorId);
+    }
 
     try {
       const data = await apiClient.getJson('/student/roadmap/demo-child-id');
@@ -300,6 +306,7 @@ export default function DashboardScreen() {
         lessonTitle={selectedNode ? selectedNode.titleAmharic : 'Lesson Session'}
         tasks={[]}
         hearts={hearts}
+        selectedTutorId={selectedTutorId}
         onClose={() => setSessionEngineVisible(false)}
         onFinishLesson={handleFinishLessonSession}
       />
