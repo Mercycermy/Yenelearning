@@ -1,0 +1,66 @@
+[
+  {
+    "id": 1,
+    "row_idx": 0,
+    "filename": "human_speaker_1.wav",
+    "url": "http://localhost:3001/audio/human_dataset/human_speaker_1.wav",
+    "transcript": "በዓሉን የምናሳልፈው ያለን ለሌላቸውና ለተቸገሩ ወገኖች በማካፈል ተደስተው እንዲውሉ በማድረግ ነው ያሉት ደግሞ የበዓሉ ታዳሚ አቶ ሱሌማን ኢብራሂም ናቸው።",
+    "bytes": 383010
+  },
+  {
+    "id": 2,
+    "row_idx": 1,
+    "filename": "human_speaker_2.wav",
+    "url": "http://localhost:3001/audio/human_dataset/human_speaker_2.wav",
+    "transcript": "በተመሳሳይ የአብጸጋ ታምራት የክረምት ትምህርት ለቀጣይ አመት መደበኛ ትምህርት ስንቅ ስለሆን ተማሪዎች በክረምት ትምህርት ቤት በመምጣት እውቀት መገብየት እንደሚገባቸው ተናግሯል።",
+    "bytes": 456578
+  },
+  {
+    "id": 3,
+    "row_idx": 2,
+    "filename": "human_speaker_3.wav",
+    "url": "http://localhost:3001/audio/human_dataset/human_speaker_3.wav",
+    "transcript": "ተማሪ እሱባለው ሙሉጌታ  በጎ ፈቃደኛ መምህራን ትውልድን በእውቀት ለማነጽ የሚያደርጉትን ተግባር ሲመለከት እሱም በተለያዩ የበጎ ፈቃድ ስራ ላይ የአቅሙን ለማበርከት ያለውን ፍላጎት እንዳጎለበቱለት ገልጿል።",
+    "bytes": 505511
+  },
+  {
+    "id": 4,
+    "row_idx": 3,
+    "filename": "human_speaker_4.wav",
+    "url": "http://localhost:3001/audio/human_dataset/human_speaker_4.wav",
+    "transcript": "በቀጣይ ለመደበኛው የትምህርት ዘመን የክረምት ማጠናከሪያ ትምህርቱ እንደሚያግዘው የገለጸው ደግሞ በኒውኤራ የመጀመሪያና መካከለኛ ደረጃ ትምህርት ቤት የስምንተኛ ክፍልን ማጠናከሪያ ትምህርት ሲወስድ ያገኘነው እሱባለው ሙሉጌታ ነው።",
+    "bytes": 574356
+  },
+  {
+    "id": 5,
+    "row_idx": 4,
+    "filename": "human_speaker_5.wav",
+    "url": "http://localhost:3001/audio/human_dataset/human_speaker_5.wav",
+    "transcript": "ከልደታ ወደ ሜክሲኮ አደባባይ ባልቻ ሆስፒታል መታጠፊያ ላይ",
+    "bytes": 149152
+  },
+  {
+    "id": 6,
+    "row_idx": 5,
+    "filename": "human_speaker_6.wav",
+    "url": "http://localhost:3001/audio/human_dataset/human_speaker_6.wav",
+    "transcript": "ይህም በእውቀትና ስነ-ምግባር የታነጸ ትውልድ ለመገንባት ወሳኝ በመሆኑ በትምህርት ዘርፍ የሚያደርጉትን ድጋፍ እንደሚያጠናክሩም ገልጿል።",
+    "bytes": 308282
+  },
+  {
+    "id": 7,
+    "row_idx": 100,
+    "filename": "human_speaker_7.wav",
+    "url": "http://localhost:3001/audio/human_dataset/human_speaker_7.wav",
+    "transcript": "የሩስያ ጉዙፉ የሃይል አቅራቢ ሮዝኒፍት በአርክቲክ ውቅያኖስ አካባቢ ከፍተኛ የነዳጅ ክምችት መገኘቱን አስታውቋል።",
+    "bytes": 279997
+  },
+  {
+    "id": 8,
+    "row_idx": 200,
+    "filename": "human_speaker_8.wav",
+    "url": "http://localhost:3001/audio/human_dataset/human_speaker_8.wav",
+    "transcript": "የፖለቲካ ፓርቲዎች የጋራ ምክር ቤት በተለያዩ ጊዜያት በተከናወኑ የአረንጓዴ አሻራ መርሀግብሮች ተሳትፎ በማድረግ የበኩሉን ሲወጣ መቆየቱን ጠቁመው፣ በቀጣይም በዚህና መሰል ሀገራዊ ጉዳዮች ላይ ተሳትፎውን ያጠናክራል ብለዋል።",
+    "bytes": 542662
+  }
+]
