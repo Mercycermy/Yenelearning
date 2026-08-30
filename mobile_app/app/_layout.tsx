@@ -67,7 +67,12 @@ export default function RootLayout() {
         <Stack.Screen name="parent-dashboard" options={{ headerShown: false }} />
         <Stack.Screen name="stories" options={{ title: 'Stories' }} />
         <Stack.Screen name="story-reader" options={{ title: 'Story' }} />
-        <Stack.Screen name="games" options={{ title: 'Games' }} />
+        <Stack.Screen name="games" options={{ title: 'Mini-Games Arcade' }} />
+        <Stack.Screen name="game/shape-match" options={{ title: 'Shape Match', headerShown: false }} />
+        <Stack.Screen name="game/word-spell" options={{ title: 'Word Spell', headerShown: false }} />
+        <Stack.Screen name="game/counting" options={{ title: 'Count & Math', headerShown: false }} />
+        <Stack.Screen name="game/logic-puzzle" options={{ title: 'Logic Quest', headerShown: false }} />
+        <Stack.Screen name="teacher-dashboard" options={{ headerShown: false }} />
         <Stack.Screen name="knowledge" options={{ title: 'Knowledge' }} />
         <Stack.Screen name="knowledge/[id]" options={{ title: 'Knowledge Details' }} />
       </Stack>

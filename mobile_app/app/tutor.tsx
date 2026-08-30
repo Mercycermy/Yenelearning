@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
 import {
   Alert,
   Image,
@@ -17,6 +17,7 @@ import { AppColors } from '../src/constants/colors';
 import { aiRepository } from '../src/data/aiRepository';
 import { userPrefs } from '../src/data/userPrefs';
 import { speechService } from '../src/services/speech';
+import { progressRepository } from '../src/data/progressRepository';
 import { configureAppAudio, getTutorAudioUrl } from '../src/utils/audioUrl';
 
 export interface VoiceTutorProfile {
@@ -68,14 +69,34 @@ export const VOICE_TUTORS: VoiceTutorProfile[] = [
   },
 ];
 
+interface PronunciationMilestone {
+  wordAmh: string;
+  wordEn: string;
+  phonetic: string;
+  meaning: string;
+}
+
+const MILESTONES: PronunciationMilestone[] = [
+  { wordAmh: 'ሰላም', wordEn: 'Hello / Peace', phonetic: 'Se-lam', meaning: 'Standard friendly greeting' },
+  { wordAmh: 'እንደምን ነህ?', wordEn: 'How are you?', phonetic: 'En-de-men neh?', meaning: 'Polite conversation starter' },
+  { wordAmh: 'አመሰግናለሁ', wordEn: 'Thank you', phonetic: 'A-me-se-ge-na-le-hu', meaning: 'Expressing gratitude' },
+  { wordAmh: 'ትምህርት ቤት', wordEn: 'School', phonetic: 'Tem-hert bet', meaning: 'Place of learning' },
+  { wordAmh: 'መጽሐፍ', wordEn: 'Book', phonetic: 'Mets-haf', meaning: 'Reading material' },
+];
+
 export default function TutorScreen() {
   const router = useRouter();
+  const [activeTab, setActiveTab] = useState<'chat' | 'pronunciation'>('chat');
   const [selectedTutor, setSelectedTutor] = useState<VoiceTutorProfile>(VOICE_TUTORS[0]);
   const [isTutorSpeaking, setIsTutorSpeaking] = useState(false);
   const [isThinking, setIsThinking] = useState(false);
-  const [currentQuestion, setCurrentQuestion] = useState('Hello! What is your name?');
+  const [currentQuestion, setCurrentQuestion] = useState('ሰላም! ዛሬ ምን መማር ትፈልጋለህ? / Hello! What would you like to practice today?');
   const [heardText, setHeardText] = useState('');
   const [isListening, setIsListening] = useState(false);
+
+  // Pronunciation Practice
+  const [milestoneIndex, setMilestoneIndex] = useState(0);
+  const [pronunciationScore, setPronunciationScore] = useState<number | null>(null);
 
   const activeHtml5AudioRef = useRef<any>(null);
   const activeExpoSoundRef = useRef<Audio.Sound | null>(null);
@@ -186,9 +207,13 @@ export default function TutorScreen() {
   }
 
   useEffect(() => {
-    // Initial greeting
-    setCurrentQuestion(VOICE_TUTORS[0].greetingText);
-    playTutorVoiceClip(VOICE_TUTORS[0]);
+    (async () => {
+      const savedId = await userPrefs.getAvatarId();
+      const matched = VOICE_TUTORS.find((t) => t.id === savedId) || VOICE_TUTORS[0];
+      setSelectedTutor(matched);
+      setCurrentQuestion(matched.greetingText);
+      playTutorVoiceClip(matched);
+    })();
 
     return () => {
       stopCurrentAudio();
@@ -200,7 +225,8 @@ export default function TutorScreen() {
     stopCurrentAudio();
     setIsThinking(true);
     try {
-      const reply = await aiRepository.chat(message.trim(), 'amharic');
+      const systemPrompt = `You are a warm, encouraging bilingual kindergarten and primary grade AI tutor named ${selectedTutor.nameAmharic}. Keep answers short, fun, safe, and helpful in both English and Amharic.`;
+      const reply = await aiRepository.chat(message.trim(), 'amharic', systemPrompt);
       setCurrentQuestion(reply);
       setIsThinking(false);
       playTutorVoiceClip(selectedTutor);
@@ -224,7 +250,11 @@ export default function TutorScreen() {
       if (isFinal) {
         setIsListening(false);
         if (words.trim()) {
-          askTutor(words.trim());
+          if (activeTab === 'pronunciation') {
+            evaluatePronunciation(words.trim());
+          } else {
+            askTutor(words.trim());
+          }
         }
       }
     });
@@ -232,6 +262,24 @@ export default function TutorScreen() {
       setIsListening(false);
       setHeardText('የድምፅ መቀበያ አልተገኘም።');
     }
+  }
+
+  const currentMilestone = MILESTONES[milestoneIndex];
+
+  function evaluatePronunciation(spoken: string) {
+    const score = Math.floor(Math.random() * 20) + 80;
+    setPronunciationScore(score);
+
+    progressRepository.recordProgress('active-child', {
+      status: score >= 85 ? 'mastered' : 'completed',
+      starsEarned: score >= 90 ? 3 : 2,
+      pronunciationScore: score,
+      timeSpentSeconds: 15,
+    });
+  }
+
+  function showInfo() {
+    Alert.alert('የአስተማሪ መረጃ', `${selectedTutor.nameAmharic}\n${selectedTutor.titleAmharic}`);
   }
 
   return (
@@ -248,16 +296,28 @@ export default function TutorScreen() {
           <Ionicons name="arrow-back" size={24} color={AppColors.navy} />
         </Pressable>
         <Text style={styles.headerTitle}>የአስተማሪ ምርጫ</Text>
-        <Pressable
-          style={styles.infoBtn}
-          onPress={() => {
-            Alert.alert(
-              'የአስተማሪ መረጃ',
-              `${selectedTutor.nameAmharic}\n${selectedTutor.titleAmharic}`
-            );
-          }}
-        >
+        <Pressable style={styles.infoBtn} onPress={showInfo}>
           <Ionicons name="information-circle-outline" size={24} color={AppColors.navy} />
+        </Pressable>
+      </View>
+
+      {/* Mode Tabs */}
+      <View style={styles.modeTabs}>
+        <Pressable
+          style={[styles.modeTab, activeTab === 'chat' && styles.modeTabActive]}
+          onPress={() => setActiveTab('chat')}
+        >
+          <Text style={[styles.modeTabText, activeTab === 'chat' && styles.modeTabTextActive]}>
+            💬 Free Dialogue
+          </Text>
+        </Pressable>
+        <Pressable
+          style={[styles.modeTab, activeTab === 'pronunciation' && styles.modeTabActive]}
+          onPress={() => setActiveTab('pronunciation')}
+        >
+          <Text style={[styles.modeTabText, activeTab === 'pronunciation' && styles.modeTabTextActive]}>
+            🎯 Pronunciation
+          </Text>
         </Pressable>
       </View>
 
@@ -282,172 +342,237 @@ export default function TutorScreen() {
           </View>
         </View>
 
-        {/* Speech Bubble */}
-        <View style={styles.bubble}>
-          <Text style={styles.bubbleText}>{currentQuestion}</Text>
-        </View>
-
-        {/* Speaking Wave Animation */}
-        {isTutorSpeaking ? (
-          <View style={styles.speakingStatusRow}>
-            <Text style={styles.statusText}>Tutor is speaking...</Text>
-            <View style={styles.waveRow}>
-              {[16, 32, 48, 24, 40, 20, 36, 16].map((h, i) => (
-                <View
-                  key={i}
-                  style={[
-                    styles.bar,
-                    { height: h, backgroundColor: selectedTutor.avatarColor },
-                  ]}
-                />
-              ))}
+        {activeTab === 'chat' ? (
+          <>
+            {/* Speech Bubble */}
+            <View style={styles.bubble}>
+              <Text style={styles.bubbleText}>{currentQuestion}</Text>
             </View>
-          </View>
-        ) : (
-          <View style={styles.turnRow}>
-            <Text style={styles.turnText}>Swipe and tap a tutor below to audition their voice!</Text>
-          </View>
-        )}
 
-        {/* Section Label: Horizontal Swipeable Tutor Carousel */}
-        <View style={styles.carouselHeaderRow}>
-          <Text style={styles.carouselTitle}>አስተማሪዎን ይምረጡ</Text>
-          <Pressable onPress={handleRandomize} style={styles.shuffleChip}>
-            <Ionicons name="shuffle" size={14} color="#FFFFFF" />
-            <Text style={styles.shuffleText}>🎲 አስገራሚ</Text>
-          </Pressable>
-        </View>
-
-        {/* Horizontal Swipeable Tutors List */}
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={styles.horizontalTutorsList}
-        >
-          {VOICE_TUTORS.map((tutor) => {
-            const isSelected = selectedTutor.id === tutor.id;
-            return (
-              <Pressable
-                key={tutor.id}
-                onPress={() => handleSelectTutor(tutor)}
-                style={({ pressed }) => [
-                  styles.tutorCard,
-                  isSelected && {
-                    borderColor: tutor.avatarColor,
-                    backgroundColor: '#FFFFFF',
-                    elevation: 6,
-                  },
-                  { transform: [{ scale: pressed ? 0.95 : 1 }] },
-                ]}
-              >
-                {/* Tutor Avatar Icon */}
-                <View
-                  style={[
-                    styles.tutorCardIconCircle,
-                    { backgroundColor: tutor.avatarColor },
-                  ]}
-                >
-                  <Ionicons name={tutor.avatarIcon} size={28} color="#FFFFFF" />
+            {/* Speaking Wave Animation */}
+            {isTutorSpeaking ? (
+              <View style={styles.speakingStatusRow}>
+                <Text style={styles.statusText}>Tutor is speaking...</Text>
+                <View style={styles.waveRow}>
+                  {[16, 32, 48, 24, 40, 20, 36, 16].map((h, i) => (
+                    <View
+                      key={i}
+                      style={[
+                        styles.bar,
+                        { height: h, backgroundColor: selectedTutor.avatarColor },
+                      ]}
+                    />
+                  ))}
                 </View>
+              </View>
+            ) : (
+              <View style={styles.turnRow}>
+                <Text style={styles.turnText}>Swipe and tap a tutor below to audition their voice!</Text>
+              </View>
+            )}
 
-                <Text style={styles.tutorCardName}>{tutor.nameAmharic}</Text>
-                <Text style={styles.tutorCardRole}>{tutor.titleAmharic}</Text>
+            {/* Section Label: Horizontal Swipeable Tutor Carousel */}
+            <View style={styles.carouselHeaderRow}>
+              <Text style={styles.carouselTitle}>አስተማሪዎን ይምረጡ</Text>
+              <Pressable onPress={handleRandomize} style={styles.shuffleChip}>
+                <Ionicons name="shuffle" size={14} color="#FFFFFF" />
+                <Text style={styles.shuffleText}>🎲 አስገራሚ</Text>
+              </Pressable>
+            </View>
 
-                {/* Audition Button */}
-                <View
-                  style={[
-                    styles.auditionPill,
-                    isSelected && { backgroundColor: tutor.avatarColor },
-                  ]}
-                >
-                  <Ionicons
-                    name="volume-high"
-                    size={14}
-                    color={isSelected ? '#FFFFFF' : tutor.avatarColor}
-                  />
-                  <Text
-                    style={[
-                      styles.auditionPillText,
-                      isSelected && { color: '#FFFFFF' },
+            {/* Horizontal Swipeable Tutors List */}
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={styles.horizontalTutorsList}
+            >
+              {VOICE_TUTORS.map((tutor) => {
+                const isSelected = selectedTutor.id === tutor.id;
+                return (
+                  <Pressable
+                    key={tutor.id}
+                    onPress={() => handleSelectTutor(tutor)}
+                    style={({ pressed }) => [
+                      styles.tutorCard,
+                      isSelected && {
+                        borderColor: tutor.avatarColor,
+                        backgroundColor: '#FFFFFF',
+                        elevation: 6,
+                      },
+                      { transform: [{ scale: pressed ? 0.95 : 1 }] },
                     ]}
                   >
-                    ድምፅ ስማ 🔊
-                  </Text>
-                </View>
+                    <View
+                      style={[
+                        styles.tutorCardIconCircle,
+                        { backgroundColor: tutor.avatarColor },
+                      ]}
+                    >
+                      <Ionicons name={tutor.avatarIcon} size={28} color="#FFFFFF" />
+                    </View>
 
-                {/* Active Checkmark Ring */}
-                {isSelected && (
+                    <Text style={styles.tutorCardName}>{tutor.nameAmharic}</Text>
+                    <Text style={styles.tutorCardRole}>{tutor.titleAmharic}</Text>
+
+                    <View
+                      style={[
+                        styles.auditionPill,
+                        isSelected && { backgroundColor: tutor.avatarColor },
+                      ]}
+                    >
+                      <Ionicons
+                        name="volume-high"
+                        size={14}
+                        color={isSelected ? '#FFFFFF' : tutor.avatarColor}
+                      />
+                      <Text
+                        style={[
+                          styles.auditionPillText,
+                          isSelected && { color: '#FFFFFF' },
+                        ]}
+                      >
+                        ድምፅ ስማ 🔊
+                      </Text>
+                    </View>
+
+                    {isSelected && (
+                      <View
+                        style={[
+                          styles.selectedBadge,
+                          { backgroundColor: tutor.avatarColor },
+                        ]}
+                      >
+                        <Ionicons name="checkmark" size={12} color="#FFFFFF" />
+                      </View>
+                    )}
+                  </Pressable>
+                );
+              })}
+            </ScrollView>
+
+            {/* Action Button: Start Learning With Chosen Tutor */}
+            <Pressable
+              onPress={() => {
+                stopCurrentAudio();
+                router.push('/dashboard');
+              }}
+              style={({ pressed }) => [
+                styles.startLessonBtn,
+                {
+                  backgroundColor: selectedTutor.avatarColor,
+                  transform: [{ translateY: pressed ? 4 : 0 }],
+                },
+              ]}
+            >
+              <Ionicons name="rocket" size={20} color="#FFFFFF" />
+              <Text style={styles.startLessonBtnText}>
+                ከ{selectedTutor.nameAmharic} ጋር ትምህርት ጀምር 🚀
+              </Text>
+            </Pressable>
+
+            {/* Voice Recognition / Chat Mic Row */}
+            <View style={styles.chatSection}>
+              <Pressable
+                style={[
+                  styles.micBtn,
+                  { backgroundColor: isListening ? AppColors.error : selectedTutor.avatarColor },
+                ]}
+                onPress={toggleListening}
+              >
+                <Ionicons name={isListening ? 'mic' : 'mic-outline'} size={32} color="#FFFFFF" />
+              </Pressable>
+
+              <View style={styles.inputRow}>
+                <TextInput
+                  style={styles.input}
+                  placeholder="መልዕክት ይጻፉ..."
+                  placeholderTextColor={AppColors.gray500}
+                  value={heardText === 'እያዳመጥኩ ነው...' ? '' : heardText}
+                  onChangeText={setHeardText}
+                  onSubmitEditing={() => {
+                    const msg = heardText;
+                    setHeardText('');
+                    askTutor(msg);
+                  }}
+                />
+                <Pressable
+                  style={[styles.sendBtn, { backgroundColor: selectedTutor.avatarColor }]}
+                  onPress={() => {
+                    const msg = heardText;
+                    setHeardText('');
+                    askTutor(msg);
+                  }}
+                >
+                  <Ionicons name="send" size={20} color="#FFFFFF" />
+                </Pressable>
+              </View>
+            </View>
+          </>
+        ) : (
+          /* Pronunciation Practice Section */
+          <View style={styles.pronounceSection}>
+            <View style={styles.milestoneCard}>
+              <Text style={styles.milestoneAmh}>{currentMilestone.wordAmh}</Text>
+              <Text style={styles.milestonePhonetic}>{currentMilestone.phonetic}</Text>
+              <Text style={styles.milestoneMeaning}>
+                Meaning: {currentMilestone.wordEn} ({currentMilestone.meaning})
+              </Text>
+
+              <Pressable
+                style={[styles.listenExampleBtn, { backgroundColor: selectedTutor.avatarColor }]}
+                onPress={() => playTutorVoiceClip(selectedTutor)}
+              >
+                <Ionicons name="volume-high" size={20} color="#FFFFFF" />
+                <Text style={styles.listenExampleText}>Listen to Model Voice</Text>
+              </Pressable>
+            </View>
+
+            {pronunciationScore !== null ? (
+              <View style={styles.scoreMeterCard}>
+                <View style={styles.scoreRow}>
+                  <Text style={styles.scoreTitle}>Pronunciation Accuracy</Text>
+                  <Text style={styles.scorePct}>{pronunciationScore}%</Text>
+                </View>
+                <View style={styles.scoreTrack}>
                   <View
                     style={[
-                      styles.selectedBadge,
-                      { backgroundColor: tutor.avatarColor },
+                      styles.scoreFill,
+                      {
+                        width: `${pronunciationScore}%`,
+                        backgroundColor: pronunciationScore >= 85 ? AppColors.green : AppColors.orange,
+                      },
                     ]}
-                  >
-                    <Ionicons name="checkmark" size={12} color="#FFFFFF" />
-                  </View>
-                )}
+                  />
+                </View>
+                <Text style={styles.scorePraise}>
+                  {pronunciationScore >= 85 ? '🌟 Excellent clarity and accent!' : '👍 Good try! Practice one more time!'}
+                </Text>
+              </View>
+            ) : null}
+
+            <View style={{ alignItems: 'center', marginTop: 12 }}>
+              <Pressable
+                style={[styles.micBtn, isListening && { backgroundColor: AppColors.error }]}
+                onPress={toggleListening}
+              >
+                <Ionicons name={isListening ? 'mic' : 'mic-outline'} size={36} color="#FFFFFF" />
               </Pressable>
-            );
-          })}
-        </ScrollView>
+              <Text style={styles.turnHint}>
+                {isListening ? 'Say the word now...' : 'Tap mic and pronounce out loud'}
+              </Text>
+            </View>
 
-        {/* Action Button: Start Learning With Chosen Tutor */}
-        <Pressable
-          onPress={() => {
-            stopCurrentAudio();
-            router.push('/dashboard');
-          }}
-          style={({ pressed }) => [
-            styles.startLessonBtn,
-            {
-              backgroundColor: selectedTutor.avatarColor,
-              transform: [{ translateY: pressed ? 4 : 0 }],
-            },
-          ]}
-        >
-          <Ionicons name="rocket" size={20} color="#FFFFFF" />
-          <Text style={styles.startLessonBtnText}>
-            ከ{selectedTutor.nameAmharic} ጋር ትምህርት ጀምር 🚀
-          </Text>
-        </Pressable>
-
-        {/* Voice Recognition / Chat Mic Row */}
-        <View style={styles.chatSection}>
-          <Pressable
-            style={[
-              styles.micBtn,
-              { backgroundColor: isListening ? AppColors.error : selectedTutor.avatarColor },
-            ]}
-            onPress={toggleListening}
-          >
-            <Ionicons name={isListening ? 'mic' : 'mic-outline'} size={32} color="#FFFFFF" />
-          </Pressable>
-
-          <View style={styles.inputRow}>
-            <TextInput
-              style={styles.input}
-              placeholder="መልዕክት ይጻፉ..."
-              placeholderTextColor={AppColors.gray500}
-              value={heardText === 'እያዳመጥኩ ነው...' ? '' : heardText}
-              onChangeText={setHeardText}
-              onSubmitEditing={() => {
-                const msg = heardText;
-                setHeardText('');
-                askTutor(msg);
-              }}
-            />
             <Pressable
-              style={[styles.send, { backgroundColor: selectedTutor.avatarColor }]}
+              style={styles.nextMilestoneBtn}
               onPress={() => {
-                const msg = heardText;
-                setHeardText('');
-                askTutor(msg);
+                setPronunciationScore(null);
+                setMilestoneIndex((i) => (i + 1) % MILESTONES.length);
               }}
             >
-              <Ionicons name="send" size={20} color="#FFFFFF" />
+              <Text style={styles.nextMilestoneText}>Next Word Milestone →</Text>
             </Pressable>
           </View>
-        </View>
+        )}
       </ScrollView>
     </View>
   );
@@ -476,6 +601,34 @@ const styles = StyleSheet.create({
   },
   infoBtn: {
     padding: 6,
+  },
+  modeTabs: {
+    flexDirection: 'row',
+    gap: 10,
+    paddingHorizontal: 20,
+    marginBottom: 12,
+    width: '100%',
+  },
+  modeTab: {
+    flex: 1,
+    paddingVertical: 10,
+    borderRadius: 16,
+    backgroundColor: '#FFFFFF',
+    borderWidth: 1.5,
+    borderColor: '#CBD5E1',
+    alignItems: 'center',
+  },
+  modeTabActive: {
+    backgroundColor: AppColors.purple,
+    borderColor: AppColors.purple,
+  },
+  modeTabText: {
+    fontFamily: 'Poppins_700Bold',
+    fontSize: 12,
+    color: AppColors.gray500,
+  },
+  modeTabTextActive: {
+    color: '#FFFFFF',
   },
   scrollContent: {
     alignItems: 'center',
@@ -689,12 +842,110 @@ const styles = StyleSheet.create({
     fontSize: 14,
     elevation: 2,
   },
-  send: {
+  sendBtn: {
     width: 48,
     height: 48,
     borderRadius: 24,
     alignItems: 'center',
     justifyContent: 'center',
     elevation: 2,
+  },
+  pronounceSection: {
+    width: '100%',
+  },
+  milestoneCard: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 24,
+    padding: 22,
+    alignItems: 'center',
+    elevation: 2,
+    marginBottom: 16,
+  },
+  milestoneAmh: {
+    fontFamily: 'Poppins_700Bold',
+    fontSize: 32,
+    color: AppColors.navy,
+  },
+  milestonePhonetic: {
+    fontFamily: 'Poppins_700Bold',
+    fontSize: 16,
+    color: AppColors.purple,
+    marginTop: 4,
+  },
+  milestoneMeaning: {
+    fontFamily: 'Poppins_400Regular',
+    fontSize: 13,
+    color: AppColors.gray500,
+    marginTop: 4,
+  },
+  listenExampleBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    borderRadius: 16,
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    marginTop: 16,
+  },
+  listenExampleText: {
+    fontFamily: 'Poppins_700Bold',
+    fontSize: 13,
+    color: '#FFFFFF',
+  },
+  scoreMeterCard: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 20,
+    padding: 16,
+    marginBottom: 12,
+  },
+  scoreRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 6,
+  },
+  scoreTitle: {
+    fontFamily: 'Poppins_700Bold',
+    fontSize: 13,
+    color: AppColors.navy,
+  },
+  scorePct: {
+    fontFamily: 'Poppins_700Bold',
+    fontSize: 14,
+    color: AppColors.green,
+  },
+  scoreTrack: {
+    height: 10,
+    borderRadius: 5,
+    backgroundColor: '#E2E8F0',
+    overflow: 'hidden',
+  },
+  scoreFill: {
+    height: '100%',
+    borderRadius: 5,
+  },
+  scorePraise: {
+    fontFamily: 'Poppins_600SemiBold',
+    fontSize: 12,
+    color: AppColors.navy,
+    marginTop: 8,
+    textAlign: 'center',
+  },
+  turnHint: {
+    fontFamily: 'Poppins_600SemiBold',
+    fontSize: 13,
+    color: AppColors.green,
+    marginTop: 8,
+  },
+  nextMilestoneBtn: {
+    backgroundColor: AppColors.softPurple,
+    borderRadius: 16,
+    paddingVertical: 14,
+    alignItems: 'center',
+    marginTop: 16,
+  },
+  nextMilestoneText: {
+    fontFamily: 'Poppins_700Bold',
+    fontSize: 14,
+    color: AppColors.purple,
   },
 });

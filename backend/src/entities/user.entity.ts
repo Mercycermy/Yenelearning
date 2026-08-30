@@ -5,11 +5,15 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   OneToMany,
+  ManyToOne,
+  JoinColumn,
 } from 'typeorm';
 import { Child } from './child.entity';
 
 export enum UserRole {
   ADMIN = 'admin',
+  SCHOOL_ADMIN = 'school_admin',
+  TEACHER = 'teacher',
   PARENT = 'parent',
 }
 
@@ -39,6 +43,9 @@ export class User {
 
   @Column({ default: true })
   isActive: boolean;
+
+  @Column({ nullable: true })
+  schoolId: string;
 
   @Column({ nullable: true })
   subscriptionPlan: string;

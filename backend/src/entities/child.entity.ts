@@ -18,6 +18,14 @@ export enum SupportedLanguage {
     OROMO = 'oromo',
 }
 
+export enum GradeLevel {
+    KG = 'kg',
+    GRADE_1 = 'grade_1',
+    GRADE_2 = 'grade_2',
+    GRADE_3 = 'grade_3',
+    GRADE_4 = 'grade_4',
+}
+
 @Entity('children')
 export class Child {
     @PrimaryGeneratedColumn('uuid')
@@ -28,6 +36,13 @@ export class Child {
 
     @Column({ type: 'int' })
     age: number;
+
+    @Column({
+        type: 'varchar',
+        enum: GradeLevel,
+        default: GradeLevel.KG,
+    })
+    grade: GradeLevel;
 
     @Column({ nullable: true })
     avatarId: string;
@@ -69,6 +84,9 @@ export class Child {
     @Column({ type: 'simple-array', default: '' })
     badges: string[];
 
+    @Column({ nullable: true })
+    schoolId: string;
+
     @ManyToOne(() => User, (user) => user.children, { onDelete: 'CASCADE' })
     @JoinColumn({ name: 'parentId' })
     parent: User;
@@ -85,3 +103,4 @@ export class Child {
     @UpdateDateColumn()
     updatedAt: Date;
 }
+

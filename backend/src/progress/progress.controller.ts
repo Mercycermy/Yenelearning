@@ -67,6 +67,30 @@ export class ProgressController {
         return this.progressService.getProgressByStoryPage(childId, storyId, pageNumber);
     }
 
+    @Get(':childId/weekly-summary')
+    getWeeklySummary(@Param('childId', ParseUUIDPipe) childId: string) {
+        return this.progressService.getWeeklySummary(childId);
+    }
+
+    @Post(':childId/game-result')
+    recordGameResult(
+        @Param('childId', ParseUUIDPipe) childId: string,
+        @Body() body: {
+            gameType: string;
+            score: number;
+            maxScore: number;
+            timeSpentSeconds: number;
+            starsEarned: number;
+        },
+    ) {
+        return this.progressService.recordGameResult(childId, body);
+    }
+
+    @Get(':childId/game-results')
+    getGameResults(@Param('childId', ParseUUIDPipe) childId: string) {
+        return this.progressService.getGameResults(childId);
+    }
+
     @Get('stats/global')
     @UseGuards(RolesGuard)
     @Roles(UserRole.ADMIN)

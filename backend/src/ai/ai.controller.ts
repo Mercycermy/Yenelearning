@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Res, BadRequestException } from '@nestjs/common';
+import { Controller, Post, Body, Res, BadRequestException, HttpCode, HttpStatus } from '@nestjs/common';
 import * as Express from 'express';
 import { AiService } from './ai.service';
 import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
@@ -24,6 +24,7 @@ export class AiController {
     constructor(private readonly aiService: AiService) { }
 
     @Post('chat')
+    @HttpCode(HttpStatus.OK)
     async chat(@Body() dto: ChatDto) {
         if (!process.env.HF_ACCESS_TOKEN) {
             return { message: "Mock Response: AI not configured (missing HF_ACCESS_TOKEN)" };

@@ -8,3 +8,7 @@ export * from './language.entity';
 export * from './chapter.entity';
 export * from './chapter-progress.entity';
 export * from './avatar-item.entity';
+export * from './school.entity';
+export * from './message.entity';
+export * from './game-result.entity';
+export * from './payment.entity';
