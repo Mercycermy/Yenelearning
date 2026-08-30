@@ -57,7 +57,7 @@ export function DuolingoRoadmapPath({
       contentContainerStyle={styles.scrollContent}
       showsVerticalScrollIndicator={false}
     >
-      {chapters.map((chapter) => {
+      {[...chapters].reverse().map((chapter) => {
         const completedIds = chapter.completedNodeIds || [];
         return (
           <View key={chapter.id} style={styles.chapterSection}>

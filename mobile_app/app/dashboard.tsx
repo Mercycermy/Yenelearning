@@ -13,6 +13,7 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import { AppColors } from '../src/constants/colors';
 import { userPrefs } from '../src/data/userPrefs';
+import { apiClient } from '../src/data/apiClient';
 import {
   DuolingoRoadmapPath,
   ChapterData,
@@ -20,6 +21,10 @@ import {
 } from '../src/components/DuolingoRoadmapPath';
 import { AvatarCustomizerModal, AvatarItemData } from '../src/components/AvatarCustomizerModal';
 import { AgeAdaptiveWrapper } from '../src/components/AgeAdaptiveWrapper';
+import { LessonCompletionModal } from '../src/components/LessonCompletionModal';
+import { RewardChestModal } from '../src/components/RewardChestModal';
+import { NodePreviewModal } from '../src/components/NodePreviewModal';
+import { LessonSessionEngine, TaskStepData } from '../src/components/LessonSessionEngine';
 
 const MOCK_CHAPTERS: ChapterData[] = [
   {
@@ -84,7 +89,19 @@ export default function DashboardScreen() {
   const [stars, setStars] = useState(120);
   const [hearts, setHearts] = useState(5);
 
+  const [chapters, setChapters] = useState<ChapterData[]>(MOCK_CHAPTERS);
+  const [avatarItems, setAvatarItems] = useState<AvatarItemData[]>(MOCK_AVATAR_ITEMS);
+
+  // Modals
   const [customizerVisible, setCustomizerVisible] = useState(false);
+  const [previewModalVisible, setPreviewModalVisible] = useState(false);
+  const [sessionEngineVisible, setSessionEngineVisible] = useState(false);
+  const [completionModalVisible, setCompletionModalVisible] = useState(false);
+  const [chestModalVisible, setChestModalVisible] = useState(false);
+
+  const [selectedNode, setSelectedNode] = useState<LessonNodeData | null>(null);
+  const [selectedChapter, setSelectedChapter] = useState<ChapterData | null>(null);
+
   const [equippedConfig, setEquippedConfig] = useState<{
     equippedHat?: string;
     equippedOutfit?: string;
@@ -97,6 +114,19 @@ export default function DashboardScreen() {
     ]);
     setAvatarImageUrl(image);
     setAvatarName(name);
+
+    try {
+      const data = await apiClient.getJson('/student/roadmap/demo-child-id');
+      if (data && data.chapters) {
+        setChapters(data.chapters as ChapterData[]);
+      }
+      const shopItems = await apiClient.getJsonList('/student/avatar/shop');
+      if (shopItems && shopItems.length > 0) {
+        setAvatarItems(shopItems as AvatarItemData[]);
+      }
+    } catch (e) {
+      // Fallback
+    }
   }, []);
 
   useFocusEffect(
@@ -106,15 +136,55 @@ export default function DashboardScreen() {
   );
 
   function handleSelectNode(node: LessonNodeData, chapter: ChapterData) {
-    if (node.type === 'STORY') {
-      router.push('/stories');
-    } else if (node.type === 'WORD_GAME') {
-      router.push('/words');
-    } else if (node.type === 'AI_TALK') {
-      router.push('/tutor');
-    } else {
-      router.push('/games');
+    setSelectedNode(node);
+    setSelectedChapter(chapter);
+    setPreviewModalVisible(true);
+  }
+
+  function handleStartLessonSession(node: LessonNodeData, chapter: ChapterData) {
+    setPreviewModalVisible(false);
+    setSessionEngineVisible(true);
+  }
+
+  async function handleFinishLessonSession(starsEarned: number) {
+    setSessionEngineVisible(false);
+    setStars((prev) => prev + starsEarned);
+    setStreakDays((prev) => prev + 1);
+
+    // Update completed node in chapters
+    if (selectedNode && selectedChapter) {
+      setChapters((prev) =>
+        prev.map((ch) => {
+          if (ch.id === selectedChapter.id) {
+            const completed = ch.completedNodeIds || [];
+            if (!completed.includes(selectedNode.id)) {
+              return { ...ch, completedNodeIds: [...completed, selectedNode.id] };
+            }
+          }
+          return ch;
+        }),
+      );
+
+      // Call backend API completion endpoint
+      try {
+        await apiClient.postJson('/student/node/complete', {
+          childId: 'demo-child-id',
+          chapterId: selectedChapter.id,
+          nodeId: selectedNode.id,
+          starsEarned,
+        });
+      } catch (e) {
+        // Fallback
+      }
     }
+
+    setCompletionModalVisible(true);
+  }
+
+  function handleClaimChest() {
+    setStars((prev) => prev + 25);
+    setChestModalVisible(false);
+    Alert.alert('Claimed! ⭐️', '25 Bonus Stars added to your balance!');
   }
 
   function handleEquipItem(item: AvatarItemData) {
@@ -126,6 +196,7 @@ export default function DashboardScreen() {
     if (item.category === 'HAT') newConfig.equippedHat = item.iconName;
     if (item.category === 'OUTFIT') newConfig.equippedOutfit = item.iconName;
     setEquippedConfig(newConfig);
+    setStars((prev) => prev - item.starCost);
     Alert.alert('Equipped! 🎉', `${item.nameAmharic} is now equipped on your avatar!`);
   }
 
@@ -207,21 +278,55 @@ export default function DashboardScreen() {
           onSelectAction={(route) => router.push(route as never)}
         >
           <DuolingoRoadmapPath
-            chapters={MOCK_CHAPTERS}
+            chapters={chapters}
             activeNodeId="node-2"
             onSelectNode={handleSelectNode}
           />
         </AgeAdaptiveWrapper>
       </View>
 
+      {/* Node Preview Modal */}
+      <NodePreviewModal
+        visible={previewModalVisible}
+        node={selectedNode}
+        chapter={selectedChapter}
+        onClose={() => setPreviewModalVisible(false)}
+        onStartLesson={handleStartLessonSession}
+      />
+
+      {/* Option A Sequential Multi-Task Lesson Engine */}
+      <LessonSessionEngine
+        visible={sessionEngineVisible}
+        lessonTitle={selectedNode ? selectedNode.titleAmharic : 'Lesson Session'}
+        tasks={[]}
+        hearts={hearts}
+        onClose={() => setSessionEngineVisible(false)}
+        onFinishLesson={handleFinishLessonSession}
+      />
+
       {/* Avatar Customization Modal */}
       <AvatarCustomizerModal
         visible={customizerVisible}
         onClose={() => setCustomizerVisible(false)}
         stars={stars}
-        items={MOCK_AVATAR_ITEMS}
+        items={avatarItems}
         equippedConfig={equippedConfig}
         onEquipItem={handleEquipItem}
+      />
+
+      {/* Lesson Completion Celebratory Modal */}
+      <LessonCompletionModal
+        visible={completionModalVisible}
+        starsEarned={15}
+        lessonTitle={selectedNode ? `${selectedNode.titleAmharic} - ${selectedNode.title}` : 'Lesson Session'}
+        onContinue={() => setCompletionModalVisible(false)}
+      />
+
+      {/* Milestone Reward Chest Modal */}
+      <RewardChestModal
+        visible={chestModalVisible}
+        bonusStars={25}
+        onClaim={handleClaimChest}
       />
     </View>
   );
