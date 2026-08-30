@@ -54,15 +54,13 @@ export class StudentExperienceService {
 
     const progressMap = new Map(progressRecords.map((p) => [p.chapterId, p]));
 
-    const formattedChapters = chapters.map((ch, index) => {
-      const p = progressMap.get(ch.id);
-      const isLocked = ch.isLockedByDefault && index > 0 && !p;
+    const formattedChapters = chapters.map((ch) => {
       return {
         ...ch,
-        isLocked,
-        status: p ? p.status : isLocked ? 'LOCKED' : 'UNLOCKED',
-        completedNodeIds: p ? p.completedNodeIds : [],
-        totalStarsEarned: p ? p.totalStarsEarned : 0,
+        isLocked: false,
+        status: 'UNLOCKED',
+        completedNodeIds: [],
+        totalStarsEarned: 0,
       };
     });
 
