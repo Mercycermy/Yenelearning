@@ -91,8 +91,7 @@ export function DuolingoRoadmapPath({
             <View style={styles.nodesColumn}>
               {chapter.nodes.map((node, nIdx) => {
                 const isCompleted = completedIds.includes(node.id);
-                const isActive = activeNodeId === node.id || (!isCompleted && nIdx === 0);
-                const isNodeLocked = chapter.isLocked || (!isCompleted && nIdx > completedIds.length);
+                const isActive = activeNodeId === node.id || nIdx === 0;
                 const xOffset = getNodeOffset(nIdx);
 
                 let btnBg = chapter.themeColor || AppColors.green;
@@ -104,9 +103,6 @@ export function DuolingoRoadmapPath({
                 } else if (isActive) {
                   btnBg = '#F59E0B';
                   shadowColor = '#D97706';
-                } else if (isNodeLocked) {
-                  btnBg = '#9CA3AF';
-                  shadowColor = '#6B7280';
                 }
 
                 return (
@@ -121,7 +117,6 @@ export function DuolingoRoadmapPath({
                     {isActive && <View style={styles.activeGlowRing} />}
 
                     <Pressable
-                      disabled={isNodeLocked}
                       onPress={() => onSelectNode(node, chapter)}
                       style={({ pressed }) => [
                         styles.nodeButton,
@@ -133,13 +128,7 @@ export function DuolingoRoadmapPath({
                       ]}
                     >
                       <Ionicons
-                        name={
-                          isNodeLocked
-                            ? 'lock-closed'
-                            : isCompleted
-                            ? 'checkmark-sharp'
-                            : (node.icon as any) || 'book'
-                        }
+                        name={(node.icon as any) || 'book'}
                         size={28}
                         color="#FFFFFF"
                       />

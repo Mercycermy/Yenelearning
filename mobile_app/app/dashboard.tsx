@@ -62,8 +62,8 @@ const MOCK_CHAPTERS: ChapterData[] = [
     titleAmharic: 'ምዕራፍ 3: ተፈጥሮ እና እንስሳት',
     titleEnglish: 'Chapter 3: Nature & Animals',
     themeColor: '#F59E0B',
-    isLocked: true,
-    status: 'LOCKED',
+    isLocked: false,
+    status: 'UNLOCKED',
     completedNodeIds: [],
     nodes: [
       { id: 'node-8', title: 'Gelada Monkeys', titleAmharic: 'ጭላዳ ዝንጀሮ', type: 'WORD_GAME', icon: 'leaf', starReward: 10, description: 'Learn about Ethiopian animals' },
