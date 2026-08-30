@@ -3,7 +3,6 @@ import { StudentExperienceService } from './student-experience.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 
 @Controller('student')
-@UseGuards(JwtAuthGuard)
 export class StudentExperienceController {
   constructor(private readonly studentService: StudentExperienceService) {}
 

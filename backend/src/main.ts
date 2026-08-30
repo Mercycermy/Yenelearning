@@ -69,6 +69,13 @@ async function bootstrap() {
   }
   app.useStaticAssets(uploadsPath, { prefix: '/uploads' });
 
+  const publicPath = join(__dirname, '..', 'public');
+  if (!existsSync(publicPath)) {
+    mkdirSync(publicPath, { recursive: true });
+  }
+  app.useStaticAssets(publicPath);
+  app.useStaticAssets(join(publicPath, 'audio'), { prefix: '/audio' });
+
   const port = configService.get<number>('PORT', 3000);
   await app.listen(port);
 

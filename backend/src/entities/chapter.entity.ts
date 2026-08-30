@@ -6,6 +6,21 @@ import {
     UpdateDateColumn,
 } from 'typeorm';
 
+export interface TaskStep {
+    step: number;
+    type: 'VOCAB_CARD' | 'STORY_READ' | 'PICTURE_MATCH' | 'SPEECH_PRACTICE';
+    title?: string;
+    word?: string;
+    meaning?: string;
+    text?: string;
+    question?: string;
+    options?: string[];
+    correctAnswer?: string;
+    prompt?: string;
+    audioUrl?: string;
+    imageUrl?: string;
+}
+
 export interface LessonNode {
     id: string;
     title: string;
@@ -14,6 +29,7 @@ export interface LessonNode {
     icon: string;
     starReward: number;
     description?: string;
+    tasks?: TaskStep[];
 }
 
 @Entity('chapters')
